@@ -153,19 +153,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Calendar.cpp" />
+    <ClCompile Include="DateCalendar.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activity.h" />
     <ClInclude Include="Calendar.h" />
+    <ClInclude Include="DateCalendar.h" />
+    <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Row.h" />
+    <ClInclude Include="Subwindow.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="Time.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="grass.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="arial.ttf" />

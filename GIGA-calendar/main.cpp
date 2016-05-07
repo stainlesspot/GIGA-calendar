@@ -22,18 +22,18 @@ int main()
 	sf::Font fontArial;
 	fontArial.loadFromFile("arial.ttf");
 	
-	const unsigned char fpsmCharSize = 16, subWindowMargin = 20;
+	const unsigned char fpsmCharSize = 16, windowMargin = 10;
 	gui::FPSMeter fpsMeter(fontArial, fpsmCharSize);
 	fpsMeter.setPosition(windowResolution.width / 3 - 1.5 * fpsmCharSize, 0)
 		.setColor(sf::Color::Black);
 
 	gui::WindowManager wm;
 
-	sf::Texture t, t2, t3;
-	sf::Image i, i2, i3;
+	sf::Texture t, t2;
+	sf::Image i, i2;
 	
-	i3.create(windowResolution.width, windowResolution.height, sf::Color(0, 0, 0, 0));
-	t3.loadFromImage(i3);
+/*	i3.create(windowResolution.width, windowResolution.height, sf::Color(0, 0, 0, 0));
+	t3.loadFromImage(i3);*/
 
 	sf::RectangleShape border(sf::Vector2f(windowResolution.width, windowResolution.height));
 	border.setOutlineThickness(-1);
@@ -50,7 +50,7 @@ int main()
 
 	wm.emplace("dateCalendar", gui::Window()
 		.setBackgroundTexture(t)
-		.setPosition(0, 0)
+		.setPosition(windowMargin, windowMargin)
 		.setMovable(false), true);
 	
 	i2.create(windowResolution.width / 3 + 1, windowResolution.height, sf::Color(40, 255, 40, 255));
