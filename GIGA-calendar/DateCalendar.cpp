@@ -1,6 +1,12 @@
 #include "DateCalendar.h"
  
-DateCalendar::DateCalendar(gui::WindowManager & wm)
+DateCalendar::DateCalendar(gui::Window & w)
+	: subWindow(&w)
 {
-	subWindow = &wm.at("dateCalendar", true);
+}
+
+DateCalendar & DateCalendar::setSubWindow(gui::Window &)
+{
+	subWindow
+	return *this;
 }

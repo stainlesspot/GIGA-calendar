@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activity.h" />
+    <ClInclude Include="ActivityMenu.h" />
     <ClInclude Include="Calendar.h" />
     <ClInclude Include="DateCalendar.h" />
     <ClInclude Include="MainWindow.h" />

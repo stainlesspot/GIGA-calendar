@@ -1,7 +1,7 @@
 #include "MainWindow.h"
 
 MainWindow::MainWindow()
-	: windowVMode(sf::VideoMode::getDesktopMode().width * 2 / 3, sf::VideoMode::getDesktopMode().height * 2 / 3)
+	: width(sf::VideoMode::getDesktopMode().width * 2 / 3), height(sf::VideoMode::getDesktopMode().height * 2 / 3)
 {
 }
 
