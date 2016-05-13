@@ -15,7 +15,7 @@ public:
 	Row(const std::array<Cell, 7>& );
 	Row(const Row&);
 	Row(Row&&);
-	~Row() = default;
+	~Row();
 
 	Row& setHeight(const float);
 	Row& move(const float height);

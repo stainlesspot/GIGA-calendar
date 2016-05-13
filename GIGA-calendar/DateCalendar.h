@@ -17,7 +17,7 @@ private:
 public:
 	DateCalendar() = default;
 	DateCalendar(const sf::Vector2f& position, const unsigned int width, const unsigned int height,
-		const sf::Color& backgroundTextureColor, const bool isMovable);
+		const sf::Color& backgroundTextureColor, const bool isMovable = false);
 	~DateCalendar() = default;
 
 	const bool input(const sf::Event& event);
