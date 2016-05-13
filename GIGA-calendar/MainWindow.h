@@ -8,10 +8,12 @@
 
 class MainWindow {
 private:
+	const char windowMargin;
+
 	unsigned int width;
 	unsigned int height;
 
-	gui::WindowManager subwindowManager;
+	gui::WindowManager windowManager;
 	DateCalendar leftSide;
 	ActivityMenu rightSide;
 

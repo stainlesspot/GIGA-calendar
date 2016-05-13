@@ -38,7 +38,6 @@ int main()
 		.setPosition(windowMargin, windowMargin)
 		.setMovable(false), true);
 
-	
 
 	i2.create((windowResolution.width - 2 * windowMargin) / 3, windowResolution.height - 2 * windowMargin, sf::Color(40, 255, 40, 255));
 	t2.loadFromImage(i2);

@@ -1,21 +1,26 @@
 #pragma once
 
-#include <GUI/GUI.h>
+#include <GUI/Window.h>
 #include <deque>
 
 #include "Row.h"
 
-class DateCalendar {
+class DateCalendar : private gui::Window {
 private:
-	gui::Window* subWindow = nullptr;
-	
+	unsigned int width;
+	unsigned int height;
+
+	sf::Color backgroundTextureColor;
+
 	std::deque<Row> calendar;
 
 public:
 	DateCalendar() = default;
-	DateCalendar(gui::Window&);
+	DateCalendar(const sf::Vector2f& position, const unsigned int width, const unsigned int height,
+		const sf::Color& backgroundTextureColor, const bool isMovable = false);
+	~DateCalendar() = default;
 
-	DateCalendar& setSubWindow(gui::Window&);
+	const bool input(const sf::Event& event);
 
-	void prepare();
+	DateCalendar& prepare();
 };
