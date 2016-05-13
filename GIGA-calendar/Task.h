@@ -31,4 +31,4 @@ public:
 	//	1 = {overdue: completion != 100, deadline in the past};
 	//	2 = {done: completion == 100}
 
-}
+};
