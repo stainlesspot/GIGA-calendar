@@ -1,5 +1,7 @@
 #include <time.h>
 #include <iostream>
+#include <chrono>
+
 
 #include <SFML/Graphics.hpp>
 
@@ -51,6 +53,8 @@ int main()
 
 
 	window.setFramerateLimit(60);
+
+	char* array = new char[100];
 	
 	while (window.isOpen())
 	{
@@ -68,6 +72,10 @@ int main()
 				break;
 			}
 		}
+		time_t today = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+		ctime_s(array, 100, &today);
+		std::cout << array;
+
 		window.clear(sf::Color(150, 150, 150, 255));
 		window.draw(wm);
 		window.display();

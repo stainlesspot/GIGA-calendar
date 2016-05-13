@@ -1,8 +1,10 @@
 #pragma once
+#include <vector>
+
+#include <SFML/Graphics.hpp>
+
 #include "Event.h"
 #include "Task.h"
-#include <vector>
-#include <SFML/Graphics.hpp>
 
 //	Visually the calendar is made up of colored rectangles, or cells,
 //	each representing a concrete date. They follow an ascending order.
