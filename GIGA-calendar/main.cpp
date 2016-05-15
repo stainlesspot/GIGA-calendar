@@ -10,6 +10,7 @@
 #include <GUI/FPSMeter.h>
 
 #include "Calendar.h"
+#include "Time.h"
 
 
 
@@ -26,7 +27,9 @@ int main()
 	
 	const unsigned char fpsmCharSize = 16, windowMargin = 1;
 
-	
+	int kon(2);
+	//std::cout << kon;
+	std::cout << 2.2f;
 	gui::WindowManager wm;
 
 	sf::Texture t, t2;
@@ -39,6 +42,9 @@ int main()
 		.setBackgroundTexture(t)
 		.setPosition(windowMargin, windowMargin)
 		.setMovable(false), true);
+
+	gui::Duration;
+	gui::Internals::timeSinceStart();
 
 
 	i2.create((windowResolution.width - 2 * windowMargin) / 3, windowResolution.height - 2 * windowMargin, sf::Color(40, 255, 40, 255));
@@ -72,10 +78,15 @@ int main()
 				break;
 			}
 		}
-		time_t today = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+/*		time_t today(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+		std::chrono::time_point<std::chrono::system_clock> s;
+		std::chrono::system_clock::duration;
+*/		Time t(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+/*		time(&today);
 		ctime_s(array, 100, &today);
 		std::cout << array;
-
+*/
+		std::cout << "Time t : {" << t.getHour() << ':' << t.getMinute() << ':' << t.getSecond() << "}\n";
 		window.clear(sf::Color(150, 150, 150, 255));
 		window.draw(wm);
 		window.display();
