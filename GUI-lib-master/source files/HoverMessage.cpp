@@ -82,6 +82,16 @@ namespace gui
 	{
 		return m_textBox.getOutlineThickness();
 	}
+
+	const ColoredText& HoverMessage::getText() const
+	{
+		return TextPane::getText();
+	}
+
+	ColoredText& HoverMessage::getText()
+	{
+		return TextPane::getText();
+	}
 	
 	void HoverMessage::updateBox()const
 	{
@@ -153,16 +163,10 @@ namespace gui
 		return *this;
 	}
 
-	HoverMessage& HoverMessage::setAnimationDuration(const float duration)
+	HoverMessage& HoverMessage::setDuration(const float duration)
 	{
-		FadeAnimation::setAnimationDuration(duration);
+		FadeAnimation::setDuration(duration);
 		return *this;
-	}
-
-	HoverMessage& HoverMessage::updateFadeAmount() const
-	{
-		FadeAnimation::updateFadeAmount();
-		return (HoverMessage&)*this;
 	}
 		
 	HoverMessage& HoverMessage::setBackgroundFill(const sf::Color& color)

@@ -5,10 +5,8 @@
 
 #include "DateCalendar.h"
 #include "ActivityMenu.h"
-
 class MainWindow {
 private:
-	const char windowMargin;
 
 	unsigned int width;
 	unsigned int height;

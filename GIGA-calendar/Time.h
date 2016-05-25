@@ -1,16 +1,25 @@
 #pragma once
+
+#include <cstdint>
+
 class Time {
 private:
-	unsigned char hour;
-	unsigned char minute;
-	unsigned char second;
+	uint8_t hour;
+	uint8_t minute;
+	uint8_t second;
 
 public:
 	Time();
-	Time(const unsigned char hour, const unsigned char minute, const unsigned char second);
+	Time(const uint8_t hour, const uint8_t minute, const uint8_t second);
 	Time(const unsigned long long seconds);
 
-	const unsigned long long asSeconds() const;
+	Time(const Time&) = default;
+	Time(Time&&) = default;
+	virtual ~Time() = default;
+
+	static Time now();
+
+	virtual const unsigned long long asSeconds() const;
 
 	Time operator +(const unsigned long long seconds) const;
 	Time operator +(const Time&) const;
@@ -19,13 +28,15 @@ public:
 	Time operator -(const Time&) const;
 
 	void operator =(const unsigned long long seconds);
-	Time& operator =(const Time&);
 
-	void setHour(const unsigned char hour);
-	void setMinute(const unsigned char minute);
-	void setSecond(const unsigned char second);
+	Time& operator =(const Time&) = default;
+	Time& operator =(Time&&) = default;
 
-	const unsigned char getHour() const;
-	const unsigned char getMinute() const;
-	const unsigned char getSecond() const;
+	Time& setHour(const uint8_t hour);
+	Time& setMinute(const uint8_t minute);
+	Time& setSecond(const uint8_t second);
+
+	const uint8_t getHour() const;
+	const uint8_t getMinute() const;
+	const uint8_t getSecond() const;
 };

@@ -1,8 +1,9 @@
-#include <GUI\GUI.h>
+#include <GUI/GUI.h>
+#include <SFML/Graphics/RenderWindow.hpp>
 
-#include <sstream>
+#include <sstream> // Items needed only for this example start here.
 
-#define LIMIT 10
+#define LIMIT 10 
 #define AMOUNT 1
 
 int integer = 0;
@@ -23,11 +24,11 @@ std::string getInt()
 	std::stringstream ss;
 	ss << integer;
 	return ss.str();
-}
+} // Items needed only for this example end here.
 
-void main()
+int main()
 {
-	sf::Texture buttonTex, closeButtonTex, barBackgroundTex, barFillTex, windowBackground;
+	sf::Texture buttonTex, closeButtonTex, barBackgroundTex, barFillTex, windowBackground; // Loading resources begins here.
 	sf::Font font;
 
 	barBackgroundTex.loadFromFile("resources/bar_background.png");
@@ -35,45 +36,21 @@ void main()
 	buttonTex.loadFromFile("resources/button.png");
 	closeButtonTex.loadFromFile("resources/close_button.png");
 	windowBackground.loadFromFile("resources/window_background.png");
-	font.loadFromFile("resources/font.ttf");
-	
-	gui::WindowManager main;
-	sf::RenderWindow window(sf::VideoMode(1600, 800), "Example", sf::Style::None);
+	font.loadFromFile("resources/font.ttf"); // Loading resources ends here.
 
-	main.emplace("First Window", std::move(gui::Window()
+	sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Example", sf::Style::None); // Creating Render Window.
+
+	gui::WindowManager main; // Creating main Window Manager
+	
+	main.emplace("First Window", std::move(gui::Window() // Populating main with windows.
 			.setPosition(250, 250)
 			.setBackgroundTexture(windowBackground, true)
-			.setBackgroundColor(sf::Color::Green)
 			.setMovable(true)
 
-			.add("1st Button", std::move(gui::Button(gui::Icon(buttonTex, true))
-				.bindAction(gui::Button::Released, std::bind([](const int amount)
-				{
-					integer += amount;
-				}, -AMOUNT))
-				.setPredicates(gui::Button::PredicateArray{ std::bind(canChange, -LIMIT, true) })
-				.setPredicateMessage(gui::HoverMessage(gui::bind("Integer is less than ", sf::Color::White) + 
-					gui::bind(std::to_string(LIMIT), sf::Color::Yellow),
-					font, 15))
-				.setName(std::move(gui::TextArea("Decrease Int by " + 
-					std::to_string(AMOUNT), font, 18).setColor(sf::Color(175, 45, 65, 220))))
-				.setDelay(0.5f)
-				.setMessage(std::move(gui::HoverMessage(gui::bind("This button ", sf::Color(87, 87, 87, 230)) +
-					gui::bind("reduces ", sf::Color(160, 40, 60, 220)) + gui::bind("the integer", sf::Color(87, 87, 87, 230)) + []()
-						{
-							return integer == 0 ? gui::bind("", sf::Color()) : gui::bind(". It is ", sf::Color(87, 87, 87, 230))
-								+ gui::bind("\ncurrently at ", sf::Color(87, 87, 87, 230)) +
-								gui::bind(std::to_string(integer), integer > 0.0f ? sf::Color(40, 145, 60, 220) : sf::Color(160, 40, 60, 220));
-						} + gui::bind(".", sf::Color(87, 87, 87, 255)),
-					font)
-					.setBackgroundFill(sf::Color(240, 240, 242, 225))
-					.setBorderFill(sf::Color(118, 118, 118, 210))
-					.setBorderThickness(2.0f))
-					.setCharacterSize(13))
-				.setPosition(50, 130)))
+			.add("Txt Field", gui::TextField().setPosition(50, 130).setPrompt(gui::bind("Click here to type.")).setFont(font).setColor(sf::Color::Red).setCharacterSize(13).setWidth(100))
 
-			.add("2nd Button", gui::Button(gui::Icon(buttonTex, false))
-				.bindAction(gui::Button::Released, std::bind([](const int amount) 
+			.add("1st Button", gui::Button(gui::Icon(buttonTex, false))
+				.bindAction(gui::Released, std::bind([](const int amount) 
 					{
 						integer += amount;
 					}, AMOUNT))
@@ -97,14 +74,14 @@ void main()
 				.setMessage(std::move(gui::HoverMessage(gui::bind("This is the ", sf::Color::White) + 
 					gui::bind("current value ", sf::Color::Yellow) + gui::bind("of the ", sf::Color::White) +
 					gui::bind("integer.", sf::Color::Yellow) +
-					gui::bind("\nThis text gets updated automatically every 1 / 10 second.", sf::Color::Red), font, 15)
+					gui::bind("\nThis text gets updated automatically every 1 / 10 seconds.", sf::Color::Red), font, 15)
 					.setBackgroundFill(sf::Color::Black)
 					.setBorderFill(sf::Color::Yellow)
 					.setBorderThickness(2.0f)))
 				.setColor(sf::Color::Yellow)
 				.setUpdateFunction([]()
 					{
-						return gui::ColoredString(std::to_string(integer), integer > 0.0f ? sf::Color::Green : integer == 0.0f ? 
+						return gui::bind(std::to_string(integer), integer > 0.0f ? sf::Color::Green : integer == 0.0f ? 
 							sf::Color::Yellow : sf::Color::Red);
 					})
 				.setPosition(50, 30)))
@@ -124,21 +101,21 @@ void main()
 					+ gui::bind(std::to_string(LIMIT), sf::Color::White), font).setBackgroundFill(sf::Color(20, 30, 40, 210))))
 					
 			.add("Close Btn", gui::Button(gui::Icon(closeButtonTex, true))
-				.bindAction(gui::Button::Released, [&]()
+				.bindAction(gui::Released, [&]()
 					{
-						main.at("First Window").setActive(false);
+						main.at("First Window", false).setActive(false);
 					})
 				.setPosition(windowBackground.getSize().x - closeButtonTex.getSize().x, 0))
 					
 			.add("Txt Pane", gui::TextPane(gui::bind("This is a simple program demonstrating ", sf::Color::White) +
-				gui::bind("\nSHT Games", sf::Color::Yellow) + 
+				gui::bind("\nSHT Games", sf::Color::Yellow, sf::Text::Italic) + 
 				gui::bind("' GUI Library. If you encounter\nany issues, please contact us at:\n", sf::Color::White) +
-				gui::bind("shtgamessts@gmail.com", sf::Color::Yellow), font, 15)
+				gui::bind("shtgamessts@gmail.com", sf::Color::Yellow, sf::Text::Bold), font, 15)
 				.setPosition(120, 20)))
 			.add("FPS", gui::FPSMeter().setFont(font).setPosition(600, 20).setColor(sf::Color::White)), false)
 		
 		.emplace("Second Window", std::move(gui::Window()
-			.setBackgroundColor(sf::Color(255, 255, 100))
+			.setBackgroundColor(sf::Color(255, 255, 150))
 			.setBackgroundTexture(windowBackground)
 			.setMovable(true)
 			.setPosition(20, 20)
@@ -146,7 +123,7 @@ void main()
 
 			.add("Txt Area", gui::TextArea()
 				.setFont(font)
-				.setText(gui::ColoredString("0", sf::Color()))
+				.setText("0")
 				.setUpdateFunction([]()
 				{
 					return gui::bind(std::to_string(integer), sf::Color());
@@ -155,13 +132,13 @@ void main()
 				.setCharacterSize(30))
 
 			.add("Btn", gui::Button(gui::Icon(buttonTex, true))
-				.bindAction(gui::Button::Released, std::bind([](const int amount)
+				.bindAction(gui::Released, std::bind([](const int amount)
 				{
 					integer += amount;
 				}, -AMOUNT))
-				.bindAction(gui::Button::PredicatesUnfulfilled, [&]()
+				.bindAction(gui::PredicatesUnfulfilled, [&]()
 				{
-					main.at("First Window").setActive(true);
+					main.at("First Window", false).setActive(true);
 				})
 				.setPredicates(gui::Button::PredicateArray{ std::bind(canChange, -LIMIT, true) })
 				.setPredicateMessage(gui::HoverMessage(gui::bind("Integer is less than ", sf::Color::White) + 
@@ -169,10 +146,10 @@ void main()
 					font, 15))
 				.setName(std::move(gui::TextArea("int -= " + 
 					std::to_string(AMOUNT), font, 18).setColor(sf::Color(175, 45, 65, 220))))
-				.setPosition(30, 100))), false);
+				.setPosition(30, 100))), true);
 
-	window.setVerticalSyncEnabled(true);
-
+	main.emplace("Third Window", gui::Window(main.at("Second Window", true)).setBackgroundColor(sf::Color(255, 255, 200)).setPosition(45, 80), false);
+	
 	while (running)
 	{
 		sf::Event event;

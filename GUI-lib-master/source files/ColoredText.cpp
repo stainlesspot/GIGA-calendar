@@ -31,7 +31,8 @@ namespace gui
 {
 	gui::ColoredText::operator ColoredString()
 	{
-		return ColoredString(m_text.empty() ? "" : m_text.front()->first, m_text.empty() ? sf::Color() : m_text.front()->second);
+		return ColoredString(m_text.empty() ? "" : m_text.front()->first,
+			m_text.empty() ? std::make_pair(sf::Color(), sf::Text::Regular) : m_text.front()->second);
 	}
 
 	void ColoredText::stringToArrangedText(unique_ptr_vector<sf::Text>& target,
@@ -39,14 +40,15 @@ namespace gui
 		const unsigned char characterSize, sf::Vector2f& addPosition,
 		const float TEXT_HEIGHT)
 	{
-		std::string buffer;
+		sf::String buffer;
 		for (auto it = str.first.begin(), end = str.first.end(); it != end; ++it)
 		{
-			if (*it != '\n') buffer.push_back(*it);
+			if (*it != '\n') buffer += *it;
 			else
 			{
 				target.emplace_back(new sf::Text(buffer, font, characterSize));
-				target.back()->setColor(str.second);
+				target.back()->setColor(str.second.first);
+				target.back()->setStyle(str.second.second);
 				target.back()->setPosition(addPosition);
 				addPosition.x = 0;
 				addPosition.y += TEXT_HEIGHT + LINE_SPACING;
@@ -54,10 +56,11 @@ namespace gui
 			}
 		}
 
-		if (!buffer.empty())
+		if (!buffer.isEmpty())
 		{
 			target.emplace_back(new sf::Text(buffer, font, characterSize));
-			target.back()->setColor(str.second);
+			target.back()->setColor(str.second.first);
+			target.back()->setStyle(str.second.second);
 			target.back()->setPosition(addPosition);
 			addPosition.x += target.back()->getGlobalBounds().width + 1.0f;
 		}
@@ -108,52 +111,58 @@ namespace gui
 		}
 	}
 
-	ColoredText bind(const std::string& string, const sf::Color& color)
+	ColoredText bind(const sf::String& string, const sf::Color& color, const sf::Text::Style style)
 	{
 		ColoredText returnValue;
-		if (!string.empty()) returnValue.m_text.emplace_back(new ColoredString(string, color));
+		if (!string.isEmpty()) returnValue.m_text.emplace_back(new ColoredString(string, std::make_pair(color, style)));
 		return returnValue;
 	}
 
-	ColoredText& operator+(ColoredText& lhs, const ColoredText& rhs)
+	ColoredText operator+(const ColoredText& lhs, const ColoredText& rhs)
 	{
+		ColoredText returnValue(lhs);
 		for (auto it = rhs.m_volatileText.begin(), end = rhs.m_volatileText.end(); it != end; ++it)
-			lhs.m_volatileText.emplace(std::move(std::make_pair(it->first + lhs.m_text.size(), it->second)));
+			returnValue.m_volatileText.emplace(std::move(std::make_pair(it->first + returnValue.m_text.size(), it->second)));
 		for (auto it = rhs.m_text.begin(), end = rhs.m_text.end(); it != end; ++it)
-			lhs.m_text.emplace_back(*it);
-		return lhs;
+			returnValue.m_text.emplace_back(*it);
+		return returnValue;
 	}
 
-	ColoredText& operator+(ColoredText& lhs, ColoredText&& rhs)
+	ColoredText operator+(const ColoredText& lhs, ColoredText&& rhs)
 	{
+		ColoredText returnValue(lhs);
 		for (auto it = rhs.m_volatileText.begin(), end = rhs.m_volatileText.end(); it != end; ++it)
-			lhs.m_volatileText.emplace(std::move(std::make_pair(it->first + lhs.m_text.size(), std::move(it->second))));
+			returnValue.m_volatileText.emplace(std::move(std::make_pair(it->first + returnValue.m_text.size(), std::move(it->second))));
 		for (auto it = rhs.m_text.begin(), end = rhs.m_text.end(); it != end; ++it)
-			lhs.m_text.emplace_back(std::move(*it));
+			returnValue.m_text.emplace_back(std::move(*it));
+		return returnValue;
+	}
+
+	ColoredText operator+(const ColoredText& lhs, const ColoredString& rhs)
+	{
+		ColoredText returnValue(lhs);
+		returnValue.m_text.emplace_back(new ColoredString(rhs));
 		return lhs;
 	}
 
-	ColoredText& operator+(ColoredText& lhs, const ColoredString& rhs)
+	ColoredText operator+(const ColoredText& lhs, ColoredString&& rhs)
 	{
-		lhs.m_text.emplace_back(new ColoredString(rhs));
-		return lhs;
+		ColoredText returnValue(lhs);
+		returnValue.m_text.emplace_back(new ColoredString(std::move(rhs)));
+		return returnValue;
 	}
 
-	ColoredText& operator+(ColoredText& lhs, ColoredString&& rhs)
+	ColoredText operator+(const ColoredText& lhs, const std::function<ColoredText()>& rhs)
 	{
-		lhs.m_text.emplace_back(new ColoredString(std::move(rhs)));
-		return lhs;
+		ColoredText returnValue(lhs);
+		returnValue.m_volatileText.insert(std::make_pair(lhs.m_text.size(), rhs));
+		return returnValue;
 	}
 
-	ColoredText& operator+(ColoredText& lhs, const std::function<ColoredText()>& rhs)
+	ColoredText operator+(const ColoredText& lhs, std::function<ColoredText()>&& function)
 	{
-		lhs.m_volatileText.insert(std::make_pair(lhs.m_text.size(), rhs));
-		return lhs;
-	}
-
-	ColoredText& operator+(ColoredText& lhs, std::function<ColoredText()>&& rhs)
-	{
-		lhs.m_volatileText.emplace(std::move(std::make_pair(lhs.m_text.size(), std::move(rhs))));
-		return lhs;
+		ColoredText returnValue(lhs);
+		returnValue.m_volatileText.emplace(std::move(std::make_pair(lhs.m_text.size(), std::move(function))));
+		return returnValue;
 	}
 }

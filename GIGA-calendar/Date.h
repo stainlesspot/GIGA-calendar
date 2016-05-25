@@ -1,23 +1,68 @@
 #pragma once
+
+#include <cstdint>
+
+/*enum Month
+{
+	January = 1,
+	February,
+	March,
+	April,
+	May,
+	June,
+	July,
+	August,
+	September,
+	October,
+	November,
+	December
+};*/
+
 class Date {
 private:
-	unsigned char day;
-	unsigned char month;
-	unsigned short year;
+	uint8_t day;
+	uint8_t month;
+	short year;
+
+	static const unsigned short monthToDays[13];
+
+	const bool isLeapYear() const;
 
 public:
 	Date();
-	Date(const unsigned char day, const unsigned char month, const unsigned short year);
-	Date(const unsigned long long days);
-	//~Date();
+	Date(const unsigned short year, const uint8_t month, const uint8_t day);
+	Date(const unsigned long long days, const bool addUTCEpoch = false);
 
-	/*virtual*/ bool isValid();
-	//	if month is [1,3,5,7,8,10 or 12], maxDay is 31;
-	//	if month is [4,6,9 or 11], maxDay is 30;
-	//	if month is 2 and year is leap, maxDay is 29;
-	//	if month is 2 and year is not leap, maxDay is 28.
+	Date(const Date&) = default;
+	Date(Date&&) = default;
+	virtual ~Date() = default;
 
-	virtual const Date operator +(const Date&) const;// (?)
-	virtual const Date operator -(const Date&) const;
-	virtual Date& operator =(const Date&);
+	static Date now();
+
+	const unsigned long long asDays() const;
+
+	Date operator +(const unsigned long long days) const;
+	Date operator +(const Date&) const;
+	
+	Date operator -(const unsigned long long days) const;
+	Date operator -(const Date&) const;
+
+
+	void operator =(const unsigned long long days);
+
+	Date& operator =(const Date&) = default;
+	Date& operator =(Date&&) = default;
+
+	Date& setYear(const unsigned short year);
+	Date& setMonth(const uint8_t month);
+	Date& setDay(const uint8_t day);
+
+	const unsigned short getYear() const;
+	const uint8_t getMonth() const;
+	const uint8_t getDay() const;
+
+	const uint8_t getDayOfWeek() const;
+
+
+
 };

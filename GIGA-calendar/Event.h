@@ -8,7 +8,7 @@
 //	For example staff meetings in a company could be viewed as an Event which repeat every month.
 class Event : public Activity {
 private:
-	Timestamp end;	//	date at which the event ends, default = 1 hour after start;
+//	Timestamp end;	//	date at which the event ends, default = 1 hour after start;
 	std::string name;//	string which represents the name of the Event,
 	//								default;
 	std::string location;
@@ -21,8 +21,8 @@ public:
 	Event(const Event&);
 	~Event();
 
-	Event& setStart(const Timestamp&);
-	Event& setEnd(const Timestamp&);
+//	Event& setStart(const Timestamp&);
+//	Event& setEnd(const Timestamp&);
 	Event& setName(const std::string&);
 	Event& setLocation(const std::string&);
 

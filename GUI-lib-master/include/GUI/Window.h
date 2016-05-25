@@ -97,6 +97,7 @@ namespace gui
 
 		const sf::Vector2f& getPosition()const;
 		const bool isMovable()const;
+		const bool isBeingMoved()const;
 
 		Window& setPosition(const sf::Vector2f& position);
 		Window& setPosition(const float x, const float y);
@@ -127,11 +128,11 @@ namespace gui
 		const sf::Sprite& background()const;
 
 	private:
-		sf::Sprite                                          m_background;
-		ordered_map<Interactive>                            m_elements;
-		std::unique_ptr<TransparencyMap>                    m_transparency = nullptr;
-		bool                                                m_movable = false, m_active = true, m_closed = false;
-		std::unique_ptr<sf::Vector2f>                       m_mouseDragOffset = nullptr;
+		sf::Sprite                       m_background;
+		ordered_map<Interactive>         m_elements;
+		std::unique_ptr<TransparencyMap> m_transparency = nullptr;
+		bool                             m_movable = false, m_active = true, m_closed = false;
+		std::unique_ptr<sf::Vector2f>    m_mouseDragOffset = nullptr;
 	};
 }
 

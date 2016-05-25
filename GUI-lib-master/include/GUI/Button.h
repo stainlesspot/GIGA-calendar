@@ -35,6 +35,28 @@
 #include "TextArea.h"
 #include "Icon.h"
 
+namespace gui
+{
+	enum Event
+	{
+		Pressed,
+		Released,
+		PredicatesFulfilled,
+		PredicatesUnfulfilled
+	};
+}
+
+namespace std
+{
+	template <> struct hash<gui::Event>
+	{
+		size_t operator()(const gui::Event& key) const
+		{
+			return size_t(key);
+		}
+	};
+}
+
 namespace gui 
 {
 	class Button : public Icon
@@ -47,21 +69,13 @@ namespace gui
 			PressedDown
 		};
 
-		enum Event
-		{
-			Pressed,
-			Released,
-			PredicatesFulfilled,
-			PredicatesUnfulfilled
-		};
-
 		typedef std::vector<std::function<const bool()>>(PredicateArray);
 
 		Button(const Icon& visual);
 		Button(Icon&& visual);
 		Button(const Button& copy);
 		Button(Button&& temp) = default;
-		Button() = default;
+		Button();
 		~Button() = default;
 
 		virtual std::unique_ptr<Interactive> copy()const override;
@@ -71,11 +85,12 @@ namespace gui
 		virtual const bool input(const sf::Event& event)override;
 		using Icon::contains;
 		
-		const std::shared_ptr<const HoverMessage> getMessage()const override;
+		const std::shared_ptr<HoverMessage> getMessage()const override;
 
+		virtual const bool isActive()const;
 		virtual const State getState()const;
-		const std::shared_ptr<const HoverMessage> getPredicateMessage()const;
-		const std::shared_ptr<const TextArea> getName()const;
+		const std::shared_ptr<HoverMessage> getPredicateMessage()const;
+		const std::shared_ptr<TextArea> getName()const;
 
 		virtual Button& setPosition(const float x, const float y)override;
 		virtual Button& setPosition(const sf::Vector2f& position)override;
@@ -83,6 +98,7 @@ namespace gui
 		Button& setMessage(const HoverMessage& message)override;
 		Button& setMessage(HoverMessage&& tempMessage)override;
 		Button& setTexture(const sf::Texture& texture, const bool transparencyCheck = false)override;
+		Button& setColor(const sf::Color& color)override;
 
 		Button& setName(const TextArea& name);
 		Button& setName(TextArea&& nameTemp);
@@ -94,6 +110,10 @@ namespace gui
 		Button& setPredicates(PredicateArray&& predicates);
 		Button& bindAction(const Event event, const std::function<void()>& action);
 		Button& bindAction(const Event event, std::function<void()>&& action);
+		Button& resetShader(const std::string& GLSLCode);
+		Button& resetShader();
+
+		static const std::string& getDefaultStateShader();
 
 	protected:
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states)const override;
@@ -110,11 +130,7 @@ namespace gui
 		TimePoint                               m_timeOfLastPredicateCheck;
 		State                                   m_state = Idle;
 		mutable bool                            m_predicatesFulfilled = true;
-
-		static const bool loadShader();
-
-		static const bool shaderLoadSuccessful;
-		static sf::Shader grayscaleShader;
+		std::shared_ptr<sf::Shader>             m_stateShader = nullptr;
 
 		friend class CheckBox;
 	};

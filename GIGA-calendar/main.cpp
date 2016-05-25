@@ -5,16 +5,18 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <GUI/Button.h>
-#include <GUI/WindowManager.h>
-#include <GUI/FPSMeter.h>
+#include <GUI/Gui.h>
 
-#include "Calendar.h"
-#include "Time.h"
+#include "MainWindow.h"
+#include "Resources.h"
+
+/*#include "Calendar.h"
+#include "DateTime.h"
 
 
 
-int main()
+
+void main()
 {
 	sf::VideoMode windowResolution = sf::VideoMode::getDesktopMode();
 	
@@ -24,31 +26,52 @@ int main()
 	
 	sf::Font fontArial;
 	fontArial.loadFromFile("arial.ttf");
-	
-	const unsigned char fpsmCharSize = 16, windowMargin = 1;
 
-	int kon(2);
-	//std::cout << kon;
-	std::cout << 2.2f;
+	const uint8_t fpsmCharSize = 16, textCharSize = 20, windowMargin = 1;
+	
 	gui::WindowManager wm;
 
 	sf::Texture t, t2;
 	sf::Image i, i2;
 	
+
 	i.create((windowResolution.width - 2 * windowMargin) * 2 / 3, windowResolution.height - 2 * windowMargin, sf::Color::White);
 	t.loadFromImage(i);
+
+
+	Time tim(7655);
+
+	//gui::Button().
+
 
 	wm.emplace("dateCalendar", gui::Window()
 		.setBackgroundTexture(t)
 		.setPosition(windowMargin, windowMargin)
-		.setMovable(false), true);
+		.setMovable(false)
 
-	gui::Duration;
-	gui::Internals::timeSinceStart();
+		.add("timeTextArea", gui::TextArea("Time tim: " + std::to_string(tim.getHour()) + ':' + std::to_string(tim.getMinute()) + ':' + std::to_string(tim.getSecond()) + "\n", fontArial, textCharSize)
+			.setPosition(2, 0)
+			.setUpdateFunction([]()
+			{
+				//Time timati = Time::now();
+				//Date doni = Date::now();
+				DateTime doni(DateTime::now());
+
+				return gui::bind("Current time - " + std::to_string(doni.getHour()) + ':' + std::to_string(doni.getMinute()) + ':' + std::to_string(doni.getSecond()) + '\n' +
+					"Current date: " + std::to_string(doni.getYear()) + '-' + std::to_string(doni.getMonth()) + '-' + std::to_string(doni.getDay()) + '\n'
+					,sf::Color::Black);
+			})
+			.setColor(sf::Color::Black)),true);
+
+//	gui::Duration;
+//	gui::Internals::timeSinceStart(); 
+	
 
 
 	i2.create((windowResolution.width - 2 * windowMargin) / 3, windowResolution.height - 2 * windowMargin, sf::Color(40, 255, 40, 255));
 	t2.loadFromImage(i2);
+	//t2.loadFromFile("grass.png");
+	
 	wm.emplace("activityMenu", gui::Window()
 		.setBackgroundTexture(t2)
 		.setPosition((windowResolution.width - 2 * windowMargin) * 2 / 3 + windowMargin, windowMargin)
@@ -60,8 +83,6 @@ int main()
 
 	window.setFramerateLimit(60);
 
-	char* array = new char[100];
-	
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -78,19 +99,18 @@ int main()
 				break;
 			}
 		}
-/*		time_t today(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
-		std::chrono::time_point<std::chrono::system_clock> s;
-		std::chrono::system_clock::duration;
-*/		Time t(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-/*		time(&today);
-		ctime_s(array, 100, &today);
-		std::cout << array;
-*/
-		std::cout << "Time t : {" << t.getHour() << ':' << t.getMinute() << ':' << t.getSecond() << "}\n";
+
 		window.clear(sf::Color(150, 150, 150, 255));
 		window.draw(wm);
 		window.display();
 	}
+}*/
 
-	return 0;
+
+void main() {
+	Resources::load();
+	MainWindow mainWindow;
+	mainWindow.prepare();
+	mainWindow.initialize();
 }
+

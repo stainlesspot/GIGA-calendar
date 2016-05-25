@@ -42,7 +42,7 @@ namespace gui
 	{
 		friend class Button;
 	public:
-		TextArea(const std::string& text, const sf::Font& font, const unsigned char characterSize = 13);
+		TextArea(const sf::String& text, const sf::Font& font, const unsigned char characterSize = 13);
 		TextArea(const TextArea& copy);
 		TextArea(TextArea&& temp) = default;
 		TextArea() = default;
@@ -62,6 +62,8 @@ namespace gui
 		const sf::Font& getFont()const;
 		const unsigned char getCharacterSize()const;
 		const sf::Color& getColor()const;
+		const sf::String& getText()const;
+		const sf::Text::Style getStyle()const;
 
 		TextArea& clearMessage()override;
 		TextArea& setMessage(const HoverMessage& message)override;
@@ -69,10 +71,11 @@ namespace gui
 		TextArea& setPosition(const float x, const float y)override;
 		TextArea& setPosition(const sf::Vector2f& position)override;
 
-		TextArea& setText(const ColoredString& text)const;
+		TextArea& setStyle(const sf::Text::Style style)const;
+		TextArea& setText(const sf::String& text)const;
 		TextArea& setFont(const sf::Font& font);
 		TextArea& setCharacterSize(const unsigned char characterSize);
-		TextArea& setColor(const sf::Color& color);
+		TextArea& setColor(const sf::Color& color)const;
 		TextArea& setUpdateFunction(const std::function<ColoredString()>& func);
 		TextArea& setUpdateFunction(std::function<ColoredString()>&& func);
 		

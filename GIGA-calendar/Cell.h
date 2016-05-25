@@ -3,6 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <GUI/Button.h>
+
+#include "Date.h"
 #include "Event.h"
 #include "Task.h"
 
@@ -16,20 +19,17 @@
 //	Clicking on a cell highlights (selects) her, and brings upon the event menu.
 //	There can only be one selected cell. 
 //	On default the present day is selected.
-class Cell {
+class Cell : public gui::Button{
 
 private:
-	Point position;
-	sf::RectangleShape shape;
-	Date date;
 	std::vector<Activity> activities;
 
 public:
-	Cell();
-	Cell(const Date&, const std::vector<Activity>& v = std::vector<Activity>(0));
-	Cell(const Cell&);
+	Cell(const Date&);
 	
-	Cell& setPosition(const Point&);
-	Cell& setShape(const sf::RectangleShape&);
-	
+	Cell() = default;
+	Cell(const Cell&) = default;
+	Cell(Cell&&) = default;
+	~Cell() = default;
+
 };

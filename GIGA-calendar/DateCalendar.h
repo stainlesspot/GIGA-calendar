@@ -5,22 +5,31 @@
 
 #include "Row.h"
 
-class DateCalendar : private gui::Window {
+class DateCalendar : public gui::Window {
 private:
 	unsigned int width;
 	unsigned int height;
 
-	sf::Color backgroundTextureColor;
-
 	std::deque<Row> calendar;
 
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
 public:
+	DateCalendar(const sf::Vector2f& position, const unsigned int width, const unsigned int height, const bool isMovable = false);
+
 	DateCalendar() = default;
-	DateCalendar(const sf::Vector2f& position, const unsigned int width, const unsigned int height,
-		const sf::Color& backgroundTextureColor, const bool isMovable);
+	DateCalendar(const DateCalendar&) = default;
+	DateCalendar(DateCalendar&&) = default;
 	~DateCalendar() = default;
 
-	const bool input(const sf::Event& event);
+	std::unique_ptr<gui::Window> copy() const override;
+	std::unique_ptr<gui::Window> move() override;
+
+//	const bool input(const sf::Event& event);
 
 	DateCalendar& prepare();
+
+	DateCalendar& operator =(const DateCalendar&) = default;
+	DateCalendar& operator =(DateCalendar&&) = default;
+
 };
