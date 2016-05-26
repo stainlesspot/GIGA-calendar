@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Calendar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -31,12 +28,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DateTime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Row.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Cell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Settings.cpp">
@@ -53,25 +44,13 @@
     <ClInclude Include="Activity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Cell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Row.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Calendar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Subwindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MainWindow.h">
@@ -100,10 +79,5 @@
     <Font Include="arial.ttf">
       <Filter>Resource Files</Filter>
     </Font>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="grass.png">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>

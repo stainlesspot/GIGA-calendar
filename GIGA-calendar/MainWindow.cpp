@@ -4,14 +4,14 @@
 
 MainWindow::MainWindow()
 	: width(sf::VideoMode::getDesktopMode().width * 2 / 3), height(sf::VideoMode::getDesktopMode().height * 2 / 3),
-	leftSide(sf::Vector2f(Settings::mainWindowPadding, Settings::mainWindowPadding), (width - 2 * Settings::mainWindowPadding) * 2 / 3,
-		height - 2 * Settings::mainWindowPadding), rightSide()
+	dateCalendar(sf::Vector2f(Settings::MainWindow::padding.left, Settings::MainWindow::padding.top), (width - Settings::MainWindow::padding.left - Settings::MainWindow::padding.right ) * 2 / 3,
+		height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom), activityMenu()
 {}
 
 void MainWindow::prepare()
 {
-	leftSide.prepare();
-	windowManager.emplace("dateCalendar", leftSide, true);
+	dateCalendar.prepare();
+	windowManager.emplace("dateCalendar", dateCalendar, true);
 
 }
 
@@ -38,7 +38,7 @@ void MainWindow::initialize()
 			}
 		}
 
-		window.clear(Settings::mainWindowBackgroundColor);
+		window.clear(Settings::MainWindow::backgroundColor);
 		window.draw(windowManager);
 		window.display();
 	}

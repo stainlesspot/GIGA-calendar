@@ -1,16 +1,27 @@
 #include "Resources.h"
 
 sf::Font Resources::arial;
-sf::Texture Resources::calendarCell;
+sf::Texture Resources::DateCalendar::background,
+	Resources::DateCalendar::Cell::background;
 
-void Resources::loadCalendarCell(unsigned int width, unsigned int height)
-{
-	sf::Image i;
-	i.create(width, height, sf::Color::White);
-	calendarCell.loadFromImage(i);
-}
 
 void Resources::load()
 {
 	arial.loadFromFile("arial.ttf");
+}
+
+void Resources::DateCalendar::load(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
+{
+	sf::Image i;
+	i.create(width, height, backgroundColor);
+
+	background.loadFromImage(i);
+}
+
+void Resources::DateCalendar::Cell::load(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
+{
+	sf::Image i;
+	i.create(width, height, backgroundColor);
+
+	background.loadFromImage(i);
 }

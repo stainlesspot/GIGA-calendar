@@ -152,40 +152,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Calendar.cpp" />
-    <ClCompile Include="Cell.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="DateCalendar.cpp" />
     <ClCompile Include="DateTime.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Resources.cpp" />
-    <ClCompile Include="Row.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activity.h" />
     <ClInclude Include="ActivityMenu.h" />
-    <ClInclude Include="Calendar.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="DateCalendar.h" />
     <ClInclude Include="DateTime.h" />
     <ClInclude Include="MainWindow.h" />
-    <ClInclude Include="Cell.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Resources.h" />
-    <ClInclude Include="Row.h" />
     <ClInclude Include="Settings.h" />
-    <ClInclude Include="Subwindow.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="Time.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="arial.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="grass.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

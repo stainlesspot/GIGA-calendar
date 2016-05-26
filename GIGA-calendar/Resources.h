@@ -4,9 +4,20 @@
 
 struct Resources {
 	static sf::Font arial;
-	static sf::Texture calendarCell;
-
-	static void loadCalendarCell(unsigned int width, unsigned int height);
 
 	static void load();
+
+	struct DateCalendar {
+		
+		static sf::Texture background;
+
+		static void load(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor = sf::Color::White);
+
+		struct Cell {
+			static sf::Texture background;
+
+			static void load(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor = sf::Color::White);
+		};
+	};
+
 };

@@ -12,8 +12,8 @@ private:
 	unsigned int height;
 
 	gui::WindowManager windowManager;
-	DateCalendar leftSide;
-	ActivityMenu rightSide;
+	DateCalendar dateCalendar;
+	gui::Window activityMenu;
 
 
 public:
