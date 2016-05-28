@@ -8,8 +8,6 @@
 class Activity {
 private:
 	Time asociatedTime;
-	//	the defining time of the derived classes, it is shown to the user at vertical view.
-	//	for Event it is start time, for Task - deadline.
 	std::string description;
 //	Timestamp* repetition = nullptr;
 	//	the time period which, when elapsed, the Activity repeats,

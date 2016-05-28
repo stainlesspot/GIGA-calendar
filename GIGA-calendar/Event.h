@@ -1,30 +1,39 @@
-#pragma once 
-#include "Activity.h"
-#include "Time.h"
+#pragma once
 
-//	Event is an activity which is certain to happen on a given date.
+#include <string>
+//#include <optional>
+
+#include "DateTime.h"
+
+//	Event is an activity which is supposed to happen on a given date.
 //	For example appointment at the doctor is an Event.
 //	There could also be repetitive Events, which repeat after given time.
 //	For example staff meetings in a company could be viewed as an Event which repeat every month.
-class Event : public Activity {
+class Event {
 private:
-//	Timestamp end;	//	date at which the event ends, default = 1 hour after start;
-	std::string name;//	string which represents the name of the Event,
-	//								default;
-	std::string location;
-	//								string which represents where the Event will be situated in,
-	//								default = unknown (nullptr);
+	DateTime start, end;
+	std::string name, description;
+//	std::optional<DateTime> repetition; 
 
 public:
 	Event();
-	Event(Time start, std::string description);
-	Event(const Event&);
-	~Event();
+	Event(const DateTime& start, const DateTime& end, const std::string& name, const std::string& description);
+	
+	Event(const Event&) = default;
+	Event(Event&&) = default;
+	~Event() = default;
 
-//	Event& setStart(const Timestamp&);
-//	Event& setEnd(const Timestamp&);
+	Event& setStart(const DateTime&);
+	Event& setEnd(const DateTime&);
 	Event& setName(const std::string&);
 	Event& setLocation(const std::string&);
 
-	//const Date getAsociatedDate() const;
+	DateTime getStart();
+	DateTime getEnd();
+	std::string getName();
+	std::string getDescription();
+
+	Event& operator =(const Event&) = default;
+	Event& operator =(Event&&) = default;
+
 };

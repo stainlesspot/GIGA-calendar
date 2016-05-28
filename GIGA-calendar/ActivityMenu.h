@@ -1,6 +1,13 @@
 #pragma once
 
+#include <vector>
+
+#include "Activity.h"
+
 class ActivityMenu {
 private:
-	//TODO
+	std::vector<Activity> activities;
+
+
 };
+
