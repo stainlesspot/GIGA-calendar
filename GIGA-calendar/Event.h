@@ -13,7 +13,7 @@ class Event {
 private:
 	DateTime start, end;
 	std::string name, description;
-//	std::optional<DateTime> repetition; 
+	std::unique_ptr<DateTime> repetition; 
 
 public:
 	Event();
@@ -28,10 +28,10 @@ public:
 	Event& setName(const std::string&);
 	Event& setLocation(const std::string&);
 
-	DateTime getStart();
-	DateTime getEnd();
-	std::string getName();
-	std::string getDescription();
+	DateTime getStart() const;
+	DateTime getEnd() const;
+	std::string getName() const;
+	std::string getDescription() const;
 
 	Event& operator =(const Event&) = default;
 	Event& operator =(Event&&) = default;

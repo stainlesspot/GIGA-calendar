@@ -22,7 +22,6 @@ public:
 	std::unique_ptr<gui::Window> copy() const override;
 	std::unique_ptr<gui::Window> move() override;
 
-//	const bool input(const sf::Event& event);
 
 	DateCalendar& prepare();
 

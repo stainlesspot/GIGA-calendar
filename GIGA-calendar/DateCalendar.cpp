@@ -39,7 +39,7 @@ std::unique_ptr<gui::Window> DateCalendar::move()
 DateCalendar& DateCalendar::prepare()
 {
 	
-	Resources::DateCalendar::load(width, height, Settings::DateCalendar::backgroundColor);
+	Resources::DateCalendar::loadBackground(width, height, Settings::DateCalendar::backgroundColor);
 
 	setBackgroundTexture(Resources::DateCalendar::background);
 
@@ -56,7 +56,7 @@ DateCalendar& DateCalendar::prepare()
 	
 	date = date - date.getDayOfWeek();
 
-	Resources::DateCalendar::Cell::load(cellWidth, cellHeight);
+	Resources::DateCalendar::Cell::loadBackground(cellWidth, cellHeight);
 
 	for (uint8_t row = 0; row < 6; row++)
 		for (uint8_t cell = 0; cell < 7; cell++) {
@@ -66,10 +66,13 @@ DateCalendar& DateCalendar::prepare()
 				.setPosition((cellWidth + Settings::DateCalendar::spaceBetweenCells) * cell + Settings::DateCalendar::padding.left,
 					(cellHeight + Settings::DateCalendar::spaceBetweenRows) * row + Settings::DateCalendar::padding.top)
 				.setName(text.setColor(Settings::DateCalendar::Cell::textColor).setPosition((text.getGlobalBounds().width - cellWidth) / 2 + 8, (text.getGlobalBounds().height - cellHeight / 2)))
-				.setColor(Settings::DateCalendar::Cell::monthColors[date.getMonth()]));
+				.setColor(Settings::DateCalendar::Cell::monthColors[date.getMonth()])
+				.bindAction(gui::Event::Released, [date]() {
+					Resources::DateCalendar::Cell::highlighted.reset(new Date(date));
+				})
+				);
 
 			date = date + 1;
 		}
-	
 	return *this;
 }

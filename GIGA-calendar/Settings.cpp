@@ -32,7 +32,7 @@ const Padding Settings::MainWindow::padding(1),
 const sf::Color Settings::MainWindow::backgroundColor(150, 150, 150, 255),
 	Settings::DateCalendar::backgroundColor(255, 255, 255, 255),
 	Settings::DateCalendar::Cell::textColor(255, 255, 255, 255),
-	Settings::ActivityMenu::backgroundColor(40, 255, 40, 255);
+	Settings::ActivityMenu::backgroundColor(62, 230, 123, 255);
 
 const std::array<sf::Color, 13> Settings::DateCalendar::Cell::monthColors = {
 	sf::Color(255, 255, 255, 255),		//	Base
@@ -40,7 +40,7 @@ const std::array<sf::Color, 13> Settings::DateCalendar::Cell::monthColors = {
 	sf::Color(0, 255, 0, 255),			//	February
 	sf::Color(0, 255, 0, 255),			//	March
 	sf::Color(100, 100, 255, 255),		//	April
-	sf::Color(100, 255, 100, 255),		//	May
+	sf::Color(62, 230, 123, 255),		//	May
 	sf::Color(255, 100, 100, 255),		//	June
 	sf::Color(0, 255, 0, 255),			//	July
 	sf::Color(0, 255, 0, 255),			//	August

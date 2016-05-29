@@ -1,27 +1,39 @@
 #include "Resources.h"
+#include <memory>
 
 sf::Font Resources::arial;
 sf::Texture Resources::DateCalendar::background,
-	Resources::DateCalendar::Cell::background;
+	Resources::DateCalendar::Cell::background,
+	Resources::ActivityMenu::background;
 
+std::unique_ptr<Date> Resources::DateCalendar::Cell::highlighted(nullptr);
 
-void Resources::load()
+bool Resources::load()
 {
-	arial.loadFromFile("arial.ttf");
+	return arial.loadFromFile("arial.ttf");
 }
 
-void Resources::DateCalendar::load(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
+bool Resources::DateCalendar::loadBackground(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
 {
 	sf::Image i;
 	i.create(width, height, backgroundColor);
 
-	background.loadFromImage(i);
+	return background.loadFromImage(i);
 }
 
-void Resources::DateCalendar::Cell::load(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
+bool Resources::DateCalendar::Cell::loadBackground(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
 {
 	sf::Image i;
 	i.create(width, height, backgroundColor);
 
-	background.loadFromImage(i);
+	return background.loadFromImage(i);
+}
+
+bool Resources::ActivityMenu::loadBackground(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
+{
+	sf::Image i;
+	i.create(width, height, backgroundColor);
+
+	return background.loadFromImage(i);
+
 }
