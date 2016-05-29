@@ -35,19 +35,19 @@ const sf::Color Settings::MainWindow::backgroundColor(150, 150, 150, 255),
 	Settings::ActivityMenu::backgroundColor(62, 230, 123, 255);
 
 const std::array<sf::Color, 13> Settings::DateCalendar::Cell::monthColors = {
-	sf::Color(255, 255, 255, 255),		//	Base
-	sf::Color(0, 255, 0, 255),			//	January 
-	sf::Color(0, 255, 0, 255),			//	February
-	sf::Color(0, 255, 0, 255),			//	March
-	sf::Color(100, 100, 255, 255),		//	April
-	sf::Color(62, 230, 123, 255),		//	May
-	sf::Color(255, 100, 100, 255),		//	June
-	sf::Color(0, 255, 0, 255),			//	July
-	sf::Color(0, 255, 0, 255),			//	August
-	sf::Color(0, 255, 0, 255),			//	September
-	sf::Color(0, 255, 0, 255),			//	October
-	sf::Color(0, 255, 0, 255),			//	Novermber
-	sf::Color(0, 255, 0, 255)			//	December
+	sf::Color(255, 255, 255, 255),			//	Base
+	sf::Color(204, 153, 102, 255),			//	January 
+	sf::Color(198, 175, 181, 255),			//	February
+	sf::Color(191, 233, 227, 255),			//	March
+	sf::Color(224, 73, 81, 255),			//	April
+	sf::Color(123, 182, 97, 255),			//	May
+	sf::Color(255, 216, 88, 255),			//	June
+	sf::Color(230, 178, 184, 255),			//	July
+	sf::Color(243, 130, 53, 255),			//	August
+	sf::Color(89, 104, 174, 255),			//	September
+	sf::Color(152, 180, 212, 255),			//	October
+	sf::Color(220, 41, 66, 255),			//	Novermber
+	sf::Color(47, 130, 146, 255)			//	December
 };
 
 /*const uint8_t Settings::MainWindow::padding(1),

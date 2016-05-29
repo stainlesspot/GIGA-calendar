@@ -33,6 +33,8 @@ namespace gui
 {
 	class WindowManager final : public sf::Drawable
 	{
+		friend class Window;
+		friend class Hoverable;
 	public:
 		void input(const sf::Event& event);
 
@@ -40,7 +42,7 @@ namespace gui
 		WindowManager& emplace(const std::string& key, Window&& window, const bool fullscreen = false);
 
 		void clear(const bool fullscreen = false);
-		const size_t size(const bool fullscreen = false)const;
+		const size_t count(const bool fullscreen = false)const;
 
 		Window& at(const std::string& key, const bool fullscreen);
 		const Window& at(const std::string& key, const bool fullscreen)const;
@@ -53,8 +55,10 @@ namespace gui
 
 		const bool fullscreenWindowInput(std::vector<std::unique_ptr<gui::Window>>::iterator& window, const sf::Event& event);
 
-		ordered_map<Window> m_windows, m_dialogBoxes;
+		ordered_map<Window>                                                  m_windows, m_dialogBoxes;
 		std::unique_ptr<std::vector<std::unique_ptr<gui::Window>>::iterator> m_currentlyDraggedFullscreenWindow = nullptr;
+
+		static const Hoverable* m_message;
 	};
 }
 
