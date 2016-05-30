@@ -44,12 +44,13 @@ namespace gui
 		HoverMessage(ColoredText&& string, const sf::Font& font, const unsigned char characterSize = 13);
 		HoverMessage(const HoverMessage& copy);
 		HoverMessage(HoverMessage&& temp);
+		~HoverMessage() = default;
 
 		HoverMessage& operator=(const HoverMessage& copy);
 		HoverMessage& operator=(HoverMessage&& temp);
 
 		const sf::Vector2f& getPosition()const override;
-		const sf::Font& getFont()const override;
+		const sf::Font* const getFont()const override;
 		const unsigned char getCharacterSize()const override;
 
 		const sf::FloatRect getGlobalBounds()const;

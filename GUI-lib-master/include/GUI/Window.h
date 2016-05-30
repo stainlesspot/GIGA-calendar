@@ -39,7 +39,7 @@
 namespace gui
 {
 	template <typename StorageType>
-	struct ordered_map
+	struct ordered_map final
 	{
 		ordered_map(const ordered_map& copy);
 		ordered_map(ordered_map&& temp) = default;
@@ -70,7 +70,7 @@ namespace gui
 
 		const bool contains(const sf::Vector2f& point)const;
 		virtual const bool input(const sf::Event& event);
-		void lostFocus();
+		virtual void lostFocus();
 
 		const sf::Vector2f& getPosition()const;
 		const bool isMovable()const;
@@ -87,7 +87,7 @@ namespace gui
 		Window& add(const std::string& key, Interactive&& element);
 		Window& add(const std::string& key, const Interactive& element);
 
-		void clear();
+		virtual void clear();
 
 		Window& setActive(const bool active);
 		const bool isActive();

@@ -21,8 +21,6 @@ MainWindow::MainWindow()
 		.setBackgroundTexture(Resources::ActivityMenu::background)
 		.add("noDateSelectedMessage", noDateMsg.setPosition((amWidth - noDateMsg.getGlobalBounds().width) / 2, (amHeight - noDateMsg.getGlobalBounds().height) / 2));
 
-
-	activityMenu.erase("noDateSelectedMessage");
 }
 
 void MainWindow::prepare()
