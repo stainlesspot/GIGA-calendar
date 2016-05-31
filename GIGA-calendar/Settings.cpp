@@ -21,7 +21,9 @@ Padding::Padding(uint16_t top, uint16_t right, uint16_t bottom, uint16_t left)
 {}
 
 
-const uint8_t Settings::DateCalendar::Cell::charSize(35);
+const uint8_t Settings::DateCalendar::Cell::charSize(35),
+	Settings::DateCalendar::MonthScroll::Previous::rightMargin(30),
+	Settings::DateCalendar::MonthScroll::Next::rightMargin(30);
 
 const uint16_t Settings::DateCalendar::spaceBetweenCells(15),
 	Settings::DateCalendar::spaceBetweenRows(10);

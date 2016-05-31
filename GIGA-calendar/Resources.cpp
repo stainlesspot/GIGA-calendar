@@ -4,6 +4,8 @@
 sf::Font Resources::arial;
 sf::Texture Resources::DateCalendar::background,
 	Resources::DateCalendar::Cell::background,
+	Resources::DateCalendar::MonthScroll::Previous::background,
+	Resources::DateCalendar::MonthScroll::Next::background,
 	Resources::ActivityMenu::background;
 
 std::unique_ptr<Date> Resources::DateCalendar::Cell::highlighted(nullptr);
@@ -36,4 +38,14 @@ bool Resources::ActivityMenu::loadBackground(const uint16_t width, const uint16_
 
 	return background.loadFromImage(i);
 
+}
+
+bool Resources::DateCalendar::MonthScroll::Previous::loadBackground()
+{
+	return background.loadFromFile("monthScrollPrevious.png");
+}
+
+bool Resources::DateCalendar::MonthScroll::Next::loadBackground()
+{
+	return background.loadFromFile("monthScrollNext.png");
 }

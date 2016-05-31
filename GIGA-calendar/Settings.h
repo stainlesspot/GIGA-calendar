@@ -26,6 +26,17 @@ struct Settings {
 		static const Padding padding;
 		static const sf::Color backgroundColor;
 
+		struct MonthScroll {
+			struct Previous {
+				static const uint8_t rightMargin;
+			};
+			
+			struct Next {
+				static const uint8_t rightMargin;
+			};
+
+		};
+
 		struct Cell {
 			static const uint8_t charSize;
 			static const sf::Color textColor;

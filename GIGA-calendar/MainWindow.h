@@ -8,8 +8,6 @@
 class MainWindow {
 private:
 
-	sf::Sprite s;
-
 	unsigned int width;
 	unsigned int height;
 
