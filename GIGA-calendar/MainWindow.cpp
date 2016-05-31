@@ -4,9 +4,10 @@
 #include "MainWindow.h"
 #include "Settings.h"
 #include "Resources.h"
+#include "SlideMonth.h"
 
 MainWindow::MainWindow()
-	: width(sf::VideoMode::getDesktopMode().width * 2 / 3), height(sf::VideoMode::getDesktopMode().height * 2 / 3),
+	: width(Settings::MainWindow::width), height(Settings::MainWindow::height),
 	dateCalendar(sf::Vector2f(Settings::MainWindow::padding.left, Settings::MainWindow::padding.top), width * 2 / 3 + ((width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.left,
 		height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom)
 {
@@ -25,7 +26,7 @@ MainWindow::MainWindow()
 
 void MainWindow::prepare()
 {
-	dateCalendar.prepare();
+	dateCalendar.prepare(calendarFrame);
 	windowManager.emplace("dateCalendar", dateCalendar, true);
 	windowManager.emplace("activityMenu", activityMenu, true);
 }
@@ -36,7 +37,10 @@ void MainWindow::initialize()
 	
 	window.setVerticalSyncEnabled(true);
 
-	
+	/*
+	SlideMonth slideDown(false, windowManager.at("dateCalendar", true));
+	slideDown.setDuration(4).setFPS(20);
+	*/
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -56,6 +60,7 @@ void MainWindow::initialize()
 
 		window.clear(Settings::MainWindow::backgroundColor);
 		window.draw(windowManager);
+//		window.draw(slideDown);
 
 		window.display();
 	}

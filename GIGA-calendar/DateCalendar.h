@@ -3,13 +3,15 @@
 #include <GUI/Window.h>
 #include <deque>
 
+#include "Settings.h"
 #include "Resources.h"
+
 
 
 class DateCalendar : public gui::Window {
 
-	typedef Settings::DateCalendar(Settings);
-	typedef Resources::DateCalendar(Resources);
+	typedef Settings::DateCalendar(S);
+	typedef Resources::DateCalendar(R);
 
 private:
 	unsigned int width;
@@ -27,9 +29,9 @@ public:
 	std::unique_ptr<gui::Window> move() override;
 
 
-	void prepare();
+	void prepare(sf::View&);
 
-	void generateRows(Date);
+//	void generateRows(Date);
 
 	DateCalendar& operator =(const DateCalendar&) = default;
 	DateCalendar& operator =(DateCalendar&&) = default;

@@ -11,6 +11,8 @@ private:
 	unsigned int width;
 	unsigned int height;
 
+	sf::View calendarFrame;
+
 	gui::WindowManager windowManager;
 	DateCalendar dateCalendar;
 	gui::Window activityMenu;

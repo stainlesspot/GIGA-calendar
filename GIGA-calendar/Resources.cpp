@@ -42,10 +42,10 @@ bool Resources::ActivityMenu::loadBackground(const uint16_t width, const uint16_
 
 bool Resources::DateCalendar::MonthScroll::Previous::loadBackground()
 {
-	return background.loadFromFile("monthScrollPrevious.png");
+	return background.loadFromFile("resources/arrow_up.png");
 }
 
 bool Resources::DateCalendar::MonthScroll::Next::loadBackground()
 {
-	return background.loadFromFile("monthScrollNext.png");
+	return background.loadFromFile("resources/arrow_down.png");
 }

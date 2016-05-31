@@ -16,7 +16,12 @@ struct Padding {
 
 struct Settings {
 	
+	struct View {
+		static const Padding padding;
+	};
+
 	struct MainWindow {
+		static const uint16_t width, height;
 		static const Padding padding;
 		static const sf::Color backgroundColor;
 	};
@@ -28,11 +33,11 @@ struct Settings {
 
 		struct MonthScroll {
 			struct Previous {
-				static const uint8_t rightMargin;
+				static const uint8_t rightMargin, bottomMargin;
 			};
 			
 			struct Next {
-				static const uint8_t rightMargin;
+				static const uint8_t rightMargin, bottomMargin;
 			};
 
 		};

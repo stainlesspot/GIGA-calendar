@@ -1,7 +1,13 @@
-﻿  MainWindow.cpp
-MainWindow.cpp(20): warning C4244: 'argument': conversion from 'unsigned int' to 'const float', possible loss of data
+﻿  DateCalendar.cpp
+DateCalendar.cpp(54): warning C4244: 'argument': conversion from 'unsigned int' to 'const float', possible loss of data
+DateCalendar.cpp(65): warning C4244: 'argument': conversion from 'unsigned int' to 'const float', possible loss of data
+DateCalendar.cpp(96): warning C4244: 'argument': conversion from 'unsigned int' to 'const float', possible loss of data
+  MainWindow.cpp
+MainWindow.cpp(21): warning C4244: 'argument': conversion from 'unsigned int' to 'const float', possible loss of data
+  Settings.cpp
+  main.cpp
   Generating code
-  1 of 2713 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  1 of 2723 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
@@ -12,11 +18,11 @@ GUI.lib(Icon.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(I
 GUI.lib(TextArea.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(TextArea.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
 GUI.lib(Interactive.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Interactive.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
 GUI.lib(WindowManager.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(WindowManager.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
+GUI.lib(Animation.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Animation.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
 GUI.lib(HoverMessage.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(HoverMessage.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
 GUI.lib(Internals.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Internals.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
 GUI.lib(FadeAnimation.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(FadeAnimation.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
 GUI.lib(TransparencyMap.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(TransparencyMap.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(Animation.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Animation.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
 GUI.lib(TextPane.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(TextPane.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
 GUI.lib(ColoredText.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(ColoredText.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
   GIGA-calendar.vcxproj -> D:\GitHub\GIGA-calendar\Release\GIGA-calendar.exe

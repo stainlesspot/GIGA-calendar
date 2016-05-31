@@ -159,6 +159,7 @@
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="SlideMonth.cpp" />
     <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClInclude Include="DateTime.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="SlideMonth.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Task.h" />
