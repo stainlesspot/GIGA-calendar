@@ -17,6 +17,7 @@ private:
 	unsigned int width;
 	unsigned int height;
 
+
 public:
 	DateCalendar(const sf::Vector2f& position, const unsigned int width, const unsigned int height, const bool isMovable = false);
 
@@ -35,5 +36,11 @@ public:
 
 	DateCalendar& operator =(const DateCalendar&) = default;
 	DateCalendar& operator =(DateCalendar&&) = default;
+
+	DateCalendar& setWidth(const unsigned int width);
+	DateCalendar& setHeight(const unsigned int height);
+	
+	unsigned int getWidth() const;
+	unsigned int getHeight() const;
 
 };

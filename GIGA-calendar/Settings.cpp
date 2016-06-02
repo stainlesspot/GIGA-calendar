@@ -1,25 +1,26 @@
 #include "Settings.h"
 
-Padding::Padding()
-	: Padding(0)
+Spacing::Spacing()
+	: Spacing(0)
 {}
 
-Padding::Padding(uint16_t all)
-	: Padding(all, all, all, all)
+Spacing::Spacing(uint16_t all)
+	: Spacing(all, all, all, all)
 {}
 
-Padding::Padding(uint16_t topAndBottom, uint16_t rightAndLeft)
-	: Padding(topAndBottom, rightAndLeft, topAndBottom, rightAndLeft)
+Spacing::Spacing(uint16_t topAndBottom, uint16_t rightAndLeft)
+	: Spacing(topAndBottom, rightAndLeft, topAndBottom, rightAndLeft)
 {}
 
-Padding::Padding(uint16_t top, uint16_t rightAndLeft, uint16_t bottom)
-	: Padding(top, rightAndLeft, bottom, rightAndLeft)
+Spacing::Spacing(uint16_t top, uint16_t rightAndLeft, uint16_t bottom)
+	: Spacing(top, rightAndLeft, bottom, rightAndLeft)
 {}
 
-Padding::Padding(uint16_t top, uint16_t right, uint16_t bottom, uint16_t left)
+Spacing::Spacing(uint16_t top, uint16_t right, uint16_t bottom, uint16_t left)
 	: top(top), right(right), bottom(bottom), left(left)
 {}
 
+const float Settings::DateCalendar::Cell::shaderDarkening(0.15);
 
 const uint8_t Settings::DateCalendar::Cell::charSize(35),
 	Settings::DateCalendar::MonthScroll::Previous::rightMargin(15),
@@ -32,7 +33,7 @@ const uint16_t Settings::MainWindow::width(1920 * 2 / 3),
 	Settings::DateCalendar::spaceBetweenCells(15),
 	Settings::DateCalendar::spaceBetweenRows(10);
 
-const Padding Settings::View::padding(15, 0),
+const Spacing Settings::View::padding(15, 0),
 	Settings::MainWindow::padding(1),
 	Settings::DateCalendar::padding(100, 50);
 

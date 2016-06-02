@@ -5,30 +5,30 @@
 
 #include <SFML/Graphics.hpp>
 
-struct Padding {
+struct Spacing {
 	uint16_t top, right, bottom, left;
-	Padding();
-	Padding(uint16_t all);
-	Padding(uint16_t topAndBottom, uint16_t rightAndLeft);
-	Padding(uint16_t top, uint16_t rightAndLeft, uint16_t bottom);
-	Padding(uint16_t top, uint16_t right, uint16_t bottom, uint16_t left);
+	Spacing();
+	Spacing(uint16_t all);
+	Spacing(uint16_t topAndBottom, uint16_t rightAndLeft);
+	Spacing(uint16_t top, uint16_t rightAndLeft, uint16_t bottom);
+	Spacing(uint16_t top, uint16_t right, uint16_t bottom, uint16_t left);
 };
 
 struct Settings {
 	
 	struct View {
-		static const Padding padding;
+		static const Spacing padding;
 	};
 
 	struct MainWindow {
 		static const uint16_t width, height;
-		static const Padding padding;
+		static const Spacing padding;
 		static const sf::Color backgroundColor;
 	};
 
 	struct DateCalendar {
 		static const uint16_t spaceBetweenCells, spaceBetweenRows;
-		static const Padding padding;
+		static const Spacing padding;
 		static const sf::Color backgroundColor;
 
 		struct MonthScroll {
@@ -43,6 +43,7 @@ struct Settings {
 		};
 
 		struct Cell {
+			static const float shaderDarkening;
 			static const uint8_t charSize;
 			static const sf::Color textColor;
 			static const std::array<sf::Color, 13> monthColors;

@@ -36,7 +36,7 @@ std::unique_ptr<gui::Window> DateCalendar::move()
 	return std::unique_ptr<gui::Window>(new DateCalendar(std::move(*this)));
 }
 
-void DateCalendar::prepare(sf::View& view)
+void DateCalendar::prepare(sf::View& monthView)
 {
 	//std::cout << "Date : {" << date.getYear() << '-' << int(date.getMonth()) << '-' << int(date.getDay()) << " [" << int(date.getDayOfWeek()) << "]}" << std::endl;
 
@@ -65,15 +65,18 @@ void DateCalendar::prepare(sf::View& view)
 			S::padding.top - S::MonthScroll::Previous::bottomMargin - R::MonthScroll::Previous::background.getSize().y));
 
 
-	/*const unsigned int viewWidth = width - S::padding.left - S::padding.right + Settings::View::padding.left + Settings::View::padding.right,
+
+	const unsigned int viewWidth = width - S::padding.left - S::padding.right + Settings::View::padding.left + Settings::View::padding.right,
 		viewHeight = height - S::padding.top - S::padding.bottom + Settings::View::padding.top + Settings::View::padding.bottom,
 		viewX = viewWidth / 2 + S::padding.left + Settings::MainWindow::padding.left - Settings::View::padding.left,
 		viewY = viewHeight + S::padding.top + Settings::MainWindow::padding.top - Settings::View::padding.top;
 
-	view.setSize(viewWidth, viewHeight);
-	view.setCenter(viewX, viewY);
-	view.setViewport(sf::FloatRect(viewX, viewY, 1, 1));
-*/	
+	monthView.setSize(viewWidth, viewHeight);
+	monthView.setCenter(viewX, viewY);
+	monthView.setViewport(sf::FloatRect(viewX / Settings::MainWindow::width, viewY / Settings::MainWindow::height, 1, 1));
+	
+	
+
 	Date date(Date::now().setDay(1));
 	
 	date = date - date.getDayOfWeek();
@@ -98,11 +101,50 @@ void DateCalendar::prepare(sf::View& view)
 				.setColor(S::Cell::monthColors[date.getMonth()])
 				.bindAction(gui::Event::Released, [date]() {
 				R::Cell::highlighted.reset(new Date(date));
-			}));
+				})
+				.resetShader(
+					   "uniform float state;\
+						uniform bool active;\
+						uniform sampler2D tex;\
+						\
+						void main()\
+						{\
+							vec4 color = texture2D(tex, gl_TexCoord[0].xy) * gl_Color;\
+							if (active)\
+								gl_FragColor = vec4((color.rgb == vec3(1, 1, 1)) ? color.rgb : (color.rgb * (1.0f - (state * " + std::to_string(S::Cell::shaderDarkening) + "f))), color.a);\
+							else\
+							{\
+								float greyValue = color.r * 0.29 + color.g * 0.58 + color.b * 0.13;\
+								gl_FragColor = vec4(greyValue, greyValue, greyValue, color.a);\
+							}\
+						}")
+			);
 
 			date = date + 1;
 		}
 	
+}
+
+DateCalendar & DateCalendar::setWidth(const unsigned int width)
+{
+	this->width = width;
+	return *this;
+}
+
+DateCalendar & DateCalendar::setHeight(const unsigned int height)
+{
+	this->height = height;
+	return *this;
+}
+
+unsigned int DateCalendar::getWidth() const
+{
+	return width;
+}
+
+unsigned int DateCalendar::getHeight() const
+{
+	return height;
 }
 
 /*void DateCalendar::generateRows(Date date)

@@ -26,7 +26,7 @@ MainWindow::MainWindow()
 
 void MainWindow::prepare()
 {
-	dateCalendar.prepare(calendarFrame);
+	dateCalendar.prepare(monthView);
 	windowManager.emplace("dateCalendar", dateCalendar, true);
 	windowManager.emplace("activityMenu", activityMenu, true);
 }
@@ -59,8 +59,14 @@ void MainWindow::initialize()
 		}
 
 		window.clear(Settings::MainWindow::backgroundColor);
+
+		
+		window.setView(window.getDefaultView());
 		window.draw(windowManager);
-//		window.draw(slideDown);
+
+
+	//	window.setView(monthView);
+	//	window.draw();
 
 		window.display();
 	}
