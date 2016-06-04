@@ -16,7 +16,7 @@ struct Spacing {
 
 struct Settings {
 	
-	struct View {
+	struct MonthView {
 		static const Spacing padding;
 	};
 
@@ -26,9 +26,9 @@ struct Settings {
 		static const sf::Color backgroundColor;
 	};
 
-	struct DateCalendar {
+	struct Calendar {
 		static const uint16_t spaceBetweenCells, spaceBetweenRows;
-		static const Spacing padding;
+		static const Spacing margin;
 		static const sf::Color backgroundColor;
 
 		struct MonthScroll {

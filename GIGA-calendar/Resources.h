@@ -11,10 +11,10 @@ struct Resources {
 
 	static bool load();
 
-	struct DateCalendar {
-		static sf::Texture background;
+	struct Calendar {
+		static sf::Texture background, redBackground;
 
-		static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor = sf::Color::White);
+		static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor);
 
 		struct MonthScroll {
 			struct Previous {
@@ -35,14 +35,14 @@ struct Resources {
 
 			static sf::Texture background;
 
-			static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor = sf::Color::White);
+			static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor);
 		};
 	};
 
 	struct ActivityMenu {
 		static sf::Texture background;
 
-		static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor = sf::Color::White);
+		static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor);
 	};
 
 };

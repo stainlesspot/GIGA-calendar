@@ -2,28 +2,34 @@
 #include <memory>
 
 sf::Font Resources::arial;
-sf::Texture Resources::DateCalendar::background,
-	Resources::DateCalendar::Cell::background,
-	Resources::DateCalendar::MonthScroll::Previous::background,
-	Resources::DateCalendar::MonthScroll::Next::background,
+sf::Texture Resources::Calendar::background,
+	Resources::Calendar::redBackground,
+	Resources::Calendar::Cell::background,
+	Resources::Calendar::MonthScroll::Previous::background,
+	Resources::Calendar::MonthScroll::Next::background,
 	Resources::ActivityMenu::background;
 
-std::unique_ptr<Date> Resources::DateCalendar::Cell::highlighted(nullptr);
+std::unique_ptr<Date> Resources::Calendar::Cell::highlighted(nullptr);
 
 bool Resources::load()
 {
 	return arial.loadFromFile("arial.ttf");
 }
 
-bool Resources::DateCalendar::loadBackground(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
+bool Resources::Calendar::loadBackground(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
 {
+	sf::Image i2;
+	i2.create(width, height, sf::Color::Red);
+	redBackground.loadFromImage(i2);
+
+	
 	sf::Image i;
 	i.create(width, height, backgroundColor);
 
 	return background.loadFromImage(i);
 }
 
-bool Resources::DateCalendar::Cell::loadBackground(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
+bool Resources::Calendar::Cell::loadBackground(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
 {
 	sf::Image i;
 	i.create(width, height, backgroundColor);
@@ -40,12 +46,12 @@ bool Resources::ActivityMenu::loadBackground(const uint16_t width, const uint16_
 
 }
 
-bool Resources::DateCalendar::MonthScroll::Previous::loadBackground()
+bool Resources::Calendar::MonthScroll::Previous::loadBackground()
 {
 	return background.loadFromFile("resources/arrow_up.png");
 }
 
-bool Resources::DateCalendar::MonthScroll::Next::loadBackground()
+bool Resources::Calendar::MonthScroll::Next::loadBackground()
 {
 	return background.loadFromFile("resources/arrow_down.png");
 }

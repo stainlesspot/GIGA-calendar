@@ -13,10 +13,13 @@ private:
 
 	sf::View monthView;
 
-	gui::WindowManager windowManager;
-	DateCalendar dateCalendar;
+
+	gui::Window calendarHUD;
+	gui::Window dateCalendar;
+
 	gui::Window activityMenu;
 
+	gui::WindowManager windowManager;
 
 public:
 	MainWindow();
@@ -24,7 +27,7 @@ public:
 	void loadFrom(const std::string& filename);
 	void saveTo(const std::string& filename);
 
-	void prepare();
+//	void prepare();
 	void initialize();
 
 };

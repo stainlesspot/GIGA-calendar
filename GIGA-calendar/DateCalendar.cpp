@@ -41,30 +41,9 @@ void DateCalendar::prepare(sf::View& monthView)
 	//std::cout << "Date : {" << date.getYear() << '-' << int(date.getMonth()) << '-' << int(date.getDay()) << " [" << int(date.getDayOfWeek()) << "]}" << std::endl;
 
 
-	R::loadBackground(width, height, S::backgroundColor);
-
-	setBackgroundTexture(R::background);
-
-
-	R::MonthScroll::Next::loadBackground();
 	
-	unsigned int nextmbX = width - S::MonthScroll::Next::rightMargin - R::MonthScroll::Next::background.getSize().x - S::padding.right;
 
-	add("nextMonth", gui::Button().setTexture(R::MonthScroll::Next::background)
-		.setPosition(nextmbX, S::padding.top - S::MonthScroll::Next::bottomMargin - R::MonthScroll::Next::background.getSize().y)
-		/*.bindAction(gui::Event::Released, [this]() {
-			((gui::Button&)(this->at("row1: cell1"))).;
-			this->erase
-		})*/);
-	
-	
-	R::MonthScroll::Previous::loadBackground();
-
-	add("previousMonth", gui::Button().setTexture(R::MonthScroll::Previous::background)
-		.setPosition(nextmbX - S::MonthScroll::Previous::rightMargin - R::MonthScroll::Previous::background.getSize().x,
-			S::padding.top - S::MonthScroll::Previous::bottomMargin - R::MonthScroll::Previous::background.getSize().y));
-
-
+	/*
 
 	const unsigned int viewWidth = width - S::padding.left - S::padding.right + Settings::View::padding.left + Settings::View::padding.right,
 		viewHeight = height - S::padding.top - S::padding.bottom + Settings::View::padding.top + Settings::View::padding.bottom,
@@ -74,9 +53,9 @@ void DateCalendar::prepare(sf::View& monthView)
 	monthView.setSize(viewWidth, viewHeight);
 	monthView.setCenter(viewX, viewY);
 	monthView.setViewport(sf::FloatRect(viewX / Settings::MainWindow::width, viewY / Settings::MainWindow::height, 1, 1));
+*/	
 	
-	
-
+/*
 	Date date(Date::now().setDay(1));
 	
 	date = date - date.getDayOfWeek();
@@ -122,7 +101,7 @@ void DateCalendar::prepare(sf::View& monthView)
 
 			date = date + 1;
 		}
-	
+*/	
 }
 
 DateCalendar & DateCalendar::setWidth(const unsigned int width)

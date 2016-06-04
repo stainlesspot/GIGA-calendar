@@ -10,8 +10,8 @@
 
 class DateCalendar : public gui::Window {
 
-	typedef Settings::DateCalendar(S);
-	typedef Resources::DateCalendar(R);
+//	typedef Settings::DateCalendar(S);
+//	typedef Resources::DateCalendar(R);
 
 private:
 	unsigned int width;

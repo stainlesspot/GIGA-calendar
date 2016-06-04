@@ -110,7 +110,6 @@ void main()
 void main() {
 	Resources::load();
 	MainWindow mainWindow;
-	mainWindow.prepare();
 	mainWindow.initialize();
 }
 
