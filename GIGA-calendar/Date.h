@@ -20,6 +20,7 @@
 
 class Date {
 private:
+
 	uint8_t day;
 	uint8_t month;
 	short year;
@@ -30,7 +31,7 @@ private:
 
 public:
 	Date();
-	Date(const unsigned short year, const uint8_t month, const uint8_t day);
+	Date(const unsigned short year, const uint8_t month, const uint8_t day, const bool beforeChrist = false);
 	Date(const unsigned long long days, const bool addUTCEpoch = false);
 
 	Date(const Date&) = default;
@@ -47,6 +48,27 @@ public:
 	Date operator -(const unsigned long long days) const;
 	Date operator -(const Date&) const;
 
+	Date& operator ++();
+
+	Date& operator --();
+
+	bool operator ==(const unsigned long long days) const;
+	bool operator ==(const Date&) const;
+
+	bool operator !=(const unsigned long long days) const;
+	bool operator !=(const Date&) const;
+
+	bool operator <(const unsigned long long days) const;
+	bool operator <(const Date&) const;
+	
+	bool operator <=(const unsigned long long days) const;
+	bool operator <=(const Date&) const;
+	
+	bool operator >(const unsigned long long days) const;
+	bool operator >(const Date&) const;
+
+	bool operator >=(const unsigned long long days) const;
+	bool operator >=(const Date&) const;
 
 	void operator =(const unsigned long long days);
 
@@ -62,6 +84,7 @@ public:
 	const uint8_t getDay() const;
 
 	const uint8_t getDayOfWeek() const;
+	const uint8_t getWeekNumber() const;
 
 
 

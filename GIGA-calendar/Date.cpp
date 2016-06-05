@@ -15,7 +15,7 @@ Date::Date()
 	: Date(1970, 1, 1)
 {}
 
-Date::Date(const unsigned short year, const uint8_t month, const uint8_t day)
+Date::Date(const unsigned short year, const uint8_t month, const uint8_t day, const bool beforeChrist)
 	: year(year)
 {
 	setMonth(month);
@@ -24,18 +24,18 @@ Date::Date(const unsigned short year, const uint8_t month, const uint8_t day)
 
 Date::Date(const unsigned long long days, const bool addUTCEpoch)
 {
-	year = 400 * (days / ((400.0f * 365.0f) + 97.0f));
+	year = days ? (400 * (days / ((400.0f * 365.0f) + 97.0f))) : 0;
 	
 	auto remDays = days - year * 365 - year / 4 + year / 100 - year / 400;
 	//std::cout << "remDays: " << remDays << std::endl;
-	month = 1;
+	month = 0;
 	if (addUTCEpoch)
 		year += 1970;
 
 	while (month < 12 && remDays > monthToDays[month] /*+ (month >= 2 ? (isLeapYear() ? 1 : 0) : 0)*/)
 		month++;
 	
-	day = remDays - monthToDays[month - 1];
+	day = days ? (remDays - monthToDays[month - 1]) : 0;
 }
 
 Date Date::now()
@@ -50,37 +50,109 @@ const unsigned long long Date::asDays() const
 }
 
 
-Date Date::operator+(const unsigned long long days) const
+Date Date::operator +(const unsigned long long days) const
 {
 	return Date(asDays() + days);
 }
 
-Date Date::operator+(const Date & d) const
+Date Date::operator +(const Date & d) const
 {
-	return Date(asDays() + d.asDays());
+	return asDays() + d.asDays();
 }
 
-Date Date::operator-(const unsigned long long days) const
+Date Date::operator -(const unsigned long long days) const
 {
 	return Date((asDays() > days) ? asDays() - days : days - asDays());
 }
 
-Date Date::operator-(const Date & d) const
+Date Date::operator -(const Date & d) const
 {
 	return Date((asDays() > d.asDays()) ? asDays() - d.asDays() : d.asDays() - asDays());
 }
 
-void Date::operator=(const unsigned long long days)
+Date & Date::operator++()
+{
+	operator =(*this + 1);
+	return *this;
+}
+
+Date & Date::operator--()
+{
+	operator -(*this - 1);
+	return *this;
+}
+
+bool Date::operator ==(const unsigned long long days) const
+{
+	return asDays() == days;
+}
+
+bool Date::operator ==(const Date & d) const
+{
+	return asDays() == d.asDays();
+}
+
+bool Date::operator !=(const unsigned long long days) const
+{
+	return !operator ==(days);
+}
+
+bool Date::operator !=(const Date & d) const
+{
+	return !operator ==(d);
+}
+
+bool Date::operator<(const unsigned long long days) const
+{
+	return asDays() < days;
+}
+
+bool Date::operator<(const Date & d) const
+{
+	return asDays() < d.asDays();
+}
+
+bool Date::operator <=(const unsigned long long days) const
+{
+	return operator <(days) || operator ==(days);
+}
+
+bool Date::operator <=(const Date & d) const
+{
+	return operator <=(d.asDays());
+}
+
+bool Date::operator >(const unsigned long long days) const
+{
+	return asDays() > days;
+}
+
+bool Date::operator >(const Date & d) const
+{
+	return asDays() > d.asDays();
+}
+
+bool Date::operator >=(const unsigned long long days) const
+{
+	return operator >(days) || operator ==(days);
+}
+
+bool Date::operator >=(const Date & d) const
+{
+	return operator >=(d.asDays());
+}
+
+void Date::operator =(const unsigned long long days)
 {
 	year = 400 * (days / ((400.0f * 365.0f) + 97.0f));
 
 	auto remDays = days - year * 365 - year / 4 + year / 100 - year / 400;
-	month = 1;
+	month = 0;
 	
-	while (month < 12 && remDays > monthToDays[month] + (month >= 2 ? (isLeapYear() ? 1 : 0) : 0))
+	while (month < 12 && remDays > monthToDays[month] /*+ (month >= 2 ? (isLeapYear() ? 1 : 0) : 0)*/)
 		month++;
 
-	setDay(remDays - monthToDays[month - 1]);
+	day = days ? (remDays - monthToDays[month - 1]) : 0;
 }
 
 Date & Date::setYear(const unsigned short year)
@@ -142,4 +214,20 @@ const uint8_t Date::getDayOfWeek() const
 	G = year - F,
 	M = month + 12 * F - 2;
 	return (day + G + (31 * M) / 12 + G / 4 - G / 100 + G / 400 - 1) % 7;
+}
+
+const uint8_t Date::getWeekNumber() const
+{
+	Date firstDay(year, 1, 1);
+	uint8_t firstDayOfWeek = firstDay.getDayOfWeek();
+	Date firstMonday(firstDay + 7 - firstDayOfWeek),
+		thisMonday(*this - getDayOfWeek());
+
+	if (*this < firstMonday)
+		if (firstDayOfWeek < 4)
+			return 1;
+		else
+			return thisMonday.getWeekNumber();
+
+	return (thisMonday - firstMonday).asDays() / 7 + 1 + (firstDayOfWeek < 4);
 }

@@ -108,6 +108,11 @@ void main()
 
 
 void main() {
+
+	Date date(2010, 1, 1);
+
+	std::cout << "Date : {" << date.getYear() << '-' << int(date.getMonth()) << '-' << int(date.getDay()) << " [" << int(date.getDayOfWeek()) << ", w" << int(date.getWeekNumber()) << "]}" << std::endl;
+	
 	Resources::load();
 	MainWindow mainWindow;
 	mainWindow.initialize();

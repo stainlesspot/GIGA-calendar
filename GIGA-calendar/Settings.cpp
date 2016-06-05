@@ -28,12 +28,13 @@ const uint8_t Settings::Calendar::Cell::charSize(35),
 	Settings::Calendar::MonthScroll::Next::rightMargin(0),
 	Settings::Calendar::MonthScroll::Next::bottomMargin(30);
 
-const uint16_t Settings::MainWindow::width(1920 * 2 / 3),
-	Settings::MainWindow::height(1080 * 2 / 3),
+const uint16_t Settings::MainWindow::width(1280),
+	Settings::MainWindow::height(720),
 	Settings::Calendar::spaceBetweenCells(0),
-	Settings::Calendar::spaceBetweenRows(0);
+	Settings::Calendar::spaceBetweenRows(0),
+	Settings::Calendar::scrollDistance(20);
 
-const Spacing Settings::MonthView::padding(15, 0),
+const Spacing Settings::MonthView::margin(15, 0),
 	Settings::MainWindow::padding(1),
 	Settings::Calendar::margin(100, 50);
 

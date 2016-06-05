@@ -12,7 +12,8 @@ private:
 	unsigned int height;
 
 	sf::View monthView;
-
+	Date viewPosition, calendarTop, calendarBottom;
+	
 
 	gui::Window calendarHUD;
 	gui::Window dateCalendar;
