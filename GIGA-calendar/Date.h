@@ -42,11 +42,11 @@ public:
 
 	const unsigned long long asDays() const;
 
-	Date operator +(const unsigned long long days) const;
-	Date operator +(const Date&) const;
+	Date operator +(const long long days) const;
+	Date operator +(const Date&) const; // Duration
 	
-	Date operator -(const unsigned long long days) const;
-	Date operator -(const Date&) const;
+	Date operator -(const long long days) const;
+	Date operator -(const Date&) const; // Duration
 
 	Date& operator ++();
 

@@ -46,22 +46,31 @@ Date Date::now()
 
 const unsigned long long Date::asDays() const
 {
+	unsigned short year = this->year - 1;
 	return year * 365 + year / 4 - year / 100 + year / 400 + monthToDays[month - 1] + day;
 }
 
 
-Date Date::operator +(const unsigned long long days) const
+Date Date::operator +(const long long days) const
 {
+	if (days < 0)
+		return operator -(-days);
+	else if (days == 0)
+		return *this;
 	return Date(asDays() + days);
 }
 
 Date Date::operator +(const Date & d) const
 {
-	return asDays() + d.asDays();
+	return Date(asDays() + d.asDays());
 }
 
-Date Date::operator -(const unsigned long long days) const
+Date Date::operator -(const long long days) const
 {
+	if (days < 0)
+		return operator +(-days);
+	else if (days == 0)
+		return *this;
 	return Date((asDays() > days) ? asDays() - days : days - asDays());
 }
 
@@ -70,15 +79,15 @@ Date Date::operator -(const Date & d) const
 	return Date((asDays() > d.asDays()) ? asDays() - d.asDays() : d.asDays() - asDays());
 }
 
-Date & Date::operator++()
+Date & Date::operator ++()
 {
 	operator =(*this + 1);
 	return *this;
 }
 
-Date & Date::operator--()
+Date & Date::operator --()
 {
-	operator -(*this - 1);
+	operator =(*this - 1);
 	return *this;
 }
 
@@ -102,12 +111,12 @@ bool Date::operator !=(const Date & d) const
 	return !operator ==(d);
 }
 
-bool Date::operator<(const unsigned long long days) const
+bool Date::operator <(const unsigned long long days) const
 {
 	return asDays() < days;
 }
 
-bool Date::operator<(const Date & d) const
+bool Date::operator <(const Date & d) const
 {
 	return asDays() < d.asDays();
 }
@@ -144,7 +153,7 @@ bool Date::operator >=(const Date & d) const
 
 void Date::operator =(const unsigned long long days)
 {
-	year = 400 * (days / ((400.0f * 365.0f) + 97.0f));
+	year = days == 0 ? 0 : 400 * (days / ((400.0f * 365.0f) + 97.0f));
 
 	auto remDays = days - year * 365 - year / 4 + year / 100 - year / 400;
 	month = 0;
