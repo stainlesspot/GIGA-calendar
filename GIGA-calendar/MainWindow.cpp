@@ -62,7 +62,7 @@ void MainWindow::initialize()
 
 	Resources::Calendar::Cell::loadBackground(cellWidth, cellHeight, Settings::Calendar::Cell::monthColors[0]);
 
-	for (uint8_t row = 0; date != end; row++)
+	for (uint8_t row = 0; date != end && row < 60; row++)
 		for (uint8_t cell = 0; cell < 7; cell++) {
 
 			gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
@@ -153,7 +153,7 @@ void MainWindow::initialize()
 	calendarHUD.add("nextMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Next::background)
 		.setPosition(nextmbX, Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Next::bottomMargin - Resources::Calendar::MonthScroll::Next::background.getSize().y)
 		.bindAction(gui::Event::Released, [this, cellHeight]() {
-			monthView.move(0, (cellHeight + Settings::Calendar::spaceBetweenRows) * 1);
+			monthView.move(0, (cellHeight + Settings::Calendar::spaceBetweenRows));
 		})
 		.resetShader(customShader));
 
@@ -223,10 +223,10 @@ void MainWindow::initialize()
 				if (windowManager.at("calendarHUD", true).contains(sf::Vector2f(event.mouseWheelScroll.x, event.mouseWheelScroll.y))) {
 					monthView.move(0, event.mouseWheelScroll.delta * (-int(cellHeight) - Settings::Calendar::spaceBetweenRows));
 					viewPosition = (event.mouseWheelScroll.delta < 0) ? viewPosition + (-event.mouseWheelScroll.delta * 7) : viewPosition - (event.mouseWheelScroll.delta * 7);
-					std::cout << "delta : " << event.mouseWheelScroll.delta << "\n";
+			/*		std::cout << "delta : " << event.mouseWheelScroll.delta << "\n";
 					std::cout << "viewPosition : {" << viewPosition.getYear() << '-' << int(viewPosition.getMonth()) << '-' << int(viewPosition.getDay())
 						<< " [" << int(viewPosition.getDayOfWeek()) << ", w" << int(viewPosition.getWeekNumber()) << "]}" << std::endl;
-				}
+			*/	}
 				break;
 			default:
 				windowManager.input(event);

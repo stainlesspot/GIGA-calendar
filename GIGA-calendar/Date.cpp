@@ -22,20 +22,40 @@ Date::Date(const unsigned short year, const uint8_t month, const uint8_t day, co
 	setDay(day);
 }
 
-Date::Date(const unsigned long long days, const bool addUTCEpoch)
+Date::Date(unsigned long long days, const bool addUnixEpoch)
 {
-	year = days ? (400 * (days / ((400.0f * 365.0f) + 97.0f))) : 0;
-	
-	auto remDays = days - year * 365 - year / 4 + year / 100 - year / 400;
-	//std::cout << "remDays: " << remDays << std::endl;
-	month = 0;
-	if (addUTCEpoch)
-		year += 1970;
 
-	while (month < 12 && remDays > monthToDays[month] /*+ (month >= 2 ? (isLeapYear() ? 1 : 0) : 0)*/)
+	if (addUnixEpoch)
+		days += 719162;
+
+	const unsigned int DAYS_IN_400_YEARS = 400 * 365 + 97;
+
+	year = 400 * (days / DAYS_IN_400_YEARS);
+
+	days %= DAYS_IN_400_YEARS;
+
+	const unsigned int DAYS_IN_100_YEARS = 100 * 365 + 24;
+
+	year += 100 * (days / DAYS_IN_100_YEARS);
+
+	days %= DAYS_IN_100_YEARS;
+
+	const unsigned int DAYS_IN_4_YEARS = 4 * 365 + 1;
+
+	year += 4 * (days / DAYS_IN_4_YEARS);
+
+	days %= DAYS_IN_4_YEARS;
+
+	year += days / 365 + 1;
+
+	days %= 365 + isLeapYear();
+
+	month = 0;
+
+	while (days >= monthToDays[month] + (isLeapYear() && month > 2))
 		month++;
-	
-	day = days ? (remDays - monthToDays[month - 1]) : 0;
+
+	day = days - monthToDays[month - 1] + 1;
 }
 
 Date Date::now()
@@ -46,8 +66,8 @@ Date Date::now()
 
 const unsigned long long Date::asDays() const
 {
-	unsigned short year = this->year - 1;
-	return year * 365 + year / 4 - year / 100 + year / 400 + monthToDays[month - 1] + day;
+	unsigned short cyear = year - 1;
+	return cyear * 365 + cyear / 4 - cyear / 100 + cyear / 400 + monthToDays[month - 1] + (month > 2) + day;
 }
 
 
