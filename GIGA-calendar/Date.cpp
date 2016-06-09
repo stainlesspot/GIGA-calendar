@@ -55,7 +55,7 @@ Date::Date(unsigned long long days, const bool addUnixEpoch)
 	while (days >= monthToDays[month] + (isLeapYear() && month > 2))
 		month++;
 
-	day = days - monthToDays[month - 1] + 1;
+	day = days - monthToDays[month - 1] + !(isLeapYear() && month > 2);
 }
 
 Date Date::now()

@@ -6,6 +6,38 @@
 #include "Resources.h"
 #include "SlideMonth.h"
 
+
+
+ struct MainWindow::Calendar{
+
+	 struct Cell {
+		 uint16_t width, height;
+
+		 sf::Vector2f position;
+
+		 Date date;
+
+		 const std::unique_ptr<gui::Button> asButton() const;
+	 };
+
+	 uint16_t width, height, cellWidth, cellHeight;
+
+	 sf::View view;
+
+	 gui::Window window;
+
+	 uint8_t viewPosition;
+	 Cell first, last;
+
+	 void load(const bool aboveFirst, const uint16_t numberOfRows);
+	 void unload(const bool atFirst, const uint16_t numberOfRows);
+
+ };
+
+ 
+
+
+
 MainWindow::MainWindow()
 	: width(Settings::MainWindow::width), height(Settings::MainWindow::height)
 	/*,dateCalendar(sf::Vector2f(Settings::MainWindow::padding.left, Settings::MainWindow::padding.top), width * 2 / 3 + ((width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.left,
@@ -95,7 +127,7 @@ void MainWindow::initialize()
 				);
 
 
-
+			
 			date = date + 1;
 		}
 
@@ -251,4 +283,89 @@ void MainWindow::initialize()
 
 		window.display();
 	}
+}
+
+void MainWindow::Calendar::load(const bool aboveTop, const uint16_t numberOfRows)
+{
+	if (aboveTop) {
+		cellWidth = (width - 6 * Settings::Calendar::spaceBetweenCells) / 7;
+		cellHeight = (height - 5 * Settings::Calendar::spaceBetweenRows) / 6;
+
+	//	const uint8_t widthLoss = (width - 6 * Settings::Calendar::spaceBetweenCells) % 7;
+
+		Resources::Calendar::Cell::loadBackground(cellWidth, cellHeight, Settings::Calendar::Cell::monthColors[0]);
+
+		Date end(top - numberOfRows * 7);
+
+		while (top != end)
+			for (uint8_t cell = 0; cell < 7; cell++, top--) {
+
+				gui::TextArea text(std::to_string(top.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
+
+				window.add(top.asString(), gui::Button()
+					.setTexture(Resources::Calendar::Cell::background)
+					.setPosition((cellWidth + Settings::Calendar::spaceBetweenCells) * cell + ((cell >= 5) ? widthLoss : 0),
+					(cellHeight + Settings::Calendar::spaceBetweenRows) * (row /*+ start.getWeekNumber() - viewPosition.getWeekNumber()*/))
+					.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - cellWidth) / 2 + 8, (text.getGlobalBounds().height - cellHeight / 2)))
+					.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
+					.bindAction(gui::Event::Released, [date]() {
+					Resources::Calendar::Cell::highlighted.reset(new Date(date));
+				})
+					.resetShader(
+						"uniform float state;\
+						uniform bool active;\
+						uniform sampler2D tex;\
+						\
+						void main()\
+						{\
+							vec4 color = texture2D(tex, gl_TexCoord[0].xy) * gl_Color;\
+							if (active)\
+								gl_FragColor = vec4((color.rgb == vec3(1, 1, 1)) ? color.rgb : (color.rgb * (1.0f - (state * " + std::to_string(Settings::Calendar::Cell::shaderDarkening) + "f))), color.a);\
+							else\
+							{\
+								float greyValue = color.r * 0.29 + color.g * 0.58 + color.b * 0.13;\
+								gl_FragColor = vec4(greyValue, greyValue, greyValue, color.a);\
+							}\
+						}")
+					);
+
+
+
+				date = date + 1;
+			}
+	}
+}
+
+const std::unique_ptr<gui::Button> MainWindow::Calendar::Cell::asButton() const
+{
+
+	std::unique_ptr<gui::Button> toReturn(new gui::Button);
+
+	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
+
+	toReturn->setTexture(Resources::Calendar::Cell::background)
+		.setPosition(position)
+		.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - width) / 2 + 8, (text.getGlobalBounds().height - height / 2)))
+		.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
+		.bindAction(gui::Event::Released, [this]() {
+			Resources::Calendar::Cell::highlighted.reset(new Date(date));
+		})
+		.resetShader(
+		   "uniform float state;\
+			uniform bool active;\
+			uniform sampler2D tex;\
+			\
+			void main()\
+			{\
+				vec4 color = texture2D(tex, gl_TexCoord[0].xy) * gl_Color;\
+				if (active)\
+					gl_FragColor = vec4((color.rgb == vec3(1, 1, 1)) ? color.rgb : (color.rgb * (1.0f - (state * " + std::to_string(Settings::Calendar::Cell::shaderDarkening) + "f))), color.a);\
+				else\
+				{\
+					float greyValue = color.r * 0.29 + color.g * 0.58 + color.b * 0.13;\
+					gl_FragColor = vec4(greyValue, greyValue, greyValue, color.a);\
+				}\
+			}");
+
+		return toReturn;
 }

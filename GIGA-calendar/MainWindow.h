@@ -7,20 +7,23 @@
 #include "ActivityMenu.h"
 class MainWindow {
 private:
+	
+	struct Calendar;
 
 	unsigned int width;
 	unsigned int height;
 
-	sf::View monthView;
-	Date viewPosition, calendarTop, calendarBottom;
-	
+	Calendar calendar;
 
 	gui::Window calendarHUD;
-	gui::Window dateCalendar;
+//	gui::Window dateCalendar;
 
 	gui::Window activityMenu;
 
 	gui::WindowManager windowManager;
+
+
+	
 
 public:
 	MainWindow();

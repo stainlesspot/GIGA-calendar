@@ -42,6 +42,8 @@ public:
 
 	const unsigned long long asDays() const;
 
+	const std::string asString() const;
+
 	Date operator +(const long long days) const;
 	Date operator +(const Date&) const; // Duration
 	
