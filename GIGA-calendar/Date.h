@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 /*enum Month
 {
@@ -29,6 +30,8 @@ private:
 
 	const bool isLeapYear() const;
 
+	const uint8_t getMaxDay() const;
+
 public:
 	Date();
 	Date(const unsigned short year, const uint8_t month, const uint8_t day, const bool beforeChrist = false);
@@ -41,6 +44,8 @@ public:
 	static Date now();
 
 	const unsigned long long asDays() const;
+
+	const std::string asString() const;
 
 	Date operator +(const long long days) const;
 	Date operator +(const Date&) const; // Duration
@@ -70,7 +75,7 @@ public:
 	bool operator >=(const unsigned long long days) const;
 	bool operator >=(const Date&) const;
 
-	void operator =(const unsigned long long days);
+	void operator =(unsigned long long days);
 
 	Date& operator =(const Date&) = default;
 	Date& operator =(Date&&) = default;

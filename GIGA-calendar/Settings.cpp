@@ -22,7 +22,8 @@ Spacing::Spacing(uint16_t top, uint16_t right, uint16_t bottom, uint16_t left)
 
 const float Settings::Calendar::Cell::shaderDarkening(0.15);
 
-const uint8_t Settings::Calendar::Cell::charSize(35),
+const uint8_t Settings::Calendar::preemtiveMonthLoad(1),
+	Settings::Calendar::Cell::charSize(35),
 	Settings::Calendar::MonthScroll::Previous::rightMargin(15),
 	Settings::Calendar::MonthScroll::Previous::bottomMargin(30),
 	Settings::Calendar::MonthScroll::Next::rightMargin(0),

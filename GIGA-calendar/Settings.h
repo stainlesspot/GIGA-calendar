@@ -27,6 +27,7 @@ struct Settings {
 	};
 
 	struct Calendar {
+		static const uint8_t preemtiveMonthLoad;
 		static const uint16_t spaceBetweenCells, spaceBetweenRows, scrollDistance;
 		static const Spacing margin;
 		static const sf::Color backgroundColor;

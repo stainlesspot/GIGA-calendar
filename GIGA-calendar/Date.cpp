@@ -10,6 +10,28 @@ const bool Date::isLeapYear() const
 {
 	return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
+const uint8_t Date::getMaxDay() const{
+	switch (month) {
+	case 1:
+	case 3:
+	case 5:
+	case 7:
+	case 8:
+	case 10:
+	case 12:
+		return 31;
+		break;
+	case 4:
+	case 6:
+	case 9:
+	case 11:
+		return 30;
+		break;
+	case 2:
+		return isLeapYear() ? 29 : 28;
+		break;
+	}
+}
 
 Date::Date()
 	: Date(1970, 1, 1)
@@ -48,14 +70,14 @@ Date::Date(unsigned long long days, const bool addUnixEpoch)
 
 	year += days / 365 + 1;
 
-	days %= 365 + isLeapYear();
+	days %= 365;
 
 	month = 0;
 
 	while (days >= monthToDays[month] + (isLeapYear() && month > 2))
 		month++;
 
-	day = days - monthToDays[month - 1] + 1;
+	day = days - monthToDays[month - 1] + !(isLeapYear() && month > 2);
 }
 
 Date Date::now()
@@ -67,7 +89,12 @@ Date Date::now()
 const unsigned long long Date::asDays() const
 {
 	unsigned short cyear = year - 1;
-	return cyear * 365 + cyear / 4 - cyear / 100 + cyear / 400 + monthToDays[month - 1] + (month > 2) + day;
+	return cyear * 365 + cyear / 4 - cyear / 100 + cyear / 400 + monthToDays[month - 1] + day - !(isLeapYear() && month > 2);
+}
+
+const std::string Date::asString() const
+{
+	return std::to_string(year) + '-' + std::to_string(month) + '-' + std::to_string(day);
 }
 
 
@@ -101,13 +128,31 @@ Date Date::operator -(const Date & d) const
 
 Date & Date::operator ++()
 {
-	operator =(*this + 1);
+	++day;
+	if (day > getMaxDay()) {
+		day = 1;
+		++month;
+		if (month > 12) {
+			month = 1;
+			++year;
+		}
+	}
 	return *this;
 }
 
 Date & Date::operator --()
 {
-	operator =(*this - 1);
+	if (day == 1) {
+		if (month == 1) {
+			--year;
+			month = 12;
+		}
+		else
+			--month;
+		day = getMaxDay();
+	}
+	else
+		--day;
 	return *this;
 }
 
@@ -171,17 +216,36 @@ bool Date::operator >=(const Date & d) const
 	return operator >=(d.asDays());
 }
 
-void Date::operator =(const unsigned long long days)
+void Date::operator =(unsigned long long days)
 {
-	year = days == 0 ? 0 : 400 * (days / ((400.0f * 365.0f) + 97.0f));
+	const unsigned int DAYS_IN_400_YEARS = 400 * 365 + 97;
 
-	auto remDays = days - year * 365 - year / 4 + year / 100 - year / 400;
+	year = 400 * (days / DAYS_IN_400_YEARS);
+
+	days %= DAYS_IN_400_YEARS;
+
+	const unsigned int DAYS_IN_100_YEARS = 100 * 365 + 24;
+
+	year += 100 * (days / DAYS_IN_100_YEARS);
+
+	days %= DAYS_IN_100_YEARS;
+
+	const unsigned int DAYS_IN_4_YEARS = 4 * 365 + 1;
+
+	year += 4 * (days / DAYS_IN_4_YEARS);
+
+	days %= DAYS_IN_4_YEARS;
+
+	year += days / 365 + 1;
+
+	days %= 365;
+
 	month = 0;
-	
-	while (month < 12 && remDays > monthToDays[month] /*+ (month >= 2 ? (isLeapYear() ? 1 : 0) : 0)*/)
+
+	while (days >= monthToDays[month] + (isLeapYear() && month > 2))
 		month++;
 
-	day = days ? (remDays - monthToDays[month - 1]) : 0;
+	day = days - monthToDays[month - 1] + !(isLeapYear() && month > 2);
 }
 
 Date & Date::setYear(const unsigned short year)
@@ -206,16 +270,16 @@ Date & Date::setDay(const uint8_t day)
 	case 8:
 	case 10:
 	case 12:
-		this->day = day % 31 != 0 ? day % 31 : 31;
+		this->day = (day % 31) ? day % 31 : 31;
 		break;
 	case 4:
 	case 6:
 	case 9:
 	case 11:
-		this->day = day % 30 != 0? day % 30 : 30;
+		this->day = (day % 30) ? day % 30 : 30;
 		break;
 	case 2:
-		this->day = isLeapYear() ? (day % 29 ? day % 29 : 29) : (day % 28 ? day % 28 : 28);
+		this->day = isLeapYear() ? ((day % 29) ? day % 29 : 29) : ((day % 28) ? day % 28 : 28);
 		break;
 	}
 	return *this;
