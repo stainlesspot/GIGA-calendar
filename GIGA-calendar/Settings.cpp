@@ -20,7 +20,7 @@ Spacing::Spacing(uint16_t top, uint16_t right, uint16_t bottom, uint16_t left)
 	: top(top), right(right), bottom(bottom), left(left)
 {}
 
-const float Settings::Calendar::Cell::shaderDarkening(0.15);
+const float Settings::Calendar::Cell::shaderDarkening(0.15f);
 
 const uint8_t Settings::Calendar::preemtiveMonthLoad(1),
 	Settings::Calendar::Cell::charSize(35),
@@ -31,8 +31,8 @@ const uint8_t Settings::Calendar::preemtiveMonthLoad(1),
 
 const uint16_t Settings::MainWindow::width(1280),
 	Settings::MainWindow::height(720),
-	Settings::Calendar::spaceBetweenCells(0),
-	Settings::Calendar::spaceBetweenRows(0),
+	Settings::Calendar::spaceBetweenCells(1),
+	Settings::Calendar::spaceBetweenRows(1),
 	Settings::Calendar::scrollDistance(20);
 
 const Spacing Settings::MonthView::margin(15, 0),

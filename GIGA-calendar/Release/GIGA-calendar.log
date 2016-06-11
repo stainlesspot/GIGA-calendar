@@ -1,20 +1,129 @@
-﻿  Generating code
-  0 of 2892 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    34 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-GUI.lib(Hoverable.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Hoverable.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(Window.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Window.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(Icon.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Icon.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(Interactive.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Interactive.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(Button.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Button.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(TextArea.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(TextArea.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(WindowManager.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(WindowManager.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(Animation.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Animation.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(HoverMessage.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(HoverMessage.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(Internals.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Internals.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(FadeAnimation.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(FadeAnimation.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(TransparencyMap.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(TransparencyMap.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(TextPane.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(TextPane.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-GUI.lib(ColoredText.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(ColoredText.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
-  GIGA-calendar.vcxproj -> D:\GitHub\GIGA-calendar\Release\GIGA-calendar.exe
+﻿  MainWindow.cpp
+MainWindow.cpp(11): error C2059: syntax error: '<<'
+MainWindow.cpp(13): error C2011: 'MainWindow::Calendar': 'struct' type redefinition
+  d:\github\giga-calendar\giga-calendar\MainWindow.h(13): note: see declaration of 'MainWindow::Calendar'
+MainWindow.cpp(39): error C2059: syntax error: '>>'
+MainWindow.cpp(45): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(48): error C2448: 'height': function-style initializer appears to be a function definition
+MainWindow.cpp(102): error C2059: syntax error: '<<'
+MainWindow.cpp(106): error C2059: syntax error: '=='
+MainWindow.cpp(110): error C2059: syntax error: '>>'
+MainWindow.cpp(120): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(120): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(120): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(120): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(120): error C2146: syntax error: missing ';' before identifier 'view'
+MainWindow.cpp(121): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(121): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(121): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(121): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(121): error C2086: 'int calendar': redefinition
+  MainWindow.cpp(120): note: see declaration of 'calendar'
+MainWindow.cpp(121): error C2146: syntax error: missing ';' before identifier 'view'
+MainWindow.cpp(122): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(122): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(122): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(122): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(122): error C2086: 'int calendar': redefinition
+  MainWindow.cpp(120): note: see declaration of 'calendar'
+MainWindow.cpp(122): error C2146: syntax error: missing ';' before identifier 'view'
+MainWindow.cpp(131): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(131): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(131): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(131): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(131): error C2146: syntax error: missing ';' before identifier 'setPosition'
+MainWindow.cpp(134): error C2065: 'chWidth': undeclared identifier
+MainWindow.cpp(134): error C2065: 'chHeight': undeclared identifier
+MainWindow.cpp(134): error C2761: 'bool Resources::Calendar::loadBackground(const uint16_t,const uint16_t,const sf::Color &)': member function redeclaration not allowed
+MainWindow.cpp(136): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(136): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(136): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(136): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(136): error C2086: 'int calendarHUD': redefinition
+  MainWindow.cpp(131): note: see declaration of 'calendarHUD'
+MainWindow.cpp(136): error C2146: syntax error: missing ';' before identifier 'setBackgroundTexture'
+MainWindow.cpp(139): error C2761: 'bool Resources::Calendar::MonthScroll::Next::loadBackground(void)': member function redeclaration not allowed
+MainWindow.cpp(141): error C2065: 'chWidth': undeclared identifier
+MainWindow.cpp(141): error C2789: 'nextmbX': an object of const-qualified type must be initialized
+  MainWindow.cpp(141): note: see declaration of 'nextmbX'
+MainWindow.cpp(164): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(164): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(164): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(164): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(164): error C2086: 'int calendarHUD': redefinition
+  MainWindow.cpp(131): note: see declaration of 'calendarHUD'
+MainWindow.cpp(164): error C2146: syntax error: missing ';' before identifier 'add'
+MainWindow.cpp(166): error C2143: syntax error: missing ';' before '{'
+MainWindow.cpp(166): error C2143: syntax error: missing ')' before ';'
+MainWindow.cpp(166): error C2447: '{': missing function header (old-style formal list?)
+MainWindow.cpp(168): error C2059: syntax error: ')'
+MainWindow.cpp(169): error C2059: syntax error: '.'
+MainWindow.cpp(169): error C2059: syntax error: ')'
+MainWindow.cpp(172): error C2761: 'bool Resources::Calendar::MonthScroll::Previous::loadBackground(void)': member function redeclaration not allowed
+MainWindow.cpp(174): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(174): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(174): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(174): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(174): error C2086: 'int calendarHUD': redefinition
+  MainWindow.cpp(131): note: see declaration of 'calendarHUD'
+MainWindow.cpp(174): error C2146: syntax error: missing ';' before identifier 'add'
+MainWindow.cpp(177): error C2143: syntax error: missing ';' before '{'
+MainWindow.cpp(177): error C2143: syntax error: missing ')' before ';'
+MainWindow.cpp(177): error C2447: '{': missing function header (old-style formal list?)
+MainWindow.cpp(179): error C2059: syntax error: ')'
+MainWindow.cpp(180): error C2059: syntax error: '.'
+MainWindow.cpp(180): error C2059: syntax error: ')'
+MainWindow.cpp(190): error C2761: 'bool Resources::ActivityMenu::loadBackground(const uint16_t,const uint16_t,const sf::Color &)': member function redeclaration not allowed
+MainWindow.cpp(194): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(194): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(194): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(194): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(194): error C2146: syntax error: missing ';' before identifier 'setPosition'
+MainWindow.cpp(202): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(202): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(202): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(202): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(202): error C2146: syntax error: missing ';' before identifier 'emplace'
+MainWindow.cpp(203): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(203): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(203): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(203): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(203): error C2086: 'int windowManager': redefinition
+  MainWindow.cpp(202): note: see declaration of 'windowManager'
+MainWindow.cpp(203): error C2146: syntax error: missing ';' before identifier 'emplace'
+MainWindow.cpp(211): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(211): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(211): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(211): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(211): error C2371: 'window': redefinition; different basic types
+  MainWindow.cpp(209): note: see declaration of 'window'
+MainWindow.cpp(211): error C2146: syntax error: missing ';' before identifier 'setVerticalSyncEnabled'
+MainWindow.cpp(226): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(226): error C2371: 'test': redefinition; different basic types
+  MainWindow.cpp(225): note: see declaration of 'test'
+MainWindow.cpp(227): error C3927: '->': trailing return type is not allowed after a non-function declarator
+MainWindow.cpp(227): error C3484: syntax error: expected '->' before the return type
+MainWindow.cpp(227): error C3613: missing return type after '->' ('int' assumed)
+MainWindow.cpp(227): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+MainWindow.cpp(227): error C2371: 'test': redefinition; different basic types
+  MainWindow.cpp(225): note: see declaration of 'test'
+MainWindow.cpp(227): error C2146: syntax error: missing ';' before identifier 'setSize'
+MainWindow.cpp(231): error C2059: syntax error: 'while'
+MainWindow.cpp(232): error C2143: syntax error: missing ';' before '{'
+MainWindow.cpp(232): error C2447: '{': missing function header (old-style formal list?)
+MainWindow.cpp(294): error C2059: syntax error: '}'
+MainWindow.cpp(294): error C2143: syntax error: missing ';' before '}'
+MainWindow.cpp(298): error C2143: syntax error: missing ';' before '{'
+MainWindow.cpp(298): error C2447: '{': missing function header (old-style formal list?)
+MainWindow.cpp(350): error C2059: syntax error: '=='
+MainWindow.cpp(352): error C2143: syntax error: missing ';' before '{'
+MainWindow.cpp(353): error C2065: 'aboveTop': undeclared identifier
+MainWindow.cpp(354): error C2065: 'cellWidth': undeclared identifier
+MainWindow.cpp(355): error C2065: 'cellHeight': undeclared identifier
+MainWindow.cpp(359): error C2065: 'cellWidth': undeclared identifier
+MainWindow.cpp(359): error C2065: 'cellHeight': undeclared identifier
+MainWindow.cpp(361): error C2065: 'top': undeclared identifier
+MainWindow.cpp(361): error C2065: 'numberOfRows': undeclared identifier
+MainWindow.cpp(363): error C2065: 'top': undeclared identifier
+MainWindow.cpp(363): fatal error C1003: error count exceeds 100; stopping compilation
+  Settings.cpp
