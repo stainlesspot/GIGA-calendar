@@ -7,6 +7,8 @@
 #include "ActivityMenu.h"
 class MainWindow {
 private:
+	
+	struct Calendar;
 
 	struct Calendar {
 
