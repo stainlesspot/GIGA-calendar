@@ -86,4 +86,12 @@
       <Filter>Resource Files</Filter>
     </Font>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\arrow_down.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\arrow_up.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

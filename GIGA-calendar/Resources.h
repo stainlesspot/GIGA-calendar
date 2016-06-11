@@ -12,7 +12,7 @@ struct Resources {
 	static bool load();
 
 	struct Calendar {
-		static sf::Texture background, redBackground;
+		static sf::Texture background;
 
 		static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor);
 

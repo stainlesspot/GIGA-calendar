@@ -179,6 +179,10 @@
   <ItemGroup>
     <Font Include="arial.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\arrow_down.png" />
+    <Image Include="resources\arrow_up.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

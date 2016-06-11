@@ -22,6 +22,7 @@ private:
 			const gui::Button& generateButton();
 			const gui::Button& updateButton();
 
+
 			void operator--();
 			void operator++();
 
@@ -29,27 +30,22 @@ private:
 
 		uint16_t width, height;
 
+		Date viewPosition, start;
 		sf::View view;
 
-		gui::Window window;
+		gui::Window window, hud;
 
-		uint8_t viewPosition;
 		Cell first, last;
+
+		void move(const int16_t rows);
 
 		void load(const bool beforeFirst, const uint16_t numberOfRows, const bool calibrate = false);
 		void unload(const bool afterFirst, const uint16_t numberOfRows);
 
 	};
 
-	
-
-	unsigned int width;
-	unsigned int height;
 
 	Calendar calendar;
-
-	gui::Window calendarHUD;
-//	gui::Window dateCalendar;
 
 	gui::Window activityMenu;
 
@@ -59,12 +55,9 @@ private:
 	
 
 public:
-	MainWindow();
-
 	void loadFrom(const std::string& filename);
 	void saveTo(const std::string& filename);
 
-//	void prepare();
 	void initialize();
 
 };

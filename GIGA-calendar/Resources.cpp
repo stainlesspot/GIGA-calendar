@@ -2,8 +2,8 @@
 #include <memory>
 
 sf::Font Resources::arial;
+
 sf::Texture Resources::Calendar::background,
-	Resources::Calendar::redBackground,
 	Resources::Calendar::Cell::background,
 	Resources::Calendar::MonthScroll::Previous::background,
 	Resources::Calendar::MonthScroll::Next::background,
@@ -13,16 +13,11 @@ std::unique_ptr<Date> Resources::Calendar::Cell::highlighted(nullptr);
 
 bool Resources::load()
 {
-	return arial.loadFromFile("arial.ttf");
+	return arial.loadFromFile("resources/arial.ttf");
 }
 
 bool Resources::Calendar::loadBackground(const uint16_t width, const uint16_t height, const sf::Color & backgroundColor)
-{
-	sf::Image i2;
-	i2.create(width, height, sf::Color::Red);
-	redBackground.loadFromImage(i2);
-
-	
+{	
 	sf::Image i;
 	i.create(width, height, backgroundColor);
 

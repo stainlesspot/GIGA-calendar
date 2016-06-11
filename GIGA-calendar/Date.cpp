@@ -20,16 +20,10 @@ const uint8_t Date::getMaxDay() const{
 	case 10:
 	case 12:
 		return 31;
-		break;
-	case 4:
-	case 6:
-	case 9:
-	case 11:
-		return 30;
-		break;
 	case 2:
 		return isLeapYear() ? 29 : 28;
-		break;
+	default:
+		return 30;
 	}
 }
 
@@ -88,13 +82,33 @@ Date Date::now()
 
 const unsigned long long Date::asDays() const
 {
-	unsigned short cyear = year - 1;
+	const unsigned short cyear = year - 1;
 	return cyear * 365 + cyear / 4 - cyear / 100 + cyear / 400 + monthToDays[month - 1] + day - !(isLeapYear() && month > 2);
 }
 
 const std::string Date::asString() const
 {
 	return std::to_string(year) + '-' + std::to_string(month) + '-' + std::to_string(day);
+}
+
+Date & Date::addMonths(const int numberOfMonths)
+{
+	year += numberOfMonths / 12;
+
+	int temp = month + numberOfMonths % 12;
+
+	if (temp > 12) {
+		year++;
+		month = temp % 12 ? temp % 12 : 12;
+	}
+	else if (temp < 1) {
+		year--;
+		month = 12 + numberOfMonths % 12 + month;
+	}
+	else
+		month = temp;
+
+	return *this;
 }
 
 
@@ -256,7 +270,7 @@ Date & Date::setYear(const unsigned short year)
 
 Date & Date::setMonth(const uint8_t month)
 {
-	this->month = month % 12;
+	this->month = month % 12 ? month % 12 : 12;
 	return *this;
 }
 
@@ -298,6 +312,11 @@ const uint8_t Date::getMonth() const
 const uint8_t Date::getDay() const
 {
 	return day;
+}
+
+const Date Date::getMonday() const
+{
+	return Date(*this - getDayOfWeek());
 }
 
 const uint8_t Date::getDayOfWeek() const

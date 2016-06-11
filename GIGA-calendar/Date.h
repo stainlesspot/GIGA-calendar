@@ -3,22 +3,6 @@
 #include <cstdint>
 #include <string>
 
-/*enum Month
-{
-	January = 1,
-	February,
-	March,
-	April,
-	May,
-	June,
-	July,
-	August,
-	September,
-	October,
-	November,
-	December
-};*/
-
 class Date {
 private:
 
@@ -46,6 +30,8 @@ public:
 	const unsigned long long asDays() const;
 
 	const std::string asString() const;
+
+	Date& addMonths(const int numberOfMonths);
 
 	Date operator +(const long long days) const;
 	Date operator +(const Date&) const; // Duration
@@ -88,6 +74,7 @@ public:
 	const uint8_t getMonth() const;
 	const uint8_t getDay() const;
 
+	const Date getMonday() const;
 	const uint8_t getDayOfWeek() const;
 	const uint8_t getWeekNumber() const;
 

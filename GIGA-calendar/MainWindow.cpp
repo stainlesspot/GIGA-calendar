@@ -8,55 +8,31 @@
 
 
 
-
-MainWindow::MainWindow()
-	: width(Settings::MainWindow::width), height(Settings::MainWindow::height)
-	/*,dateCalendar(sf::Vector2f(Settings::MainWindow::padding.left, Settings::MainWindow::padding.top), width * 2 / 3 + ((width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.left,
-		height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom)*/
-{
-	
-}
-
-
 void MainWindow::initialize()
 {
-	//	DateCalendar:
+	//	Calendar:
 
-
-	const unsigned int chWidth = width * 2 / 3 + (width % 3 == 2) - Settings::MainWindow::padding.left,
-		chHeight = height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom;
+	const unsigned int chWidth = Settings::MainWindow::width * 2 / 3 + (Settings::MainWindow::width % 3 == 2) - Settings::MainWindow::padding.left,
+		chHeight = Settings::MainWindow::height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom;
 
 	calendar.width = chWidth - Settings::Calendar::margin.left - Settings::Calendar::margin.right;
 	calendar.height = chHeight - Settings::Calendar::margin.top - Settings::Calendar::margin.bottom;
-
-//	dcWidth -= (dcWidth - 6 * Settings::Calendar::spaceBetweenCells) % 7;
-//	dcHeight -= (dcHeight - 5 * Settings::Calendar::spaceBetweenRows) % 6;
-
-
-	calendar.window.setBackgroundTexture(Resources::Calendar::redBackground);
-	calendar.window.setBackgroundTextureRect(sf::IntRect(0, 0, calendar.width + Settings::MonthView::margin.left + Settings::MonthView::margin.right, calendar.height));
-
-
+	
 
 	Date date(Date::now().setDay(1)), end(date);
 
-	calendar.viewPosition = date.getWeekNumber();
+	calendar.viewPosition = date.getMonday();
 
 	date.setMonth(date.getMonth() - Settings::Calendar::preemtiveMonthLoad);
-	
-//	calendar.viewPosition = date.getWeekNumber() - calendar.viewPosition;
-	
+		
 	end.setMonth(end.getMonth() + Settings::Calendar::preemtiveMonthLoad + 1);
 	--end;
 
-	//std::cout << "date days : " << date.asDays() << "\ndayofweek : " << int(date.getDayOfWeek());
 
-	date = date.asDays() - date.getDayOfWeek();
+	calendar.start = date = date.getMonday();
 
 	calendar.first.date = calendar.last.date = date;
 	
-//	std::cout << "Date : {" << date.getYear() << '-' << int(date.getMonth()) << '-' << int(date.getDay()) << " [" << int(date.getDayOfWeek()) << ", w" << int(date.getWeekNumber()) << "]}" << std::endl;
-
 	const unsigned int cellWidth = (calendar.width - 6 * Settings::Calendar::spaceBetweenCells) / 7,
 		cellHeight = (calendar.height - 5 * Settings::Calendar::spaceBetweenRows) / 6;
 
@@ -74,29 +50,27 @@ void MainWindow::initialize()
 
 	calendar.load(false, end.getWeekNumber() - date.getWeekNumber(), true);
 
-	/*	const unsigned int viewWidth = dcWidth + Settings::MonthView::padding.left + Settings::MonthView::padding.right,
-	viewHeight = dcHeight + Settings::MonthView::padding.top + Settings::MonthView::padding.bottom,
-	viewX = Settings::MainWindow::padding.left + Settings::Calendar::margin.left - Settings::MonthView::margin.left,
-	viewY = Settings::MainWindow::padding.top + Settings::Calendar::margin.top - Settings::MonthView::margin.top;
-	*/
+
+	// Calendar View
 
 	calendar.view.setSize(calendar.width, calendar.height);
-	calendar.view.setCenter(calendar.width / 2, calendar.height / 2 + (calendar.viewPosition - date.getWeekNumber())  * (cellHeight + Settings::Calendar::spaceBetweenRows));
+	calendar.view.setCenter(calendar.width / 2, calendar.height / 2 + (calendar.viewPosition - calendar.start).asDays() / 7  * (cellHeight + Settings::Calendar::spaceBetweenRows));
+
 	calendar.view.setViewport(sf::FloatRect(float(Settings::MainWindow::padding.left + Settings::Calendar::margin.left - Settings::MonthView::margin.left) / Settings::MainWindow::width,
 		float(Settings::MainWindow::padding.top + Settings::Calendar::margin.top - Settings::MonthView::margin.top) / Settings::MainWindow::height,
-		float(calendar.width + Settings::MonthView::margin.left + Settings::MonthView::margin.right) / width,
-		float(calendar.height + Settings::MonthView::margin.top + Settings::MonthView::margin.bottom) / height));
+		float(calendar.width + Settings::MonthView::margin.left + Settings::MonthView::margin.right) / Settings::MainWindow::width,
+		float(calendar.height + Settings::MonthView::margin.top + Settings::MonthView::margin.bottom) / Settings::MainWindow::height));
 
 
 
-	// CalendarHUD:
+	// Calendar Hud:
 
-	calendarHUD.setPosition(Settings::MainWindow::padding.left, Settings::MainWindow::padding.top);
+	calendar.hud.setPosition(Settings::MainWindow::padding.left, Settings::MainWindow::padding.top);
 
 
 	Resources::Calendar::loadBackground(chWidth, chHeight, Settings::Calendar::backgroundColor);
 
-	calendarHUD.setBackgroundTexture(Resources::Calendar::background);
+	calendar.hud.setBackgroundTexture(Resources::Calendar::background);
 
 
 	Resources::Calendar::MonthScroll::Next::loadBackground();
@@ -124,65 +98,66 @@ void MainWindow::initialize()
 							}\
 						}");
 
-	calendarHUD.add("nextMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Next::background)
+	calendar.hud.add("nextMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Next::background)
 		.setPosition(nextmbX, Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Next::bottomMargin - Resources::Calendar::MonthScroll::Next::background.getSize().y)
-		.bindAction(gui::Event::Released, [this, cellHeight]() {
-			calendar.view.move(0, (cellHeight + Settings::Calendar::spaceBetweenRows));
+		.bindAction(gui::Event::Released, [this]() {
+			Date newViewPosition(calendar.viewPosition + 3 * 7);
+			newViewPosition.addMonths(1).setDay(1);
+	
+			calendar.move((newViewPosition - calendar.viewPosition).asDays() / 7);
 		})
 		.resetShader(customShader));
 
 
 	Resources::Calendar::MonthScroll::Previous::loadBackground();
 
-	calendarHUD.add("previousMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Previous::background)
+	calendar.hud.add("previousMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Previous::background)
 		.setPosition(nextmbX - Settings::Calendar::MonthScroll::Previous::rightMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().x,
 			Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Previous::bottomMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().y)
 		.bindAction(gui::Event::Released, [this]() {
-			calendar.view.move(0, -10);
+			Date newViewPosition(calendar.viewPosition + 3 * 7);
+			newViewPosition.addMonths(-1).setDay(1);
+			newViewPosition = newViewPosition.getMonday();
+
+			calendar.move((long long(newViewPosition.asDays()) - long long(calendar.viewPosition.asDays())) / 7);
 		})
 		.resetShader(customShader));
 
 
 
 
+
 	//	ActivityMenu:
 
-	const unsigned int amWidth(width / 3 + ((width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.right),
-		amHeight(height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom);
+	const unsigned int amWidth(Settings::MainWindow::width / 3 + ((Settings::MainWindow::width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.right),
+		amHeight(Settings::MainWindow::height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom);
 
 	Resources::ActivityMenu::loadBackground(amWidth, amHeight, Settings::ActivityMenu::backgroundColor);
 
 	gui::TextArea noDateMsg("No date selected", Resources::arial, 35);
 
-	activityMenu.setPosition(width * 2 / 3, Settings::MainWindow::padding.top)
+	activityMenu.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
 		.setBackgroundTexture(Resources::ActivityMenu::background)
-		.add("noDateSelectedMessage", noDateMsg.setPosition((amWidth - noDateMsg.getGlobalBounds().width) / 2, (amHeight - noDateMsg.getGlobalBounds().height) / 2));
+		.add("noDateSelectedMessage", noDateMsg.setPosition((amWidth - noDateMsg.getGlobalBounds().width) / 2, (amHeight - noDateMsg.getGlobalBounds().height) / 2))
+		.add("FPSmeter", gui::FPSMeter(Resources::arial, Settings::Calendar::Cell::charSize).setColor(sf::Color::White).setPosition(10, 0))
+		.add("viewPosition", gui::TextArea(calendar.viewPosition.asString(), Resources::arial, Settings::Calendar::Cell::charSize).setColor(sf::Color::White).setPosition(10, 200)
+			.setUpdateFunction([this]() {
+				return gui::bind(calendar.viewPosition.asString(), sf::Color::White);
+			}));
 
 
 
 
-
-	windowManager.emplace("calendarHUD", calendarHUD, true);
+	windowManager.emplace("calendarHUD", calendar.hud, true);
 	windowManager.emplace("activityMenu", activityMenu, true);
 
 
 
 
 
-	sf::RenderWindow window(sf::VideoMode(width, height), "GIGA-Calendar", sf::Style::None);
+	sf::RenderWindow window(sf::VideoMode(Settings::MainWindow::width, Settings::MainWindow::height), "GIGA-Calendar", sf::Style::None);
 	
 	window.setVerticalSyncEnabled(true);
-
-	/*
-	SlideMonth slideDown(false, windowManager.at("dateCalendar", true));
-	slideDown.setDuration(4).setFPS(20);
-	*/
-
-
-/*	std::cout << "viewPosition : {" << viewPosition.getYear() << '-' << int(viewPosition.getMonth()) << '-' << int(viewPosition.getDay())
-		<< " [" << int(viewPosition.getDayOfWeek()) << ", w" << int(viewPosition.getWeekNumber()) << "]}" << std::endl;
-*/
-
 
 
 	sf::View test;
@@ -190,6 +165,7 @@ void MainWindow::initialize()
 	test.setSize(3000, 3000);
 
 	bool testMode = false;
+
 
 	while (window.isOpen())
 	{
@@ -206,26 +182,8 @@ void MainWindow::initialize()
 				window.close();
 				break;
 			case sf::Event::MouseWheelScrolled:
-				if (windowManager.at("calendarHUD", true).contains(sf::Vector2f(event.mouseWheelScroll.x, event.mouseWheelScroll.y))) {
-					
-					const int delta = event.mouseWheelScroll.delta;
-
-					calendar.view.move(0, delta * (-int(cellHeight) - Settings::Calendar::spaceBetweenRows));
-
-					if (delta < 0) {
-						calendar.load(false, -delta);
-						calendar.unload(true, -delta);
-					}
-					else {
-						calendar.load(true, delta);
-						calendar.unload(false, delta);
-					}
-
-				//	viewPosition = (event.mouseWheelScroll.delta < 0) ? viewPosition + (-event.mouseWheelScroll.delta * 7) : viewPosition - (event.mouseWheelScroll.delta * 7);
-			/*		std::cout << "delta : " << event.mouseWheelScroll.delta << "\n";
-					std::cout << "viewPosition : {" << viewPosition.getYear() << '-' << int(viewPosition.getMonth()) << '-' << int(viewPosition.getDay())
-						<< " [" << int(viewPosition.getDayOfWeek()) << ", w" << int(viewPosition.getWeekNumber()) << "]}" << std::endl;
-			*/	}
+				if (windowManager.at("calendarHUD", true).contains(sf::Vector2f(event.mouseWheelScroll.x, event.mouseWheelScroll.y)))
+					calendar.move(-int(event.mouseWheelScroll.delta));
 				break;
 			default:
 				windowManager.input(event);
@@ -234,12 +192,6 @@ void MainWindow::initialize()
 		}
 
 		window.clear(Settings::MainWindow::backgroundColor);
-
-	
-		/*std::cout << "viewPosition : {" << viewPosition.getYear() << '-' << int(viewPosition.getMonth()) << '-' << int(viewPosition.getDay())
-		<< " [" << int(viewPosition.getDayOfWeek()) << ", w" << int(viewPosition.getWeekNumber()) << "]}" << std::endl;
-		*/
-
 
 
 		if (!testMode) {
@@ -254,6 +206,16 @@ void MainWindow::initialize()
 
 		window.display();
 	}
+}
+
+void MainWindow::Calendar::move(const int16_t rows)
+{
+	viewPosition = viewPosition + rows * 7;
+
+	view.move(0, rows * (first.height + Settings::Calendar::spaceBetweenRows));
+
+	load(rows <= 0, rows * (rows < 0 ? -1 : 1));
+	unload(rows > 0, rows * (rows < 0 ? -1 : 1));
 }
 
 void MainWindow::Calendar::load(const bool beforeFirst, const uint16_t numberOfRows, const bool calibrate)
