@@ -8,38 +8,6 @@
 
 
 
-<<<<<<< HEAD
-=======
- struct MainWindow::Calendar{
-
-	 struct Cell {
-		 uint16_t width, height;
-
-		 sf::Vector2f position;
-
-		 Date date;
-
-		 const std::unique_ptr<gui::Button> asButton() const;
-	 };
-
-	 uint16_t width, height, cellWidth, cellHeight;
-
-	 sf::View view;
-
-	 gui::Window window;
-
-	 uint8_t viewPosition;
-	 Cell first, last;
-
-	 void load(const bool aboveFirst, const uint16_t numberOfRows);
-	 void unload(const bool atFirst, const uint16_t numberOfRows);
-
- };
-
->>>>>>> origin/master
- 
-
-
 
 MainWindow::MainWindow()
 	: width(Settings::MainWindow::width), height(Settings::MainWindow::height)
@@ -99,15 +67,10 @@ void MainWindow::initialize()
 	calendar.first.width = calendar.last.width = cellWidth;
 	calendar.first.height = calendar.last.height = cellHeight;
 
-<<<<<<< HEAD
 	calendar.window.add(calendar.last.date.asString(), calendar.last.generateButton());
 
 	calendar.first.generateButton();
-=======
-			
-			date = date + 1;
-		}
->>>>>>> origin/master
+
 
 	calendar.load(false, end.getWeekNumber() - date.getWeekNumber(), true);
 
@@ -293,7 +256,6 @@ void MainWindow::initialize()
 	}
 }
 
-<<<<<<< HEAD
 void MainWindow::Calendar::load(const bool beforeFirst, const uint16_t numberOfRows, const bool calibrate)
 {
 	if (beforeFirst) {
@@ -347,67 +309,6 @@ const gui::Button& MainWindow::Calendar::Cell::generateButton()
 	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
 
 	button.setTexture(Resources::Calendar::Cell::background)
-=======
-void MainWindow::Calendar::load(const bool aboveTop, const uint16_t numberOfRows)
-{
-	if (aboveTop) {
-		cellWidth = (width - 6 * Settings::Calendar::spaceBetweenCells) / 7;
-		cellHeight = (height - 5 * Settings::Calendar::spaceBetweenRows) / 6;
-
-	//	const uint8_t widthLoss = (width - 6 * Settings::Calendar::spaceBetweenCells) % 7;
-
-		Resources::Calendar::Cell::loadBackground(cellWidth, cellHeight, Settings::Calendar::Cell::monthColors[0]);
-
-		Date end(top - numberOfRows * 7);
-
-		while (top != end)
-			for (uint8_t cell = 0; cell < 7; cell++, top--) {
-
-				gui::TextArea text(std::to_string(top.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
-
-				window.add(top.asString(), gui::Button()
-					.setTexture(Resources::Calendar::Cell::background)
-					.setPosition((cellWidth + Settings::Calendar::spaceBetweenCells) * cell + ((cell >= 5) ? widthLoss : 0),
-					(cellHeight + Settings::Calendar::spaceBetweenRows) * (row /*+ start.getWeekNumber() - viewPosition.getWeekNumber()*/))
-					.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - cellWidth) / 2 + 8, (text.getGlobalBounds().height - cellHeight / 2)))
-					.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
-					.bindAction(gui::Event::Released, [date]() {
-					Resources::Calendar::Cell::highlighted.reset(new Date(date));
-				})
-					.resetShader(
-						"uniform float state;\
-						uniform bool active;\
-						uniform sampler2D tex;\
-						\
-						void main()\
-						{\
-							vec4 color = texture2D(tex, gl_TexCoord[0].xy) * gl_Color;\
-							if (active)\
-								gl_FragColor = vec4((color.rgb == vec3(1, 1, 1)) ? color.rgb : (color.rgb * (1.0f - (state * " + std::to_string(Settings::Calendar::Cell::shaderDarkening) + "f))), color.a);\
-							else\
-							{\
-								float greyValue = color.r * 0.29 + color.g * 0.58 + color.b * 0.13;\
-								gl_FragColor = vec4(greyValue, greyValue, greyValue, color.a);\
-							}\
-						}")
-					);
-
-
-
-				date = date + 1;
-			}
-	}
-}
-
-const std::unique_ptr<gui::Button> MainWindow::Calendar::Cell::asButton() const
-{
-
-	std::unique_ptr<gui::Button> toReturn(new gui::Button);
-
-	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
-
-	toReturn->setTexture(Resources::Calendar::Cell::background)
->>>>>>> origin/master
 		.setPosition(position)
 		.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - width) / 2 + 8, (text.getGlobalBounds().height - height / 2)))
 		.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
@@ -431,7 +332,6 @@ const std::unique_ptr<gui::Button> MainWindow::Calendar::Cell::asButton() const
 				}\
 			}");
 
-<<<<<<< HEAD
 		return button;
 }
 
@@ -461,7 +361,4 @@ void MainWindow::Calendar::Cell::operator++()
 
 	if (position.x > (width + Settings::Calendar::spaceBetweenCells) * 6)
 		position = sf::Vector2f(0, position.y + height + Settings::Calendar::spaceBetweenRows);
-=======
-		return toReturn;
->>>>>>> origin/master
 }
