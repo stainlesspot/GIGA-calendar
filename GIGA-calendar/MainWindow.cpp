@@ -4,7 +4,6 @@
 #include "MainWindow.h"
 #include "Settings.h"
 #include "Resources.h"
-#include "SlideMonth.h"
 
 std::unique_ptr<Date> MainWindow::Calendar::Cell::highlighted(nullptr);
 
@@ -49,8 +48,8 @@ const gui::Button & MainWindow::Calendar::Cell::updateButton()
 		.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - width) / 2 + 8, (text.getGlobalBounds().height - height / 2)))
 		.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
 		.bindAction(gui::Event::Released, [date]() {
-		MainWindow::Calendar::Cell::highlighted.reset(new Date(date));
-	});
+			MainWindow::Calendar::Cell::highlighted.reset(new Date(date));
+		});
 
 	return button;
 }
@@ -76,6 +75,7 @@ void MainWindow::Calendar::Cell::operator++()
 void MainWindow::Calendar::move(const int16_t rows)
 {
 	viewPosition = viewPosition + rows * 7;
+	viewOffset += rows;
 
 	view.move(0, rows * (first.height + Settings::Calendar::spaceBetweenRows));
 
@@ -174,8 +174,10 @@ void MainWindow::initialize()
 
 	// Calendar View
 
+	calendar.viewOffset = (calendar.viewPosition - calendar.start).asDays() / 7;
+
 	calendar.view.setSize(calendar.width, calendar.height);
-	calendar.view.setCenter(calendar.width / 2, calendar.height / 2 + (calendar.viewPosition - calendar.start).asDays() / 7  * (cellHeight + Settings::Calendar::spaceBetweenRows));
+	calendar.view.setCenter(calendar.width / 2, calendar.height / 2 +  calendar.viewOffset * (cellHeight + Settings::Calendar::spaceBetweenRows));
 
 
 	const sf::IntRect viewRect(Settings::MainWindow::padding.left + Settings::Calendar::margin.left - Settings::MonthView::margin.left,
@@ -259,11 +261,20 @@ void MainWindow::initialize()
 
 	gui::TextArea highlightedDateMsg("No date selected", Resources::arial, 35);
 
+	bool moved = false;
+
 	activityMenu.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
 		.setBackgroundTexture(Resources::ActivityMenu::background)
 		.add("highlightedDate", highlightedDateMsg.setPosition((amWidth - highlightedDateMsg.getGlobalBounds().width) / 2, (amHeight - highlightedDateMsg.getGlobalBounds().height) / 2)
-			.setUpdateFunction([]() {
-				return gui::bind((Calendar::Cell::highlighted == nullptr) ? "No date selected" : Calendar::Cell::highlighted->asString() + " is selected", sf::Color::White);
+			.setUpdateFunction([this, &moved, amWidth, amHeight, highlightedDateMsg]() {
+				if (Calendar::Cell::highlighted != nullptr && moved == false) {
+					windowManager.at("activityMenu", true).at("highlightedDate").setPosition(windowManager.at("activityMenu", true).at("highlightedDate").getPosition()
+						+ sf::Vector2f(int(highlightedDateMsg.getGlobalBounds().width - int(amWidth)) / 2 + sf::Text(Calendar::Cell::highlighted->asString('.', false), Resources::arial, 35).getGlobalBounds().width,
+							-int(amHeight / 2) + highlightedDateMsg.getGlobalBounds().height / 2 + Settings::ActivityMenu::HighlightedDateMsg::marginTop));
+					moved = true;
+				}
+
+				return gui::bind((Calendar::Cell::highlighted == nullptr) ? "No date selected" : Calendar::Cell::highlighted->asString('.', false, true), sf::Color::White);
 			}));
 
 
@@ -330,16 +341,19 @@ void MainWindow::initialize()
 				break;
 
 			default:
+				bool contains = false;
 				if (event.type == sf::Event::MouseMoved && viewRect.contains(event.mouseMove.x, event.mouseMove.y)) {
 					event.mouseMove.x -= viewRect.left;
-					event.mouseMove.y -= viewRect.top - (long long(calendar.viewPosition.asDays()) - long long(calendar.start.asDays())) / 7 * (cellHeight + Settings::Calendar::spaceBetweenRows);
+					event.mouseMove.y -= viewRect.top - calendar.viewOffset * (cellHeight + Settings::Calendar::spaceBetweenRows);
+					contains = true;
 				}
 				else if ((event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) && viewRect.contains(event.mouseButton.x, event.mouseButton.y)) {
 					event.mouseButton.x -= viewRect.left;
-					event.mouseButton.y -= viewRect.top - (long long(calendar.viewPosition.asDays()) - long long(calendar.start.asDays())) / 7 * (cellHeight + Settings::Calendar::spaceBetweenRows);
+					event.mouseButton.y -= viewRect.top - calendar.viewOffset * (cellHeight + Settings::Calendar::spaceBetweenRows);
+					contains = true;
 				}
-
-				if(calendar.window.input(event)) break;
+				if(contains == true)
+					if(calendar.window.input(event)) break;
 		
 				windowManager.input(event);
 

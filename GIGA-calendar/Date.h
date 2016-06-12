@@ -29,15 +29,15 @@ public:
 
 	const unsigned long long asDays() const;
 
-	const std::string asString() const;
+	const std::string asString(const char delimiter = '-', const bool yearFirst = true, const bool addZeroToSingleDigitValues = false) const;
 
 	Date& addMonths(const int numberOfMonths);
 
 	Date operator +(const long long days) const;
-	Date operator +(const Date&) const; // Duration
+	Date operator +(const Date&) const;
 	
 	Date operator -(const long long days) const;
-	Date operator -(const Date&) const; // Duration
+	Date operator -(const Date&) const;
 
 	Date& operator ++();
 

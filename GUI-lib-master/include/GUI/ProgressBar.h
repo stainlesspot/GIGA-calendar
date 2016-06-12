@@ -45,6 +45,9 @@ namespace gui
 		ProgressBar() = default;
 		~ProgressBar() = default;
 
+		ProgressBar& operator=(const ProgressBar& copy);
+		ProgressBar& operator=(ProgressBar&& temp) = default;
+
 		std::unique_ptr<Interactive> copy()const override;
 		std::unique_ptr<Interactive> move()override;
 
@@ -60,6 +63,7 @@ namespace gui
 
 		ProgressBar& setPosition(const float x, const float y)override;
 		ProgressBar& setPosition(const sf::Vector2f& position)override;
+		ProgressBar& setTexture(const sf::Texture& texture, const bool transparencyCheck = false)override;
 
 		ProgressBar& setUpdateFunction(const std::function<const float()>& function);
 		ProgressBar& setUpdateFunction(std::function<const float()>&& function);

@@ -1,5 +1,6 @@
 #include <chrono>
 #include <iostream>
+#include <algorithm>
 
 #include "Date.h"
 
@@ -86,9 +87,16 @@ const unsigned long long Date::asDays() const
 	return cyear * 365 + cyear / 4 - cyear / 100 + cyear / 400 + monthToDays[month - 1] + day - !(isLeapYear() && month > 2);
 }
 
-const std::string Date::asString() const
+const std::string Date::asString(const char delimiter, const bool yearFirst, const bool addZeroToSingleDigitValues) const
 {
-	return std::to_string(year) + '-' + std::to_string(month) + '-' + std::to_string(day);
+	if (addZeroToSingleDigitValues == false) 
+		return std::to_string(yearFirst ? year : day) + delimiter + std::to_string(month) + delimiter + std::to_string(yearFirst ? day : year);
+	
+	std::string toReturn(((yearFirst ? year : day) < 10 ? '0' : 'x') + std::to_string(yearFirst ? year : day) + delimiter + ((month < 10) ? '0' : 'x') + std::to_string(month) + delimiter
+		+ ((yearFirst ? day : year) < 10 ? '0' : 'x') + std::to_string(yearFirst ? day : year));
+
+	toReturn.erase(std::remove(toReturn.begin(), toReturn.end(), 'x'), toReturn.end());
+	return toReturn;
 }
 
 Date & Date::addMonths(const int numberOfMonths)
@@ -294,6 +302,9 @@ Date & Date::setDay(const uint8_t day)
 		break;
 	case 2:
 		this->day = isLeapYear() ? ((day % 29) ? day % 29 : 29) : ((day % 28) ? day % 28 : 28);
+		break;
+	default:
+		30;
 		break;
 	}
 	return *this;

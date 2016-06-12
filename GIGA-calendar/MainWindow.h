@@ -5,8 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <GUI/GUI.h>
 
-#include "DateCalendar.h"
-#include "ActivityMenu.h"
+#include "Date.h"
+
 class MainWindow {
 private:
 
@@ -32,6 +32,7 @@ private:
 		};
 
 		uint16_t width, height;
+		int16_t viewOffset;
 
 		Date viewPosition, start;
 		sf::View view;

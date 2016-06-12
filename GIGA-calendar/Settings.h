@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <array>
+#include <unordered_map>
 
 #include <SFML/Graphics.hpp>
 
@@ -17,42 +18,50 @@ struct Spacing {
 struct Settings {
 	
 	struct MonthView {
-		static const Spacing margin;
+		static Spacing margin;
 	};
 
 	struct MainWindow {
-		static const uint16_t width, height;
-		static const Spacing padding;
-		static const sf::Color backgroundColor;
+		static uint16_t width, height;
+		static Spacing padding;
+		static sf::Color backgroundColor;
 	};
 
 	struct Calendar {
-		static const uint8_t preemtiveMonthLoad;
-		static const uint16_t spaceBetweenCells, spaceBetweenRows, scrollDistance;
-		static const Spacing margin;
-		static const sf::Color backgroundColor;
+		static uint16_t preemtiveMonthLoad, spaceBetweenCells, spaceBetweenRows;
+		static Spacing margin;
+		static sf::Color backgroundColor;
 
 		struct MonthScroll {
 			struct Previous {
-				static const uint8_t rightMargin, bottomMargin;
+				static uint16_t rightMargin, bottomMargin;
 			};
 			
 			struct Next {
-				static const uint8_t rightMargin, bottomMargin;
+				static uint16_t rightMargin, bottomMargin;
 			};
 
 		};
 
 		struct Cell {
-			static const float shaderDarkening;
-			static const uint8_t charSize;
-			static const sf::Color textColor;
-			static const std::array<sf::Color, 13> monthColors;
+			static float shaderDarkening;
+			static uint16_t charSize;
+			static sf::Color textColor;
+			static std::array<sf::Color, 13> monthColors;
 		};
 	};
 
 	struct ActivityMenu {
-		static const sf::Color backgroundColor;
+		struct HighlightedDateMsg {
+			static uint16_t marginTop;
+		};
+		static sf::Color backgroundColor;
 	};
 
+	static void loadFromFile(const std::string& filename);
+
+private:
+	static std::string removeWhiteSpaces(std::string string);
+	static Spacing stringToSpacing(const std::string& string);
+	static sf::Color stringToColor(const std::string& string);
 };

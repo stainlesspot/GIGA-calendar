@@ -49,6 +49,15 @@ namespace gui
 		m_updateFunction(copy.m_updateFunction ? new auto(*copy.m_updateFunction) : nullptr),
 		m_progress(copy.m_progress) {}
 
+	ProgressBar& ProgressBar::operator=(const ProgressBar& copy)
+	{
+		Icon::operator=(copy);
+		m_fill = copy.m_fill;
+		m_progress = copy.m_progress;
+		m_updateFunction.reset(copy.m_updateFunction ? new auto(*copy.m_updateFunction) : nullptr);
+		return *this;
+	}
+
 	std::unique_ptr<Interactive> ProgressBar::copy() const
 	{ 
 		return std::unique_ptr<ProgressBar>(new ProgressBar(*this));
@@ -121,9 +130,17 @@ namespace gui
 		return (ProgressBar&)*this;
 	}
 
+	ProgressBar& ProgressBar::setTexture(const sf::Texture& texture, const bool transparencyCheck)
+	{
+		Icon::setTexture(texture, transparencyCheck);
+		setPosition(Icon::getPosition());
+		return *this;
+	}
+
 	ProgressBar& ProgressBar::setFillTexture(const sf::Texture& newTexture, const bool transparencyCheck)
 	{
 		m_fill.setTexture(newTexture, transparencyCheck);
+		setPosition(Icon::getPosition());
 		return *this;
 	}
 
@@ -136,8 +153,10 @@ namespace gui
 	ProgressBar& ProgressBar::setPosition(const float x, const float y)
 	{
 		Icon::setPosition(x, y);
-		m_fill.setPosition(x + ((Icon::getTexture() ? Icon::getTexture()->getSize().x : 0) - (m_fill.getTexture() ? m_fill.getTexture()->getSize().x : 0)) / 2.0f,
-			y + ((Icon::getTexture() ? Icon::getTexture()->getSize().y : 0) - (m_fill.getTexture() ? m_fill.getTexture()->getSize().y : 0)) / 2.0f);
+		if (m_fill.getTexture() && Icon::getTexture())
+			m_fill.setPosition(x + ((Icon::getTexture() ? Icon::getTexture()->getSize().x : 0) - (m_fill.getTexture() ? m_fill.getTexture()->getSize().x : 0)) / 2.0f,
+				y + ((Icon::getTexture() ? Icon::getTexture()->getSize().y : 0) - (m_fill.getTexture() ? m_fill.getTexture()->getSize().y : 0)) / 2.0f);
+		else m_fill.setPosition(x, y);
 		return *this;
 	}
 

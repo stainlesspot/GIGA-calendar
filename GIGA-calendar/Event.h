@@ -3,6 +3,8 @@
 #include <string>
 //#include <optional>
 
+#include <memory>
+
 #include "DateTime.h"
 
 //	Event is an activity which is supposed to happen on a given date.
