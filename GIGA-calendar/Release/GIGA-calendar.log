@@ -1,9 +1,19 @@
-﻿  main.cpp
-  Resources.cpp
+﻿  MainWindow.cpp
+MainWindow.cpp(57): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
+MainWindow.cpp(57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+MainWindow.cpp(102): warning C4244: 'argument': conversion from 'unsigned int' to 'const float', possible loss of data
+MainWindow.cpp(102): warning C4244: 'argument': conversion from 'const unsigned int' to 'const float', possible loss of data
+MainWindow.cpp(107): warning C4244: 'argument': conversion from 'unsigned __int64' to 'const int16_t', possible loss of data
+MainWindow.cpp(116): warning C4244: 'argument': conversion from 'unsigned int' to 'const float', possible loss of data
+MainWindow.cpp(122): warning C4244: 'argument': conversion from '__int64' to 'const int16_t', possible loss of data
+MainWindow.cpp(139): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+MainWindow.cpp(202): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+MainWindow.cpp(233): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+MainWindow.cpp(334): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Generating code
-  150 of 3047 functions ( 4.9%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    55 functions had inline decision re-evaluated but remain unchanged
+  108 of 3064 functions ( 3.5%) were compiled, the rest were copied from previous compilation.
+    57 functions were new in current compilation
+    39 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 GUI.lib(Hoverable.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Hoverable.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info
 GUI.lib(Window.obj) : warning LNK4099: PDB 'GUI.pdb' was not found with 'GUI.lib(Window.obj)' or at 'D:\GitHub\GIGA-calendar\Release\GUI.pdb'; linking object as if no debug info

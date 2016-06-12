@@ -86,9 +86,9 @@ void MainWindow::initialize()
 						{\
 							vec4 color = texture2D(tex, gl_TexCoord[0].xy) * gl_Color;\
 							if (active){\
-								if(state == 1 || color.a != 0)\
+								if(state == 1 || color.rgb != vec3(1, 1, 1))\
 									gl_FragColor = color;\
-								else  if (color.a == 0)\
+								else  if (color.rgb == vec3(1, 1, 1))\
 									gl_FragColor = vec4(62.0f / 255, 230.0f / 255, 123.0f / 255, 1);\
 							}\
 							else\
@@ -138,12 +138,7 @@ void MainWindow::initialize()
 
 	activityMenu.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
 		.setBackgroundTexture(Resources::ActivityMenu::background)
-		.add("noDateSelectedMessage", noDateMsg.setPosition((amWidth - noDateMsg.getGlobalBounds().width) / 2, (amHeight - noDateMsg.getGlobalBounds().height) / 2))
-		.add("FPSmeter", gui::FPSMeter(Resources::arial, Settings::Calendar::Cell::charSize).setColor(sf::Color::White).setPosition(10, 0))
-		.add("viewPosition", gui::TextArea(calendar.viewPosition.asString(), Resources::arial, Settings::Calendar::Cell::charSize).setColor(sf::Color::White).setPosition(10, 200)
-			.setUpdateFunction([this]() {
-				return gui::bind(calendar.viewPosition.asString(), sf::Color::White);
-			}));
+		.add("noDateSelectedMessage", noDateMsg.setPosition((amWidth - noDateMsg.getGlobalBounds().width) / 2, (amHeight - noDateMsg.getGlobalBounds().height) / 2));
 
 
 
@@ -174,17 +169,40 @@ void MainWindow::initialize()
 		{
 			switch (event.type) {
 			case sf::Event::KeyReleased:
-				if (event.key.code == sf::Keyboard::T)
+				switch (event.key.code) {
+				case sf::Keyboard::T:
 					testMode = testMode ? false : true;
+					break;
+				case sf::Keyboard::F:
+					if (windowManager.at("activityMenu", true).exists("fpsMeter"))
+						windowManager.at("activityMenu", true).erase("fpsMeter");
+					else 
+						windowManager.at("activityMenu", true).add("fpsMeter", gui::FPSMeter(Resources::arial, Settings::Calendar::Cell::charSize).setColor(sf::Color::White).setPosition(10, 0));
+					
+					break;
+				case sf::Keyboard::V:
+					if (windowManager.at("activityMenu", true).exists("viewPosition"))
+						windowManager.at("activityMenu", true).erase("viewPosition");
+					else
+						windowManager.at("activityMenu", true).add("viewPosition", gui::TextArea(calendar.viewPosition.asString(), Resources::arial, Settings::Calendar::Cell::charSize)
+							.setColor(sf::Color::White).setPosition(10, 200)
+							.setUpdateFunction([this]() {
+								return gui::bind(calendar.viewPosition.asString(), sf::Color::White);
+							}));
+					
+					break;
+				}
 				if (event.key.code != sf::Keyboard::Escape) break;
-				
+
 			case sf::Event::Closed:
 				window.close();
 				break;
+			
 			case sf::Event::MouseWheelScrolled:
 				if (windowManager.at("calendarHUD", true).contains(sf::Vector2f(event.mouseWheelScroll.x, event.mouseWheelScroll.y)))
 					calendar.move(-int(event.mouseWheelScroll.delta));
 				break;
+			
 			default:
 				windowManager.input(event);
 				break;
