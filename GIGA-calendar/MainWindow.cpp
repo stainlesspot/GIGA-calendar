@@ -6,7 +6,128 @@
 #include "Resources.h"
 #include "SlideMonth.h"
 
+std::unique_ptr<Date> MainWindow::Calendar::Cell::highlighted(nullptr);
 
+const gui::Button& MainWindow::Calendar::Cell::generateButton()
+{
+	Date date(date);
+	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
+
+	button.setTexture(Resources::Calendar::Cell::background)
+		.setPosition(position)
+		.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - width) / 2 + 8, (text.getGlobalBounds().height - height / 2)))
+		.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
+		.bindAction(gui::Event::Released, [date]() {
+			MainWindow::Calendar::Cell::highlighted.reset(new Date(date));
+		})
+		.resetShader(
+			"uniform float state;\
+			uniform bool active;\
+			uniform sampler2D tex;\
+			\
+			void main()\
+			{\
+				vec4 color = texture2D(tex, gl_TexCoord[0].xy) * gl_Color;\
+				if (active)\
+					gl_FragColor = vec4((color.rgb == vec3(1, 1, 1)) ? color.rgb : (color.rgb * (1.0f - (state * " + std::to_string(Settings::Calendar::Cell::shaderDarkening) + "f))), color.a);\
+				else\
+				{\
+					float greyValue = color.r * 0.29 + color.g * 0.58 + color.b * 0.13;\
+					gl_FragColor = vec4(greyValue, greyValue, greyValue, color.a);\
+				}\
+			}");
+
+	return button;
+}
+
+const gui::Button & MainWindow::Calendar::Cell::updateButton()
+{
+	Date date(date);
+	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
+
+	button.setPosition(position)
+		.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - width) / 2 + 8, (text.getGlobalBounds().height - height / 2)))
+		.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
+		.bindAction(gui::Event::Released, [date]() {
+		MainWindow::Calendar::Cell::highlighted.reset(new Date(date));
+	});
+
+	return button;
+}
+
+void MainWindow::Calendar::Cell::operator--()
+{
+	--date;
+	position.x -= width + Settings::Calendar::spaceBetweenCells;
+	if (position.x < 0)
+		position = sf::Vector2f((width + Settings::Calendar::spaceBetweenCells) * 6, position.y - height - Settings::Calendar::spaceBetweenRows);
+}
+
+void MainWindow::Calendar::Cell::operator++()
+{
+	++date;
+	position.x += width + Settings::Calendar::spaceBetweenCells;
+
+	if (position.x >(width + Settings::Calendar::spaceBetweenCells) * 6)
+		position = sf::Vector2f(0, position.y + height + Settings::Calendar::spaceBetweenRows);
+}
+
+
+void MainWindow::Calendar::move(const int16_t rows)
+{
+	viewPosition = viewPosition + rows * 7;
+
+	view.move(0, rows * (first.height + Settings::Calendar::spaceBetweenRows));
+
+	load(rows <= 0, rows * (rows < 0 ? -1 : 1));
+	unload(rows > 0, rows * (rows < 0 ? -1 : 1));
+}
+
+void MainWindow::Calendar::load(const bool beforeFirst, const uint16_t numberOfRows, const bool calibrate)
+{
+	if (beforeFirst) {
+		Date end(first.date - numberOfRows * 7);
+
+		while (first.date != end) {
+			--first;
+			window.add(first.date.asString(), first.updateButton());
+		}
+	}
+	else {
+		Date end(last.date + numberOfRows * 7 - calibrate);
+
+		while (last.date != end) {
+			++last;
+			window.add(last.date.asString(), last.updateButton());
+		}
+	}
+}
+
+void MainWindow::Calendar::unload(const bool afterFirst, const uint16_t numberOfRows)
+{
+	if (afterFirst) {
+		Date date(first.date), end(date + numberOfRows * 7);
+
+		while (date != end) {
+			window.erase(date.asString());
+			++date;
+		}
+
+		first.date = date;
+		first.position.y += numberOfRows * (first.height + Settings::Calendar::spaceBetweenRows);
+	}
+	else {
+		Date date(last.date), end(date - numberOfRows * 7);
+
+		while (date != end) {
+			window.erase(date.asString());
+			--date;
+		}
+
+		last.date = date;
+		last.position.y -= numberOfRows * (last.height + Settings::Calendar::spaceBetweenRows);
+	}
+}
 
 void MainWindow::initialize()
 {
@@ -56,10 +177,16 @@ void MainWindow::initialize()
 	calendar.view.setSize(calendar.width, calendar.height);
 	calendar.view.setCenter(calendar.width / 2, calendar.height / 2 + (calendar.viewPosition - calendar.start).asDays() / 7  * (cellHeight + Settings::Calendar::spaceBetweenRows));
 
-	calendar.view.setViewport(sf::FloatRect(float(Settings::MainWindow::padding.left + Settings::Calendar::margin.left - Settings::MonthView::margin.left) / Settings::MainWindow::width,
-		float(Settings::MainWindow::padding.top + Settings::Calendar::margin.top - Settings::MonthView::margin.top) / Settings::MainWindow::height,
-		float(calendar.width + Settings::MonthView::margin.left + Settings::MonthView::margin.right) / Settings::MainWindow::width,
-		float(calendar.height + Settings::MonthView::margin.top + Settings::MonthView::margin.bottom) / Settings::MainWindow::height));
+
+	const sf::IntRect viewRect(Settings::MainWindow::padding.left + Settings::Calendar::margin.left - Settings::MonthView::margin.left,
+		Settings::MainWindow::padding.top + Settings::Calendar::margin.top - Settings::MonthView::margin.top,
+		calendar.width + Settings::MonthView::margin.left + Settings::MonthView::margin.right,
+		calendar.height + Settings::MonthView::margin.top + Settings::MonthView::margin.bottom);
+
+	calendar.view.setViewport(sf::FloatRect(float(viewRect.left) / Settings::MainWindow::width,
+		float(viewRect.top) / Settings::MainWindow::height,
+		float(viewRect.width) / Settings::MainWindow::width,
+		float(viewRect.height) / Settings::MainWindow::height));
 
 
 
@@ -72,38 +199,34 @@ void MainWindow::initialize()
 
 	calendar.hud.setBackgroundTexture(Resources::Calendar::background);
 
-
 	Resources::Calendar::MonthScroll::Next::loadBackground();
 
 	const unsigned int nextmbX = chWidth - Settings::Calendar::MonthScroll::Next::rightMargin - Resources::Calendar::MonthScroll::Next::background.getSize().x - Settings::Calendar::margin.right;
 
 
-	std::string customShader("uniform float state;\
-						uniform bool active;\
-						uniform sampler2D tex;\
-						\
-						void main()\
-						{\
-							vec4 color = texture2D(tex, gl_TexCoord[0].xy) * gl_Color;\
-							if (active){\
-								if(state == 1 || color.rgb != vec3(1, 1, 1))\
-									gl_FragColor = color;\
-								else  if (color.rgb == vec3(1, 1, 1))\
-									gl_FragColor = vec4(62.0f / 255, 230.0f / 255, 123.0f / 255, 1);\
-							}\
-							else\
-							{\
-								float greyValue = color.r * 0.29 + color.g * 0.58 + color.b * 0.13;\
-								gl_FragColor = vec4(greyValue, greyValue, greyValue, color.a);\
-							}\
-						}");
+	std::string customShader(
+		"uniform float state;\
+			uniform bool active;\
+			uniform sampler2D tex;\
+			\
+			void main()\
+			{\
+				vec4 color = texture2D(tex, gl_TexCoord[0].xy) * gl_Color;\
+				if (active)\
+					gl_FragColor = vec4((color.rgb == vec3(1, 1, 1)) ? color.rgb : (color.rgb * (1.0f - (state * 0.40f))), color.a);\
+				else\
+				{\
+					float greyValue = color.r * 0.29 + color.g * 0.58 + color.b * 0.13;\
+					gl_FragColor = vec4(greyValue, greyValue, greyValue, color.a);\
+				}\
+			}");
 
 	calendar.hud.add("nextMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Next::background)
 		.setPosition(nextmbX, Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Next::bottomMargin - Resources::Calendar::MonthScroll::Next::background.getSize().y)
 		.bindAction(gui::Event::Released, [this]() {
 			Date newViewPosition(calendar.viewPosition + 3 * 7);
 			newViewPosition.addMonths(1).setDay(1);
-	
+
 			calendar.move((newViewPosition - calendar.viewPosition).asDays() / 7);
 		})
 		.resetShader(customShader));
@@ -134,23 +257,26 @@ void MainWindow::initialize()
 
 	Resources::ActivityMenu::loadBackground(amWidth, amHeight, Settings::ActivityMenu::backgroundColor);
 
-	gui::TextArea noDateMsg("No date selected", Resources::arial, 35);
+	gui::TextArea highlightedDateMsg("No date selected", Resources::arial, 35);
 
 	activityMenu.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
 		.setBackgroundTexture(Resources::ActivityMenu::background)
-		.add("noDateSelectedMessage", noDateMsg.setPosition((amWidth - noDateMsg.getGlobalBounds().width) / 2, (amHeight - noDateMsg.getGlobalBounds().height) / 2));
+		.add("highlightedDate", highlightedDateMsg.setPosition((amWidth - highlightedDateMsg.getGlobalBounds().width) / 2, (amHeight - highlightedDateMsg.getGlobalBounds().height) / 2)
+			.setUpdateFunction([]() {
+				return gui::bind((Calendar::Cell::highlighted == nullptr) ? "No date selected" : Calendar::Cell::highlighted->asString() + " is selected", sf::Color::White);
+			}));
 
 
 
 
-	windowManager.emplace("calendarHUD", calendar.hud, true);
+	windowManager.emplace("calendarHud", calendar.hud, true);
 	windowManager.emplace("activityMenu", activityMenu, true);
 
 
 
 
 
-	sf::RenderWindow window(sf::VideoMode(Settings::MainWindow::width, Settings::MainWindow::height), "GIGA-Calendar", sf::Style::None);
+	sf::RenderWindow window(sf::VideoMode(Settings::MainWindow::width, Settings::MainWindow::height), "GIGA-Calendar");
 	
 	window.setVerticalSyncEnabled(true);
 
@@ -199,12 +325,24 @@ void MainWindow::initialize()
 				break;
 			
 			case sf::Event::MouseWheelScrolled:
-				if (windowManager.at("calendarHUD", true).contains(sf::Vector2f(event.mouseWheelScroll.x, event.mouseWheelScroll.y)))
+				if (windowManager.at("calendarHud", true).contains(sf::Vector2f(event.mouseWheelScroll.x, event.mouseWheelScroll.y)))
 					calendar.move(-int(event.mouseWheelScroll.delta));
 				break;
-			
+
 			default:
+				if (event.type == sf::Event::MouseMoved && viewRect.contains(event.mouseMove.x, event.mouseMove.y)) {
+					event.mouseMove.x -= viewRect.left;
+					event.mouseMove.y -= viewRect.top - (long long(calendar.viewPosition.asDays()) - long long(calendar.start.asDays())) / 7 * (cellHeight + Settings::Calendar::spaceBetweenRows);
+				}
+				else if ((event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) && viewRect.contains(event.mouseButton.x, event.mouseButton.y)) {
+					event.mouseButton.x -= viewRect.left;
+					event.mouseButton.y -= viewRect.top - (long long(calendar.viewPosition.asDays()) - long long(calendar.start.asDays())) / 7 * (cellHeight + Settings::Calendar::spaceBetweenRows);
+				}
+
+				if(calendar.window.input(event)) break;
+		
 				windowManager.input(event);
+
 				break;
 			}
 		}
@@ -226,119 +364,3 @@ void MainWindow::initialize()
 	}
 }
 
-void MainWindow::Calendar::move(const int16_t rows)
-{
-	viewPosition = viewPosition + rows * 7;
-
-	view.move(0, rows * (first.height + Settings::Calendar::spaceBetweenRows));
-
-	load(rows <= 0, rows * (rows < 0 ? -1 : 1));
-	unload(rows > 0, rows * (rows < 0 ? -1 : 1));
-}
-
-void MainWindow::Calendar::load(const bool beforeFirst, const uint16_t numberOfRows, const bool calibrate)
-{
-	if (beforeFirst) {
-		Date end(first.date - numberOfRows * 7);
-
-		while (first.date != end) {
-			--first;
-			window.add(first.date.asString(), first.updateButton());
-		}
-	}
-	else {
-		Date end(last.date + numberOfRows * 7 - calibrate);
-
-		while (last.date != end) {
-			++last;
-			window.add(last.date.asString(), last.updateButton());
-		}
-	}
-}
-
-void MainWindow::Calendar::unload(const bool afterFirst, const uint16_t numberOfRows)
-{
-	if (afterFirst) {
-		Date date(first.date), end(date + numberOfRows * 7);
-		
-		while (date != end) {
-			window.erase(date.asString());
-			++date;
-		}
-
-		first.date = date;
-		first.position.y += numberOfRows * (first.height + Settings::Calendar::spaceBetweenRows);
-	}
-	else {
-		Date date(last.date), end(date - numberOfRows * 7);
-		
-		while (date != end) {
-			window.erase(date.asString());
-			--date;
-		}
-
-		last.date = date;
-		last.position.y -= numberOfRows * (last.height + Settings::Calendar::spaceBetweenRows);
-	}
-}
-
-
-const gui::Button& MainWindow::Calendar::Cell::generateButton()
-{
-
-	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
-
-	button.setTexture(Resources::Calendar::Cell::background)
-		.setPosition(position)
-		.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - width) / 2 + 8, (text.getGlobalBounds().height - height / 2)))
-		.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
-		.bindAction(gui::Event::Released, [this]() {
-			Resources::Calendar::Cell::highlighted.reset(new Date(date));
-		})
-		.resetShader(
-		   "uniform float state;\
-			uniform bool active;\
-			uniform sampler2D tex;\
-			\
-			void main()\
-			{\
-				vec4 color = texture2D(tex, gl_TexCoord[0].xy) * gl_Color;\
-				if (active)\
-					gl_FragColor = vec4((color.rgb == vec3(1, 1, 1)) ? color.rgb : (color.rgb * (1.0f - (state * " + std::to_string(Settings::Calendar::Cell::shaderDarkening) + "f))), color.a);\
-				else\
-				{\
-					float greyValue = color.r * 0.29 + color.g * 0.58 + color.b * 0.13;\
-					gl_FragColor = vec4(greyValue, greyValue, greyValue, color.a);\
-				}\
-			}");
-
-		return button;
-}
-
-const gui::Button & MainWindow::Calendar::Cell::updateButton()
-{
-	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
-
-	button.setPosition(position)
-		.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - width) / 2 + 8, (text.getGlobalBounds().height - height / 2)))
-		.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()]);
-
-	return button;
-}
-
-void MainWindow::Calendar::Cell::operator--()
-{
-	--date;
-	position.x -= width + Settings::Calendar::spaceBetweenCells;
-	if (position.x < 0)
-		position = sf::Vector2f((width + Settings::Calendar::spaceBetweenCells) * 6, position.y - height - Settings::Calendar::spaceBetweenRows);
-}
-
-void MainWindow::Calendar::Cell::operator++()
-{
-	++date;
-	position.x += width + Settings::Calendar::spaceBetweenCells;
-
-	if (position.x > (width + Settings::Calendar::spaceBetweenCells) * 6)
-		position = sf::Vector2f(0, position.y + height + Settings::Calendar::spaceBetweenRows);
-}

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <SFML/Graphics.hpp>
 #include <GUI/GUI.h>
 
@@ -22,6 +24,7 @@ private:
 			const gui::Button& generateButton();
 			const gui::Button& updateButton();
 
+			static std::unique_ptr<Date> highlighted;
 
 			void operator--();
 			void operator++();

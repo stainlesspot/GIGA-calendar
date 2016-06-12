@@ -78,6 +78,4 @@ public:
 	const uint8_t getDayOfWeek() const;
 	const uint8_t getWeekNumber() const;
 
-
-
 };
