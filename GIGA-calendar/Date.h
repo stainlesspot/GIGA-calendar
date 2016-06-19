@@ -29,7 +29,7 @@ public:
 
 	const unsigned long long asDays() const;
 
-	const std::string asString(const char delimiter = '-', const bool yearFirst = true, const bool addZeroToSingleDigitValues = false) const;
+	const std::string asString(const std::string& format = "Y-m-d") const;
 
 	Date& addMonths(const int numberOfMonths);
 

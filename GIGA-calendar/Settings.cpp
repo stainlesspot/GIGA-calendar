@@ -21,29 +21,44 @@ Spacing::Spacing(uint16_t top, uint16_t right, uint16_t bottom, uint16_t left)
 	: top(top), right(right), bottom(bottom), left(left)
 {}
 
+
+
 float Settings::Calendar::Cell::shaderDarkening(0.15f);
 
-uint16_t Settings::Calendar::preemtiveMonthLoad(1),
+
+
+uint16_t
+	Settings::MainWindow::width(1280),
+	Settings::MainWindow::height(720),
+
+	Settings::Calendar::preemtiveMonthLoad(1),
+	Settings::Calendar::spaceBetweenCells(1),
+	Settings::Calendar::spaceBetweenRows(1),
 	Settings::Calendar::Cell::charSize(35),
 	Settings::Calendar::MonthScroll::Previous::rightMargin(15),
 	Settings::Calendar::MonthScroll::Previous::bottomMargin(30),
 	Settings::Calendar::MonthScroll::Next::rightMargin(0),
 	Settings::Calendar::MonthScroll::Next::bottomMargin(30),
+
 	Settings::ActivityMenu::HighlightedDateMsg::marginTop(10),
-	Settings::MainWindow::width(1280),
-	Settings::MainWindow::height(720),
-	Settings::Calendar::spaceBetweenCells(1),
-	Settings::Calendar::spaceBetweenRows(1);
+	Settings::ActivityMenu::EventNode::characterSize(15);
 
 
-Spacing Settings::MonthView::margin(15, 0),
+
+Spacing
+	Settings::MonthView::margin(15, 0),
 	Settings::MainWindow::padding(1),
-	Settings::Calendar::margin(100, 50);
+	Settings::Calendar::margin(100, 50),
+	Settings::ActivityMenu::EventNode::padding(10);
 
-sf::Color Settings::MainWindow::backgroundColor(150, 150, 150, 255),
+
+
+sf::Color
+	Settings::MainWindow::backgroundColor(150, 150, 150, 255),
 	Settings::Calendar::backgroundColor(255, 255, 255, 255),
 	Settings::Calendar::Cell::textColor(255, 255, 255, 255),
 	Settings::ActivityMenu::backgroundColor(62, 230, 123, 255);
+
 
 
 std::array<sf::Color, 13> Settings::Calendar::Cell::monthColors = {

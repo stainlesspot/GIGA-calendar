@@ -259,22 +259,32 @@ void MainWindow::initialize()
 
 	Resources::ActivityMenu::loadBackground(amWidth, amHeight, Settings::ActivityMenu::backgroundColor);
 
+
+
 	gui::TextArea highlightedDateMsg("No date selected", Resources::arial, 35);
 
-	bool moved = false;
+	sf::FloatRect msgBounds(highlightedDateMsg.getGlobalBounds());
 
 	activityMenu.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
 		.setBackgroundTexture(Resources::ActivityMenu::background)
-		.add("highlightedDate", highlightedDateMsg.setPosition((amWidth - highlightedDateMsg.getGlobalBounds().width) / 2, (amHeight - highlightedDateMsg.getGlobalBounds().height) / 2)
-			.setUpdateFunction([this, &moved, amWidth, amHeight, highlightedDateMsg]() {
-				if (Calendar::Cell::highlighted != nullptr && moved == false) {
-					windowManager.at("activityMenu", true).at("highlightedDate").setPosition(windowManager.at("activityMenu", true).at("highlightedDate").getPosition()
-						+ sf::Vector2f(int(highlightedDateMsg.getGlobalBounds().width - int(amWidth)) / 2 + sf::Text(Calendar::Cell::highlighted->asString('.', false), Resources::arial, 35).getGlobalBounds().width,
-							-int(amHeight / 2) + highlightedDateMsg.getGlobalBounds().height / 2 + Settings::ActivityMenu::HighlightedDateMsg::marginTop));
-					moved = true;
-				}
+		.add("highlightedDate", highlightedDateMsg.setPosition((amWidth - msgBounds.width - msgBounds.left) / 2, (amHeight - msgBounds.height - msgBounds.top) / 2)
+			.setUpdateFunction([this, amWidth]() {
+				if (Calendar::Cell::highlighted != nullptr) {
+					sf::FloatRect newMsgBounds(sf::Text(Calendar::Cell::highlighted->asString("D M Y"), Resources::arial, 35).getGlobalBounds());
 
-				return gui::bind((Calendar::Cell::highlighted == nullptr) ? "No date selected" : Calendar::Cell::highlighted->asString('.', false, true), sf::Color::White);
+					windowManager.at("activityMenu", true).at("highlightedDate").setPosition(Settings::MainWindow::width * 2 / 3 + (amWidth - newMsgBounds.width - newMsgBounds.left) / 2,
+						Settings::MainWindow::padding.top - newMsgBounds.top + Settings::ActivityMenu::HighlightedDateMsg::marginTop);
+					
+		/*			gui::TextField newEventNode(Resources::arial, amWidth - Settings::ActivityMenu::EventNode::padding.left - Settings::ActivityMenu::EventNode::padding.right, Settings::ActivityMenu::EventNode::characterSize);
+						
+				
+					windowManager.at("activityMenu", true).add("eventList", newEventNode
+							.setPosition(amWidth - newEventNode.g)
+							.setPrompt(gui::bind("Test Event", sf::Color::White)));
+*/
+					return gui::bind(Calendar::Cell::highlighted->asString("D M Y"), sf::Color::White);
+				}
+				return gui::bind("No date selected", sf::Color::White);
 			}));
 
 
@@ -287,7 +297,7 @@ void MainWindow::initialize()
 
 
 
-	sf::RenderWindow window(sf::VideoMode(Settings::MainWindow::width, Settings::MainWindow::height), "GIGA-Calendar");
+	sf::RenderWindow window(sf::VideoMode(Settings::MainWindow::width, Settings::MainWindow::height), "GIGA-Calendar", sf::Style::None);
 	
 	window.setVerticalSyncEnabled(true);
 
@@ -297,6 +307,21 @@ void MainWindow::initialize()
 	test.setSize(3000, 3000);
 
 	bool testMode = false;
+
+	
+	
+	
+	
+	
+	sf::Text _text("9", Resources::arial, 9);
+	_text.setColor(sf::Color::Black);
+
+	gui::TextArea _text2("35", Resources::arial, 35);
+	_text2.setPosition(Settings::MainWindow::width / 2, -8);
+
+
+	sf::Clock _timer;
+
 
 
 	while (window.isOpen())
@@ -328,6 +353,10 @@ void MainWindow::initialize()
 							}));
 					
 					break;
+				case sf::Keyboard::P:
+						_text2.setCharacterSize(_text2.getCharacterSize() + 1);
+						_text2.setText(std::to_string(_text2.getCharacterSize()));
+						break;
 				}
 				if (event.key.code != sf::Keyboard::Escape) break;
 
@@ -373,7 +402,28 @@ void MainWindow::initialize()
 		else
 			window.setView(test);
 		window.draw(calendar.window);
+		
+		
+		
+	/*
+		if (_timer.getElapsedTime() >= sf::seconds(1)) {
+			_text.setCharacterSize(_text.getCharacterSize() + 1);
 
+			_text.setString(std::to_string(_text.getCharacterSize()));
+
+			_timer.restart();
+		}
+		
+		*/
+		
+		window.draw(_text);
+		window.draw(_text2);
+		
+		
+		
+		
+		
+		
 		window.display();
 	}
 }

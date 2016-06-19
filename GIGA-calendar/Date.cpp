@@ -87,16 +87,63 @@ const unsigned long long Date::asDays() const
 	return cyear * 365 + cyear / 4 - cyear / 100 + cyear / 400 + monthToDays[month - 1] + day - !(isLeapYear() && month > 2);
 }
 
-const std::string Date::asString(const char delimiter, const bool yearFirst, const bool addZeroToSingleDigitValues) const
+const std::string Date::asString(const std::string& format) const
 {
-	if (addZeroToSingleDigitValues == false) 
-		return std::to_string(yearFirst ? year : day) + delimiter + std::to_string(month) + delimiter + std::to_string(yearFirst ? day : year);
-	
-	std::string toReturn(((yearFirst ? year : day) < 10 ? '0' : 'x') + std::to_string(yearFirst ? year : day) + delimiter + ((month < 10) ? '0' : 'x') + std::to_string(month) + delimiter
-		+ ((yearFirst ? day : year) < 10 ? '0' : 'x') + std::to_string(yearFirst ? day : year));
+	const std::string monthToWord[13] = {
+		"0",
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December"
+	};
 
-	toReturn.erase(std::remove(toReturn.begin(), toReturn.end(), 'x'), toReturn.end());
-	return toReturn;
+	std::string returnValue;
+
+	bool escape = false;
+
+	for (auto it = format.begin(), end = format.end(); it != end; it++) {
+
+		if (escape) {
+			returnValue += *it;
+			escape = false;
+			continue;
+		}
+		
+		switch (*it) {
+		case 'D':
+			if (day < 10)
+				returnValue += '0';
+		case 'd':
+			returnValue += std::to_string(day);
+			break;
+		case 'm':
+			returnValue += std::to_string(month);
+			break;
+		case 'M':
+			returnValue += monthToWord[month];
+			break;
+		case 'Y':
+			if (year / 100 != 0)
+				returnValue += std::to_string(year / 100);
+		case 'y':
+			returnValue += std::to_string(year % 100);
+			break;
+		case '\\':
+			escape = true;
+			break;
+		default:
+			returnValue += *it;
+		}
+	}
+	return returnValue;
 }
 
 Date & Date::addMonths(const int numberOfMonths)

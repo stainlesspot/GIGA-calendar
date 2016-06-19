@@ -52,9 +52,17 @@ struct Settings {
 	};
 
 	struct ActivityMenu {
+
 		struct HighlightedDateMsg {
 			static uint16_t marginTop;
 		};
+
+		struct EventNode {
+			static uint16_t characterSize;
+
+			static Spacing padding;
+		};
+
 		static sf::Color backgroundColor;
 	};
 
