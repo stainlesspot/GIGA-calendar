@@ -54,14 +54,15 @@ struct Settings {
 	struct ActivityMenu {
 
 		struct HighlightedDateMsg {
-			static uint16_t marginTop;
+			static uint16_t marginTop, marginBottom;
 		};
 
-		struct EventNode {
-			static uint16_t characterSize;
-
-			static Spacing padding;
+		struct EventWindow {
+			static uint16_t characterSize, spaceBetweenRows;
+			static Spacing margin;
+			static sf::Color backgroundColor;
 		};
+
 
 		static sf::Color backgroundColor;
 	};

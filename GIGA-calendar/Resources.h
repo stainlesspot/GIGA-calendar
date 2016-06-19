@@ -10,23 +10,19 @@ struct Resources {
 	static sf::Font arial;
 
 	static bool load();
+	static bool load(sf::Texture& texture, const std::string& filepath);
+	static bool load(sf::Texture& texture, const uint16_t width, const uint16_t height, const sf::Color& color);
 
 	struct Calendar {
 		static sf::Texture background;
 
-		static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor);
-
 		struct MonthScroll {
 			struct Previous {
 				static sf::Texture background;
-
-				static bool loadBackground();
 			};
 
 			struct Next {
 				static sf::Texture background;
-
-				static bool loadBackground();
 			};
 		};
 
@@ -34,15 +30,15 @@ struct Resources {
 			static std::unique_ptr<Date> highlighted;
 
 			static sf::Texture background;
-
-			static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor);
 		};
 	};
 
 	struct ActivityMenu {
 		static sf::Texture background;
 
-		static bool loadBackground(const uint16_t width, const uint16_t height, const sf::Color& backgroundColor);
+		struct EventWindow {
+			static sf::Texture background;
+		};
 	};
 
 };

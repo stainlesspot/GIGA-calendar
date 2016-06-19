@@ -157,7 +157,7 @@ void MainWindow::initialize()
 	const unsigned int cellWidth = (calendar.width - 6 * Settings::Calendar::spaceBetweenCells) / 7,
 		cellHeight = (calendar.height - 5 * Settings::Calendar::spaceBetweenRows) / 6;
 
-	Resources::Calendar::Cell::loadBackground(cellWidth, cellHeight, Settings::Calendar::Cell::monthColors[0]);
+	Resources::load(Resources::Calendar::Cell::background, cellWidth, cellHeight, Settings::Calendar::Cell::monthColors[0]);
 
 	calendar.first.position = calendar.last.position = sf::Vector2f(0, 0);
 
@@ -197,11 +197,11 @@ void MainWindow::initialize()
 	calendar.hud.setPosition(Settings::MainWindow::padding.left, Settings::MainWindow::padding.top);
 
 
-	Resources::Calendar::loadBackground(chWidth, chHeight, Settings::Calendar::backgroundColor);
+	Resources::load(Resources::Calendar::background, chWidth, chHeight, Settings::Calendar::backgroundColor);
 
 	calendar.hud.setBackgroundTexture(Resources::Calendar::background);
 
-	Resources::Calendar::MonthScroll::Next::loadBackground();
+	Resources::load(Resources::Calendar::MonthScroll::Next::background, "resources/arrow_down.png");
 
 	const unsigned int nextmbX = chWidth - Settings::Calendar::MonthScroll::Next::rightMargin - Resources::Calendar::MonthScroll::Next::background.getSize().x - Settings::Calendar::margin.right;
 
@@ -234,7 +234,7 @@ void MainWindow::initialize()
 		.resetShader(customShader));
 
 
-	Resources::Calendar::MonthScroll::Previous::loadBackground();
+	Resources::load(Resources::Calendar::MonthScroll::Previous::background, "resources/arrow_up.png");
 
 	calendar.hud.add("previousMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Previous::background)
 		.setPosition(nextmbX - Settings::Calendar::MonthScroll::Previous::rightMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().x,
@@ -255,33 +255,46 @@ void MainWindow::initialize()
 	//	ActivityMenu:
 
 	const unsigned int amWidth(Settings::MainWindow::width / 3 + ((Settings::MainWindow::width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.right),
-		amHeight(Settings::MainWindow::height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom);
+		amHeight(Settings::MainWindow::height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom),
+		ewWidth(amWidth - Settings::ActivityMenu::EventWindow::margin.left - Settings::ActivityMenu::EventWindow::margin.right),
+		ewHeight(amHeight - Settings::ActivityMenu::EventWindow::margin.top - Settings::ActivityMenu::EventWindow::margin.bottom);
 
-	Resources::ActivityMenu::loadBackground(amWidth, amHeight, Settings::ActivityMenu::backgroundColor);
+	Resources::load(Resources::ActivityMenu::background, amWidth, amHeight, Settings::ActivityMenu::backgroundColor);
 
-
+	bool usedUp = false;
 
 	gui::TextArea highlightedDateMsg("No date selected", Resources::arial, 35);
 
 	sf::FloatRect msgBounds(highlightedDateMsg.getGlobalBounds());
 
+
+
+	Resources::load(Resources::ActivityMenu::EventWindow::background, ewWidth, ewHeight, Settings::ActivityMenu::EventWindow::backgroundColor);
+
+	eventWindow.setActive(false)
+		.setPosition(Settings::MainWindow::width * 2 / 3 + Settings::ActivityMenu::EventWindow::margin.left, Settings::MainWindow::padding.top + Settings::ActivityMenu::EventWindow::margin.top)
+		.setBackgroundTexture(Resources::ActivityMenu::EventWindow::background);
+
+
+
 	activityMenu.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
 		.setBackgroundTexture(Resources::ActivityMenu::background)
 		.add("highlightedDate", highlightedDateMsg.setPosition((amWidth - msgBounds.width - msgBounds.left) / 2, (amHeight - msgBounds.height - msgBounds.top) / 2)
-			.setUpdateFunction([this, amWidth]() {
+			.setUpdateFunction([this, amWidth, &usedUp]() {
+				
 				if (Calendar::Cell::highlighted != nullptr) {
 					sf::FloatRect newMsgBounds(sf::Text(Calendar::Cell::highlighted->asString("D M Y"), Resources::arial, 35).getGlobalBounds());
 
 					windowManager.at("activityMenu", true).at("highlightedDate").setPosition(Settings::MainWindow::width * 2 / 3 + (amWidth - newMsgBounds.width - newMsgBounds.left) / 2,
 						Settings::MainWindow::padding.top - newMsgBounds.top + Settings::ActivityMenu::HighlightedDateMsg::marginTop);
 					
-		/*			gui::TextField newEventNode(Resources::arial, amWidth - Settings::ActivityMenu::EventNode::padding.left - Settings::ActivityMenu::EventNode::padding.right, Settings::ActivityMenu::EventNode::characterSize);
+					gui::TextField newEventNode(Resources::arial, amWidth - Settings::ActivityMenu::EventWindow::margin.left - Settings::ActivityMenu::EventWindow::margin.right, Settings::ActivityMenu::EventWindow::characterSize);
 						
-				
-					windowManager.at("activityMenu", true).add("eventList", newEventNode
-							.setPosition(amWidth - newEventNode.g)
-							.setPrompt(gui::bind("Test Event", sf::Color::White)));
-*/
+					if (!usedUp) {
+						windowManager.at("eventWindow", true).setActive(true);
+
+						usedUp = true;
+					}
 					return gui::bind(Calendar::Cell::highlighted->asString("D M Y"), sf::Color::White);
 				}
 				return gui::bind("No date selected", sf::Color::White);
@@ -289,8 +302,9 @@ void MainWindow::initialize()
 
 
 
-
 	windowManager.emplace("calendarHud", calendar.hud, true);
+
+	windowManager.emplace("eventWindow", eventWindow, true);
 	windowManager.emplace("activityMenu", activityMenu, true);
 
 
@@ -331,33 +345,35 @@ void MainWindow::initialize()
 		{
 			switch (event.type) {
 			case sf::Event::KeyReleased:
-				switch (event.key.code) {
-				case sf::Keyboard::T:
-					testMode = testMode ? false : true;
-					break;
-				case sf::Keyboard::F:
-					if (windowManager.at("activityMenu", true).exists("fpsMeter"))
-						windowManager.at("activityMenu", true).erase("fpsMeter");
-					else 
-						windowManager.at("activityMenu", true).add("fpsMeter", gui::FPSMeter(Resources::arial, Settings::Calendar::Cell::charSize).setColor(sf::Color::White).setPosition(10, 0));
-					
-					break;
-				case sf::Keyboard::V:
-					if (windowManager.at("activityMenu", true).exists("viewPosition"))
-						windowManager.at("activityMenu", true).erase("viewPosition");
-					else
-						windowManager.at("activityMenu", true).add("viewPosition", gui::TextArea(calendar.viewPosition.asString(), Resources::arial, Settings::Calendar::Cell::charSize)
-							.setColor(sf::Color::White).setPosition(10, 200)
-							.setUpdateFunction([this]() {
-								return gui::bind(calendar.viewPosition.asString(), sf::Color::White);
-							}));
-					
-					break;
-				case sf::Keyboard::P:
+				if (event.key.control)
+					switch (event.key.code) {
+					case sf::Keyboard::T:
+						testMode = testMode ? false : true;
+						break;
+					case sf::Keyboard::F:
+						if (windowManager.at("activityMenu", true).exists("fpsMeter"))
+							windowManager.at("activityMenu", true).erase("fpsMeter");
+						else
+							windowManager.at("activityMenu", true).add("fpsMeter", gui::FPSMeter(Resources::arial, Settings::Calendar::Cell::charSize).setColor(sf::Color::White).setPosition(10, 0));
+
+						break;
+					case sf::Keyboard::V:
+						if (windowManager.at("activityMenu", true).exists("viewPosition"))
+							windowManager.at("activityMenu", true).erase("viewPosition");
+						else
+							windowManager.at("activityMenu", true).add("viewPosition", gui::TextArea(calendar.viewPosition.asString(), Resources::arial, Settings::Calendar::Cell::charSize)
+								.setColor(sf::Color::White).setPosition(10, 200)
+								.setUpdateFunction([this]() {
+									return gui::bind(calendar.viewPosition.asString(), sf::Color::White);
+								}));
+
+						break;
+					case sf::Keyboard::P:
 						_text2.setCharacterSize(_text2.getCharacterSize() + 1);
 						_text2.setText(std::to_string(_text2.getCharacterSize()));
 						break;
-				}
+					}
+				
 				if (event.key.code != sf::Keyboard::Escape) break;
 
 			case sf::Event::Closed:

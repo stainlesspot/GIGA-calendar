@@ -41,7 +41,9 @@ uint16_t
 	Settings::Calendar::MonthScroll::Next::bottomMargin(30),
 
 	Settings::ActivityMenu::HighlightedDateMsg::marginTop(10),
-	Settings::ActivityMenu::EventNode::characterSize(15);
+	Settings::ActivityMenu::HighlightedDateMsg::marginBottom(10),
+	Settings::ActivityMenu::EventWindow::characterSize(15),
+	Settings::ActivityMenu::EventWindow::spaceBetweenRows(5);
 
 
 
@@ -49,7 +51,7 @@ Spacing
 	Settings::MonthView::margin(15, 0),
 	Settings::MainWindow::padding(1),
 	Settings::Calendar::margin(100, 50),
-	Settings::ActivityMenu::EventNode::padding(10);
+	Settings::ActivityMenu::EventWindow::margin(115, 50);
 
 
 
@@ -57,7 +59,8 @@ sf::Color
 	Settings::MainWindow::backgroundColor(150, 150, 150, 255),
 	Settings::Calendar::backgroundColor(255, 255, 255, 255),
 	Settings::Calendar::Cell::textColor(255, 255, 255, 255),
-	Settings::ActivityMenu::backgroundColor(62, 230, 123, 255);
+	Settings::ActivityMenu::backgroundColor(62, 230, 123, 255),
+	Settings::ActivityMenu::EventWindow::backgroundColor(255, 255, 255, 255);
 
 
 
