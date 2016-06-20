@@ -51,7 +51,7 @@ private:
 
 	Calendar calendar;
 
-	gui::Window activityMenu, eventWindow;
+	gui::Window activityMenu;
 
 	gui::WindowManager windowManager;
 

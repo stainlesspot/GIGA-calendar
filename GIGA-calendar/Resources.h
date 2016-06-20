@@ -36,7 +36,7 @@ struct Resources {
 	struct ActivityMenu {
 		static sf::Texture background;
 
-		struct EventWindow {
+		struct EventNode {
 			static sf::Texture background;
 		};
 	};

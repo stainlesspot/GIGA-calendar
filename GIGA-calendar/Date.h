@@ -20,6 +20,7 @@ public:
 	Date();
 	Date(const unsigned short year, const uint8_t month, const uint8_t day, const bool beforeChrist = false);
 	Date(unsigned long long days, const bool addUnixEpoch = false);
+	Date(const std::string& string);
 
 	Date(const Date&) = default;
 	Date(Date&&) = default;

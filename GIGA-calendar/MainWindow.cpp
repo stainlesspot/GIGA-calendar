@@ -155,7 +155,7 @@ void MainWindow::initialize()
 	calendar.first.date = calendar.last.date = date;
 	
 	const unsigned int cellWidth = (calendar.width - 6 * Settings::Calendar::spaceBetweenCells) / 7,
-		cellHeight = (calendar.height - 5 * Settings::Calendar::spaceBetweenRows) / 6;
+		cellHeight = (calendar.height - (Settings::Calendar::numberOfRows - 1) * Settings::Calendar::spaceBetweenRows) / Settings::Calendar::numberOfRows;
 
 	Resources::load(Resources::Calendar::Cell::background, cellWidth, cellHeight, Settings::Calendar::Cell::monthColors[0]);
 
@@ -226,7 +226,7 @@ void MainWindow::initialize()
 	calendar.hud.add("nextMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Next::background)
 		.setPosition(nextmbX, Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Next::bottomMargin - Resources::Calendar::MonthScroll::Next::background.getSize().y)
 		.bindAction(gui::Event::Released, [this]() {
-			Date newViewPosition(calendar.viewPosition + 3 * 7);
+			Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows + 1) / 2 * 7);
 			newViewPosition.addMonths(1).setDay(1);
 
 			calendar.move((newViewPosition - calendar.viewPosition).asDays() / 7);
@@ -240,7 +240,7 @@ void MainWindow::initialize()
 		.setPosition(nextmbX - Settings::Calendar::MonthScroll::Previous::rightMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().x,
 			Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Previous::bottomMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().y)
 		.bindAction(gui::Event::Released, [this]() {
-			Date newViewPosition(calendar.viewPosition + 3 * 7);
+			Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows + 1) / 2 * 7);
 			newViewPosition.addMonths(-1).setDay(1);
 			newViewPosition = newViewPosition.getMonday();
 
@@ -254,14 +254,28 @@ void MainWindow::initialize()
 
 	//	ActivityMenu:
 
-	const unsigned int amWidth(Settings::MainWindow::width / 3 + ((Settings::MainWindow::width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.right),
+/*	const unsigned int //amWidth(Settings::MainWindow::width / 3 + ((Settings::MainWindow::width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.right),
 		amHeight(Settings::MainWindow::height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom),
-		ewWidth(amWidth - Settings::ActivityMenu::EventWindow::margin.left - Settings::ActivityMenu::EventWindow::margin.right),
-		ewHeight(amHeight - Settings::ActivityMenu::EventWindow::margin.top - Settings::ActivityMenu::EventWindow::margin.bottom);
+		ewWidth(amWidth - Settings::ActivityMenu::EventNode::margin.left - Settings::ActivityMenu::EventNode::margin.right),
+		ewHeight(amHeight - Settings::ActivityMenu::EventNode::margin.top - Settings::ActivityMenu::EventNode::margin.bottom);
+*/
 
-	Resources::load(Resources::ActivityMenu::background, amWidth, amHeight, Settings::ActivityMenu::backgroundColor);
+	const sf::IntRect
 
-	bool usedUp = false;
+		activityMenuRect(Settings::MainWindow::width * 2 / 3,
+			Settings::MainWindow::padding.top,
+			Settings::MainWindow::width / 3 + ((Settings::MainWindow::width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.right,
+			Settings::MainWindow::height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom),
+
+		eventNodeRect(activityMenuRect.left + Settings::ActivityMenu::EventNode::margin.left,
+			activityMenuRect.height + Settings::ActivityMenu::EventNode::margin.top,
+			activityMenuRect.width - Settings::ActivityMenu::EventNode::margin.left - Settings::ActivityMenu::EventNode::margin.right,
+			(activityMenuRect.height - Settings::ActivityMenu::EventNode::margin.top - Settings::ActivityMenu::EventNode::margin.bottom
+				- (Settings::ActivityMenu::EventNode::numberOfRows - 1) * Settings::ActivityMenu::EventNode::spaceBetweenRows) / Settings::ActivityMenu::EventNode::numberOfRows);
+
+
+	Resources::load(Resources::ActivityMenu::background, activityMenuRect.width, activityMenuRect.height, Settings::ActivityMenu::backgroundColor);
+
 
 	gui::TextArea highlightedDateMsg("No date selected", Resources::arial, 35);
 
@@ -269,34 +283,51 @@ void MainWindow::initialize()
 
 
 
-	Resources::load(Resources::ActivityMenu::EventWindow::background, ewWidth, ewHeight, Settings::ActivityMenu::EventWindow::backgroundColor);
+	Resources::load(Resources::ActivityMenu::EventNode::background, eventNodeRect.width, eventNodeRect.height, Settings::ActivityMenu::EventNode::backgroundColor);
 
-	eventWindow.setActive(false)
-		.setPosition(Settings::MainWindow::width * 2 / 3 + Settings::ActivityMenu::EventWindow::margin.left, Settings::MainWindow::padding.top + Settings::ActivityMenu::EventWindow::margin.top)
-		.setBackgroundTexture(Resources::ActivityMenu::EventWindow::background);
+/*	eventWindow.setActive(false)
+		.setPosition(Settings::MainWindow::width * 2 / 3 + Settings::ActivityMenu::EventNode::margin.left, Settings::MainWindow::padding.top + Settings::ActivityMenu::EventNode::margin.top)
+		.setBackgroundTexture(Resources::ActivityMenu::EventNode::background);
+*/
+
+
+	std::unique_ptr<Date> previousHighlight(nullptr);
 
 
 
 	activityMenu.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
 		.setBackgroundTexture(Resources::ActivityMenu::background)
-		.add("highlightedDate", highlightedDateMsg.setPosition((amWidth - msgBounds.width - msgBounds.left) / 2, (amHeight - msgBounds.height - msgBounds.top) / 2)
-			.setUpdateFunction([this, amWidth, &usedUp]() {
-				
+		.add("highlightedDate", highlightedDateMsg.setPosition((activityMenuRect.width - msgBounds.width - msgBounds.left) / 2, (activityMenuRect.height - msgBounds.height - msgBounds.top) / 2)
+			.setUpdateFunction([this, activityMenuRect, eventNodeRect, &previousHighlight]() {	
 				if (Calendar::Cell::highlighted != nullptr) {
 					sf::FloatRect newMsgBounds(sf::Text(Calendar::Cell::highlighted->asString("D M Y"), Resources::arial, 35).getGlobalBounds());
-
-					windowManager.at("activityMenu", true).at("highlightedDate").setPosition(Settings::MainWindow::width * 2 / 3 + (amWidth - newMsgBounds.width - newMsgBounds.left) / 2,
-						Settings::MainWindow::padding.top - newMsgBounds.top + Settings::ActivityMenu::HighlightedDateMsg::marginTop);
 					
-					gui::TextField newEventNode(Resources::arial, amWidth - Settings::ActivityMenu::EventWindow::margin.left - Settings::ActivityMenu::EventWindow::margin.right, Settings::ActivityMenu::EventWindow::characterSize);
+					if (previousHighlight == nullptr)
+						windowManager.at("activityMenu", true).at("highlightedDate").setPosition(activityMenuRect.left + (activityMenuRect.width - newMsgBounds.width - newMsgBounds.left) / 2,
+							activityMenuRect.top - newMsgBounds.top + Settings::ActivityMenu::HighlightedDateMsg::marginTop);
+					else if (*previousHighlight != *Calendar::Cell::highlighted) {
 						
-					if (!usedUp) {
-						windowManager.at("eventWindow", true).setActive(true);
+				//		windowManager.at("eventWindow", true).setActive(true);
 
-						usedUp = true;
+						for (uint8_t row = 0; row < Settings::ActivityMenu::EventNode::numberOfRows; row++) {
+							this->windowManager.at("activityMenu", true)
+								.add("row" + std::to_string(row) + " text",
+									gui::TextField(Resources::arial, eventNodeRect.width, Settings::ActivityMenu::EventNode::characterSize)
+									.setPosition(eventNodeRect.left, eventNodeRect.top + (eventNodeRect.height + Settings::ActivityMenu::EventNode::spaceBetweenRows) * row)
+									.setColor(sf::Color::Black)
+									.setPrompt(gui::bind("Click to add new Event", sf::Color(140, 140, 140, 255))))
+								.add("row" + std::to_string(row) + "background",
+									gui::Icon(Resources::ActivityMenu::EventNode::background)
+									.setPosition(eventNodeRect.left, eventNodeRect.top + (eventNodeRect.height + Settings::ActivityMenu::EventNode::spaceBetweenRows) * row));
+							std::cout << "__KON" << int(row) << std::endl;
+						}
+						std::cout << "ended KON";
 					}
+
+					previousHighlight.reset(new Date(*Calendar::Cell::highlighted));
 					return gui::bind(Calendar::Cell::highlighted->asString("D M Y"), sf::Color::White);
 				}
+				previousHighlight.reset(nullptr);
 				return gui::bind("No date selected", sf::Color::White);
 			}));
 
@@ -304,7 +335,7 @@ void MainWindow::initialize()
 
 	windowManager.emplace("calendarHud", calendar.hud, true);
 
-	windowManager.emplace("eventWindow", eventWindow, true);
+//	windowManager.emplace("eventWindow", eventWindow, true);
 	windowManager.emplace("activityMenu", activityMenu, true);
 
 
@@ -432,8 +463,8 @@ void MainWindow::initialize()
 		
 		*/
 		
-		window.draw(_text);
-		window.draw(_text2);
+	//	window.draw(_text);
+	//	window.draw(_text2);
 		
 		
 		

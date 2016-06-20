@@ -28,7 +28,7 @@ struct Settings {
 	};
 
 	struct Calendar {
-		static uint16_t preemtiveMonthLoad, spaceBetweenCells, spaceBetweenRows;
+		static uint16_t preemtiveMonthLoad, spaceBetweenCells, spaceBetweenRows, numberOfRows;
 		static Spacing margin;
 		static sf::Color backgroundColor;
 
@@ -57,8 +57,8 @@ struct Settings {
 			static uint16_t marginTop, marginBottom;
 		};
 
-		struct EventWindow {
-			static uint16_t characterSize, spaceBetweenRows;
+		struct EventNode {
+			static uint16_t characterSize, spaceBetweenRows, numberOfRows;
 			static Spacing margin;
 			static sf::Color backgroundColor;
 		};

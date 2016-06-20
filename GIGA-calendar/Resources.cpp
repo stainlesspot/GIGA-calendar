@@ -9,7 +9,7 @@ sf::Texture
 	Resources::Calendar::MonthScroll::Previous::background,
 	Resources::Calendar::MonthScroll::Next::background,
 	Resources::ActivityMenu::background,
-	Resources::ActivityMenu::EventWindow::background;
+	Resources::ActivityMenu::EventNode::background;
 
 
 std::unique_ptr<Date> Resources::Calendar::Cell::highlighted(nullptr);

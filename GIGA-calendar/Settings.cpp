@@ -34,16 +34,18 @@ uint16_t
 	Settings::Calendar::preemtiveMonthLoad(1),
 	Settings::Calendar::spaceBetweenCells(1),
 	Settings::Calendar::spaceBetweenRows(1),
+	Settings::Calendar::numberOfRows(5),
 	Settings::Calendar::Cell::charSize(35),
-	Settings::Calendar::MonthScroll::Previous::rightMargin(15),
-	Settings::Calendar::MonthScroll::Previous::bottomMargin(30),
 	Settings::Calendar::MonthScroll::Next::rightMargin(0),
 	Settings::Calendar::MonthScroll::Next::bottomMargin(30),
-
+	Settings::Calendar::MonthScroll::Previous::rightMargin(15),
+	Settings::Calendar::MonthScroll::Previous::bottomMargin(30),
+	
+	Settings::ActivityMenu::EventNode::characterSize(15),
+	Settings::ActivityMenu::EventNode::spaceBetweenRows(5),
+	Settings::ActivityMenu::EventNode::numberOfRows(6),
 	Settings::ActivityMenu::HighlightedDateMsg::marginTop(10),
-	Settings::ActivityMenu::HighlightedDateMsg::marginBottom(10),
-	Settings::ActivityMenu::EventWindow::characterSize(15),
-	Settings::ActivityMenu::EventWindow::spaceBetweenRows(5);
+	Settings::ActivityMenu::HighlightedDateMsg::marginBottom(10);
 
 
 
@@ -51,7 +53,7 @@ Spacing
 	Settings::MonthView::margin(15, 0),
 	Settings::MainWindow::padding(1),
 	Settings::Calendar::margin(100, 50),
-	Settings::ActivityMenu::EventWindow::margin(115, 50);
+	Settings::ActivityMenu::EventNode::margin(115, 50);
 
 
 
@@ -60,7 +62,7 @@ sf::Color
 	Settings::Calendar::backgroundColor(255, 255, 255, 255),
 	Settings::Calendar::Cell::textColor(255, 255, 255, 255),
 	Settings::ActivityMenu::backgroundColor(62, 230, 123, 255),
-	Settings::ActivityMenu::EventWindow::backgroundColor(255, 255, 255, 255);
+	Settings::ActivityMenu::EventNode::backgroundColor(255, 255, 255, 255);
 
 
 
@@ -76,7 +78,7 @@ std::array<sf::Color, 13> Settings::Calendar::Cell::monthColors = {
 	sf::Color(243, 130, 53, 255),			//	August
 	sf::Color(89, 104, 174, 255),			//	September
 	sf::Color(152, 180, 212, 255),			//	October
-	sf::Color(220, 41, 66, 255),			//	Novermber
+	sf::Color(220, 41, 66, 255),			//	November
 	sf::Color(47, 130, 146, 255)			//	December
 };
 
@@ -131,7 +133,7 @@ void Settings::loadFromFile(const std::string & filename)
 		std::pair<std::string, sf::Color*>("Calendar::Cell::augustColor", &Calendar::Cell::monthColors[8]),
 		std::pair<std::string, sf::Color*>("Calendar::Cell::septemberColor", &Calendar::Cell::monthColors[9]),
 		std::pair<std::string, sf::Color*>("Calendar::Cell::octoberColor", &Calendar::Cell::monthColors[10]),
-		std::pair<std::string, sf::Color*>("Calendar::Cell::novermberColor", &Calendar::Cell::monthColors[11]),
+		std::pair<std::string, sf::Color*>("Calendar::Cell::novemberColor", &Calendar::Cell::monthColors[11]),
 		std::pair<std::string, sf::Color*>("Calendar::Cell::decemberColor", &Calendar::Cell::monthColors[12])
 	};
 
