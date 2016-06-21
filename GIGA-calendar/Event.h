@@ -1,8 +1,6 @@
 #pragma once
 
 #include <string>
-//#include <optional>
-
 #include <memory>
 
 #include "DateTime.h"
@@ -10,32 +8,46 @@
 //	Event is an activity which is supposed to happen on a given date.
 //	For example appointment at the doctor is an Event.
 //	There could also be repetitive Events, which repeat after given time.
-//	For example staff meetings in a company could be viewed as an Event which repeat every month.
+//	For example staff meetings in a company could be viewed as Events which repeat every month.
 class Event {
-private:
-	DateTime start, end;
-	std::string name, description;
-	std::unique_ptr<DateTime> repetition; 
+	DateTime m_start;
+	std::string m_name;
+	std::unique_ptr<std::string> m_description;
+	std::unique_ptr<DateTime> m_end, m_repetition;
 
 public:
-	Event();
-	Event(const DateTime& start, const DateTime& end, const std::string& name, const std::string& description);
+	Event(const DateTime& start, const std::string& name,
+		const std::unique_ptr<DateTime>& end = nullptr, const std::unique_ptr<std::string>& description = nullptr, const std::unique_ptr<DateTime>& repetition = nullptr);
 	
+	Event() = default;
 	Event(const Event&) = default;
 	Event(Event&&) = default;
 	~Event() = default;
 
-	Event& setStart(const DateTime&);
-	Event& setEnd(const DateTime&);
-	Event& setName(const std::string&);
-	Event& setLocation(const std::string&);
 
-	DateTime getStart() const;
-	DateTime getEnd() const;
-	std::string getName() const;
-	std::string getDescription() const;
+	bool operator ==(const Event&) const;
+	bool operator !=(const Event&) const;
+
+	bool operator <(const Event&) const;
+	bool operator <=(const Event&) const;
+
+	bool operator >(const Event&) const;
+	bool operator >=(const Event&) const;
 
 	Event& operator =(const Event&) = default;
 	Event& operator =(Event&&) = default;
 
+	Event& setStart(const DateTime&);
+	Event& setName(const std::string&);
+	Event& setEnd(const std::unique_ptr<DateTime>&);
+	Event& setDescription(const std::unique_ptr<std::string>&);
+	Event& setRepetition(const std::unique_ptr<DateTime>&);
+
+	const DateTime& getStart() const;
+	const std::string& getName() const;
+	const std::unique_ptr<DateTime>& getEnd() const;
+	const std::unique_ptr<std::string>& getDescription() const;
+	const std::unique_ptr<DateTime>& getRepetition() const;
+
+	
 };

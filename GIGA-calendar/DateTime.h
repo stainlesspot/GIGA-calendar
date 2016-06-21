@@ -17,6 +17,25 @@ public:
 
 	const unsigned long long asSeconds() const;
 
+	bool operator ==(const unsigned long long seconds) const;
+	bool operator ==(const DateTime&) const;
+
+	bool operator != (const unsigned long long seconds) const;
+	bool operator != (const DateTime&) const;
+
+	bool operator < (const unsigned long long seconds) const;
+	bool operator < (const DateTime&) const;
+
+	bool operator <= (const unsigned long long seconds) const;
+	bool operator <= (const DateTime&) const;
+
+	bool operator > (const unsigned long long seconds) const;
+	bool operator > (const DateTime&) const;
+
+	bool operator >= (const unsigned long long seconds) const;
+	bool operator >= (const DateTime&) const;
+
+	
 	DateTime operator +(const unsigned long long seconds) const;
 	DateTime operator +(const DateTime&) const;
 

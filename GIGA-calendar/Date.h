@@ -6,9 +6,9 @@
 class Date {
 private:
 
-	uint8_t day;
-	uint8_t month;
-	short year;
+	uint8_t m_day;
+	uint8_t m_month;
+	short m_year;
 
 	static const unsigned short monthToDays[13];
 

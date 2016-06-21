@@ -4,9 +4,9 @@
 
 class Time {
 private:
-	uint8_t hour;
-	uint8_t minute;
-	uint8_t second;
+	uint8_t m_hour;
+	uint8_t m_minute;
+	uint8_t m_second;
 
 public:
 	Time();
@@ -26,6 +26,24 @@ public:
 
 	Time operator -(const unsigned long long seconds) const;
 	Time operator -(const Time&) const;
+
+	bool operator ==(const unsigned long long seconds) const;
+	bool operator ==(const Time&) const;
+
+	bool operator != (const unsigned long long seconds) const;
+	bool operator != (const Time&) const;
+
+	bool operator < (const unsigned long long seconds) const;
+	bool operator < (const Time&) const;
+
+	bool operator <= (const unsigned long long seconds) const;
+	bool operator <= (const Time&) const;
+
+	bool operator > (const unsigned long long seconds) const;
+	bool operator > (const Time&) const;
+
+	bool operator >= (const unsigned long long seconds) const;
+	bool operator >= (const Time&) const;
 
 	void operator =(const unsigned long long seconds);
 

@@ -28,7 +28,7 @@ Time Time::now()
 
 const unsigned long long Time::asSeconds() const
 {
-	return hour * 3600 + minute * 60 + second;
+	return m_hour * 3600 + m_minute * 60 + m_second;
 }
 
 Time Time::operator+(const unsigned long long seconds) const
@@ -49,6 +49,66 @@ Time Time::operator-(const unsigned long long seconds) const
 Time Time::operator-(const Time & t) const
 {
 	return Time(asSeconds() > t.asSeconds() ? asSeconds() - t.asSeconds() : t.asSeconds() - asSeconds());
+}
+
+bool Time::operator==(const unsigned long long seconds) const
+{
+	return asSeconds() == seconds;
+}
+
+bool Time::operator==(const Time & t) const
+{
+	return m_second == t.m_second  && m_minute == t.m_minute && m_hour == t.m_hour;
+}
+
+bool Time::operator!=(const unsigned long long seconds) const
+{
+	return !operator ==(seconds);
+}
+
+bool Time::operator!=(const Time & t) const
+{
+	return !operator ==(t);
+}
+
+bool Time::operator<(const unsigned long long seconds) const
+{
+	return asSeconds() < seconds;
+}
+
+bool Time::operator<(const Time & t) const
+{
+	return operator <(t.asSeconds());
+}
+
+bool Time::operator<=(const unsigned long long seconds) const
+{
+	return asSeconds() <= seconds;
+}
+
+bool Time::operator<=(const Time & t) const
+{
+	return operator <=(t.asSeconds());
+}
+
+bool Time::operator>(const unsigned long long seconds) const
+{
+	return asSeconds() > seconds;
+}
+
+bool Time::operator>(const Time & t) const
+{
+	return operator >(t);
+}
+
+bool Time::operator>=(const unsigned long long seconds) const
+{
+	return asSeconds() >= seconds;
+}
+
+bool Time::operator>=(const Time & t) const
+{
+	return operator >=(t.asSeconds());
 }
 
 void Time::operator=(const unsigned long long seconds)

@@ -19,9 +19,67 @@ DateTime DateTime::now()
 	return DateTime(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()), true);
 }
 
+
+
 const unsigned long long DateTime::asSeconds() const
 {
 	return asDays() * 24 * 3600 + Time::asSeconds();
+}
+
+
+bool DateTime::operator==(const DateTime & t) const
+{
+	return getSecond() == t.getSecond()  && getMinute() == t.getMinute() && getHour() == t.getHour();
+}
+
+bool DateTime::operator!=(const unsigned long long seconds) const
+{
+	return !operator ==(seconds);
+}
+
+bool DateTime::operator!=(const DateTime & t) const
+{
+	return !operator ==(t);
+}
+
+bool DateTime::operator<(const unsigned long long seconds) const
+{
+	return asSeconds() < seconds;
+}
+
+bool DateTime::operator<(const DateTime & t) const
+{
+	return operator <(t.asSeconds());
+}
+
+bool DateTime::operator<=(const unsigned long long seconds) const
+{
+	return asSeconds() <= seconds;
+}
+
+bool DateTime::operator<=(const DateTime & t) const
+{
+	return operator <=(t.asSeconds());
+}
+
+bool DateTime::operator>(const unsigned long long seconds) const
+{
+	return asSeconds() > seconds;
+}
+
+bool DateTime::operator>(const DateTime & t) const
+{
+	return operator >(t);
+}
+
+bool DateTime::operator>=(const unsigned long long seconds) const
+{
+	return asSeconds() >= seconds;
+}
+
+bool DateTime::operator>=(const DateTime & t) const
+{
+	return operator >=(t.asSeconds());
 }
 
 DateTime DateTime::operator+(const unsigned long long seconds) const
