@@ -1,12 +1,12 @@
 #include "Event.h"
 
-Event::Event(const DateTime & start, const std::string & name, const std::unique_ptr<DateTime>& end, const std::unique_ptr<std::string>& description, const std::unique_ptr<DateTime>& repetition)
-	: m_start(start), m_name(name), m_end(*end), m_description(*description), m_repetition(*repetition)
+Event::Event(const DateTime & start, const std::string & name, std::unique_ptr<DateTime> end, std::unique_ptr<std::string> description, std::unique_ptr<DateTime> repetition)
+	: m_start(start), m_name(name), m_end(std::move(end)), m_description(std::move(description)), m_repetition(std::move(repetition))
 {}
 
 bool Event::operator==(const Event & e) const
 {
-	return m_start == e.m_start && m_name == e.m_name &&;
+	return m_start == e.m_start && m_name == e.m_name;
 }
 
 Event & Event::setStart(const DateTime & dt)
@@ -21,21 +21,21 @@ Event & Event::setName(const std::string & s)
 	return *this;
 }
 
-Event & Event::setEnd(const std::unique_ptr<DateTime>& dt)
+Event & Event::setEnd(std::unique_ptr<DateTime> dt)
 {
-	m_end.reset(dt.get());
+	m_end = std::move(dt);
 	return *this;
 }
 
-Event & Event::setDescription(const std::unique_ptr<std::string>& s)
+Event & Event::setDescription(std::unique_ptr<std::string> s)
 {
-	m_description.reset(s.get());
+	m_description = std::move(s);
 	return *this;
 }
 
-Event & Event::setRepetition(const std::unique_ptr<DateTime>& dt)
+Event & Event::setRepetition(std::unique_ptr<DateTime> dt)
 {
-	m_repetition.reset(dt.get());
+	m_repetition = std::move(dt);
 	return *this;
 }
 
@@ -49,17 +49,18 @@ const std::string & Event::getName() const
 	return m_name;
 }
 
-const std::unique_ptr<DateTime>& Event::getEnd() const
+
+std::unique_ptr<DateTime> Event::getEnd() const
 {
-	return m_end;
+	return std::unique_ptr<DateTime>(m_end.get());
 }
 
-const std::unique_ptr<std::string>& Event::getDescription() const
+std::unique_ptr<std::string> Event::getDescription() const
 {
-	return m_description;
+	return std::unique_ptr<std::string>(m_description.get());
 }
 
-const std::unique_ptr<DateTime>& Event::getRepetition() const
+std::unique_ptr<DateTime> Event::getRepetition() const
 {
-	return m_repetition;
+	return std::unique_ptr<DateTime>(m_repetition.get());
 }

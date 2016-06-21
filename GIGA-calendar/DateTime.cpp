@@ -27,6 +27,11 @@ const unsigned long long DateTime::asSeconds() const
 }
 
 
+bool DateTime::operator==(const unsigned long long seconds) const
+{
+	return asSeconds() == seconds;
+}
+
 bool DateTime::operator==(const DateTime & t) const
 {
 	return getSecond() == t.getSecond()  && getMinute() == t.getMinute() && getHour() == t.getHour();

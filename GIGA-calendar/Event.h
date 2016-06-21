@@ -16,8 +16,7 @@ class Event {
 	std::unique_ptr<DateTime> m_end, m_repetition;
 
 public:
-	Event(const DateTime& start, const std::string& name,
-		const std::unique_ptr<DateTime>& end = nullptr, const std::unique_ptr<std::string>& description = nullptr, const std::unique_ptr<DateTime>& repetition = nullptr);
+	Event(const DateTime& start, const std::string& name, std::unique_ptr<DateTime> end = nullptr, std::unique_ptr<std::string> description = nullptr, std::unique_ptr<DateTime> repetition = nullptr);
 	
 	Event() = default;
 	Event(const Event&) = default;
@@ -39,15 +38,15 @@ public:
 
 	Event& setStart(const DateTime&);
 	Event& setName(const std::string&);
-	Event& setEnd(const std::unique_ptr<DateTime>&);
-	Event& setDescription(const std::unique_ptr<std::string>&);
-	Event& setRepetition(const std::unique_ptr<DateTime>&);
+	Event& setEnd(std::unique_ptr<DateTime>);
+	Event& setDescription(std::unique_ptr<std::string>);
+	Event& setRepetition(std::unique_ptr<DateTime>);
 
 	const DateTime& getStart() const;
 	const std::string& getName() const;
-	const std::unique_ptr<DateTime>& getEnd() const;
-	const std::unique_ptr<std::string>& getDescription() const;
-	const std::unique_ptr<DateTime>& getRepetition() const;
+	std::unique_ptr<DateTime> getEnd() const;
+	std::unique_ptr<std::string> getDescription() const;
+	std::unique_ptr<DateTime> getRepetition() const;
 
 	
 };

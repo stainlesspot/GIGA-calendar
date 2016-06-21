@@ -26,10 +26,9 @@ Spacing::Spacing(uint16_t top, uint16_t right, uint16_t bottom, uint16_t left)
 float Settings::Calendar::Cell::shaderDarkening(0.15f);
 
 
-
 uint16_t
-	Settings::MainWindow::width(1280),
-	Settings::MainWindow::height(720),
+	Settings::MainWindow::width(sf::VideoMode::getDesktopMode().width),
+	Settings::MainWindow::height(70),
 
 	Settings::Calendar::preemtiveMonthLoad(1),
 	Settings::Calendar::spaceBetweenCells(1),

@@ -6,6 +6,7 @@
 #include <GUI/GUI.h>
 
 #include "Date.h"
+//#include "Event.h"
 
 class MainWindow {
 private:
@@ -48,6 +49,7 @@ private:
 
 	};
 
+//	std::unordered_multimap<Date, Event> events;
 
 	Calendar calendar;
 

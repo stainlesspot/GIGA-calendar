@@ -226,7 +226,7 @@ void MainWindow::initialize()
 	calendar.hud.add("nextMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Next::background)
 		.setPosition(nextmbX, Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Next::bottomMargin - Resources::Calendar::MonthScroll::Next::background.getSize().y)
 		.bindAction(gui::Event::Released, [this]() {
-			Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows + 1) / 2 * 7);
+			Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows) / 2 * 7);
 			newViewPosition.addMonths(1).setDay(1);
 
 			calendar.move((newViewPosition - calendar.viewPosition).asDays() / 7);
@@ -240,7 +240,7 @@ void MainWindow::initialize()
 		.setPosition(nextmbX - Settings::Calendar::MonthScroll::Previous::rightMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().x,
 			Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Previous::bottomMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().y)
 		.bindAction(gui::Event::Released, [this]() {
-			Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows + 1) / 2 * 7);
+			Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows) / 2 * 7);
 			newViewPosition.addMonths(-1).setDay(1);
 			newViewPosition = newViewPosition.getMonday();
 
@@ -268,7 +268,7 @@ void MainWindow::initialize()
 			Settings::MainWindow::height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom),
 
 		eventNodeRect(activityMenuRect.left + Settings::ActivityMenu::EventNode::margin.left,
-			activityMenuRect.height + Settings::ActivityMenu::EventNode::margin.top,
+			activityMenuRect.top + Settings::ActivityMenu::EventNode::margin.top,
 			activityMenuRect.width - Settings::ActivityMenu::EventNode::margin.left - Settings::ActivityMenu::EventNode::margin.right,
 			(activityMenuRect.height - Settings::ActivityMenu::EventNode::margin.top - Settings::ActivityMenu::EventNode::margin.bottom
 				- (Settings::ActivityMenu::EventNode::numberOfRows - 1) * Settings::ActivityMenu::EventNode::spaceBetweenRows) / Settings::ActivityMenu::EventNode::numberOfRows);
@@ -281,16 +281,6 @@ void MainWindow::initialize()
 
 	sf::FloatRect msgBounds(highlightedDateMsg.getGlobalBounds());
 
-
-
-	Resources::load(Resources::ActivityMenu::EventNode::background, eventNodeRect.width, eventNodeRect.height, Settings::ActivityMenu::EventNode::backgroundColor);
-
-/*	eventWindow.setActive(false)
-		.setPosition(Settings::MainWindow::width * 2 / 3 + Settings::ActivityMenu::EventNode::margin.left, Settings::MainWindow::padding.top + Settings::ActivityMenu::EventNode::margin.top)
-		.setBackgroundTexture(Resources::ActivityMenu::EventNode::background);
-*/
-
-
 	std::unique_ptr<Date> previousHighlight(nullptr);
 
 
@@ -302,30 +292,49 @@ void MainWindow::initialize()
 				if (Calendar::Cell::highlighted != nullptr) {
 					sf::FloatRect newMsgBounds(sf::Text(Calendar::Cell::highlighted->asString("D M Y"), Resources::arial, 35).getGlobalBounds());
 					
-					if (previousHighlight == nullptr)
+					
+
+					if (previousHighlight == nullptr || *previousHighlight != *Calendar::Cell::highlighted) {
+						
+
+						if (previousHighlight == nullptr) {
+							sf::Image wholeImage, nodeImage;
+							wholeImage.create(activityMenuRect.width, activityMenuRect.height, Settings::ActivityMenu::backgroundColor);
+							nodeImage.create(eventNodeRect.width, eventNodeRect.height, Settings::ActivityMenu::EventNode::backgroundColor);
+
+							for (uint8_t row = 0; row < Settings::ActivityMenu::EventNode::numberOfRows; row++)
+								wholeImage.copy(nodeImage, Settings::ActivityMenu::EventNode::margin.left, Settings::ActivityMenu::EventNode::margin.top + 
+									(eventNodeRect.height + Settings::ActivityMenu::EventNode::spaceBetweenRows) * row, sf::IntRect(0, 0, 0, 0), true);
+								Resources::ActivityMenu::background.loadFromImage(wholeImage);
+						}						
+						
 						windowManager.at("activityMenu", true).at("highlightedDate").setPosition(activityMenuRect.left + (activityMenuRect.width - newMsgBounds.width - newMsgBounds.left) / 2,
 							activityMenuRect.top - newMsgBounds.top + Settings::ActivityMenu::HighlightedDateMsg::marginTop);
-					else if (*previousHighlight != *Calendar::Cell::highlighted) {
-						
-				//		windowManager.at("eventWindow", true).setActive(true);
 
+				
 						for (uint8_t row = 0; row < Settings::ActivityMenu::EventNode::numberOfRows; row++) {
-							this->windowManager.at("activityMenu", true)
-								.add("row" + std::to_string(row) + " text",
+							if (windowManager.at("activityMenu", true).exists("row" + std::to_string(row) + "text"))
+								windowManager.at("activityMenu", true).erase("row" + std::to_string(row) + "text");
+
+							windowManager.at("activityMenu", true)
+								.add("row" + std::to_string(row) + "text",
 									gui::TextField(Resources::arial, eventNodeRect.width, Settings::ActivityMenu::EventNode::characterSize)
-									.setPosition(eventNodeRect.left, eventNodeRect.top + (eventNodeRect.height + Settings::ActivityMenu::EventNode::spaceBetweenRows) * row)
-									.setColor(sf::Color::Black)
-									.setPrompt(gui::bind("Click to add new Event", sf::Color(140, 140, 140, 255))))
-								.add("row" + std::to_string(row) + "background",
-									gui::Icon(Resources::ActivityMenu::EventNode::background)
-									.setPosition(eventNodeRect.left, eventNodeRect.top + (eventNodeRect.height + Settings::ActivityMenu::EventNode::spaceBetweenRows) * row));
-							std::cout << "__KON" << int(row) << std::endl;
+										.setPosition(eventNodeRect.left - activityMenuRect.left, eventNodeRect.top - activityMenuRect.top + (eventNodeRect.height + Settings::ActivityMenu::EventNode::spaceBetweenRows) * row)
+										.setColor(sf::Color::Black)
+										.setPrompt(gui::bind("Click to add new Event", sf::Color(140, 140, 140, 255)))
+										.clearAfterInputIsProcessed(false)
+										);
 						}
-						std::cout << "ended KON";
 					}
 
 					previousHighlight.reset(new Date(*Calendar::Cell::highlighted));
 					return gui::bind(Calendar::Cell::highlighted->asString("D M Y"), sf::Color::White);
+				}
+				if (previousHighlight != nullptr) {
+					Resources::load(Resources::ActivityMenu::background, activityMenuRect.width, activityMenuRect.height, Settings::ActivityMenu::backgroundColor);
+					for (uint8_t row = 0; row < Settings::ActivityMenu::EventNode::numberOfRows; row++)
+						if (windowManager.at("activityMenu", true).exists("row" + std::to_string(row) + "text"))
+							windowManager.at("activityMenu", true).erase("row" + std::to_string(row) + "text");
 				}
 				previousHighlight.reset(nullptr);
 				return gui::bind("No date selected", sf::Color::White);
@@ -334,8 +343,6 @@ void MainWindow::initialize()
 
 
 	windowManager.emplace("calendarHud", calendar.hud, true);
-
-//	windowManager.emplace("eventWindow", eventWindow, true);
 	windowManager.emplace("activityMenu", activityMenu, true);
 
 
@@ -357,6 +364,10 @@ void MainWindow::initialize()
 	
 	
 	
+
+	std::cout << "Days since LearnedPhilosophyDefinition : " << Date::now().asDays() - Date(2015, 9, 25).asDays();
+
+
 	
 	sf::Text _text("9", Resources::arial, 9);
 	_text.setColor(sf::Color::Black);
@@ -466,7 +477,7 @@ void MainWindow::initialize()
 	//	window.draw(_text);
 	//	window.draw(_text2);
 		
-		
+//		std::cout << windowManager.at("activityMenu", true).exists("row1text") << std::endl;
 		
 		
 		

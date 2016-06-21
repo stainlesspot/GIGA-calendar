@@ -170,6 +170,7 @@
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Task.h" />
+    <ClInclude Include="TextForm.h" />
     <ClInclude Include="Time.h" />
   </ItemGroup>
   <ItemGroup>

@@ -120,33 +120,33 @@ void Time::operator=(const unsigned long long seconds)
 
 Time& Time::setHour(const uint8_t hour)
 {
-	this->hour = hour % 24;
+	m_hour = hour % 24;
 	return *this;
 }
 
 Time& Time::setMinute(const uint8_t minute)
 {
-	this->minute = minute % 60;
+	m_minute = minute % 60;
 	return *this;
 }
 
 Time& Time::setSecond(const uint8_t second)
 {
-	this->second = second % 60;
+	m_second = second % 60;
 	return *this;
 }
 
 const uint8_t Time::getHour() const
 {
-	return hour;
+	return m_hour;
 }
 
 const uint8_t Time::getMinute() const
 {
-	return minute;
+	return m_minute;
 }
 
 const uint8_t Time::getSecond() const
 {
-	return second;
+	return m_second;
 }
