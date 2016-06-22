@@ -1,12 +1,13 @@
 #pragma once
 
 #include <memory>
+#include <set>
 
 #include <SFML/Graphics.hpp>
 #include <GUI/GUI.h>
 
 #include "Date.h"
-//#include "Event.h"
+#include "Event.h"
 
 class MainWindow {
 private:
@@ -49,7 +50,7 @@ private:
 
 	};
 
-//	std::unordered_multimap<Date, Event> events;
+	std::set<Event, std::greater<Event>> events;
 
 	Calendar calendar;
 

@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <queue>
 
 #include "MainWindow.h"
 #include "Settings.h"
@@ -242,7 +243,7 @@ void MainWindow::initialize()
 		.bindAction(gui::Event::Released, [this]() {
 			Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows) / 2 * 7);
 			newViewPosition.addMonths(-1).setDay(1);
-			newViewPosition = newViewPosition.getMonday();
+//			newViewPosition = newViewPosition.getMonday();
 
 			calendar.move((long long(newViewPosition.asDays()) - long long(calendar.viewPosition.asDays())) / 7);
 		})
@@ -284,15 +285,14 @@ void MainWindow::initialize()
 	std::unique_ptr<Date> previousHighlight(nullptr);
 
 
+	std::unique_ptr<std::string> input(nullptr);
 
 	activityMenu.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
 		.setBackgroundTexture(Resources::ActivityMenu::background)
 		.add("highlightedDate", highlightedDateMsg.setPosition((activityMenuRect.width - msgBounds.width - msgBounds.left) / 2, (activityMenuRect.height - msgBounds.height - msgBounds.top) / 2)
-			.setUpdateFunction([this, activityMenuRect, eventNodeRect, &previousHighlight]() {	
+			.setUpdateFunction([this, activityMenuRect, eventNodeRect, &previousHighlight, &input]() {	
 				if (Calendar::Cell::highlighted != nullptr) {
 					sf::FloatRect newMsgBounds(sf::Text(Calendar::Cell::highlighted->asString("D M Y"), Resources::arial, 35).getGlobalBounds());
-					
-					
 
 					if (previousHighlight == nullptr || *previousHighlight != *Calendar::Cell::highlighted) {
 						
@@ -323,7 +323,9 @@ void MainWindow::initialize()
 										.setColor(sf::Color::Black)
 										.setPrompt(gui::bind("Click to add new Event", sf::Color(140, 140, 140, 255)))
 										.clearAfterInputIsProcessed(false)
-										);
+										.setInputProcessingFunction([&input](const sf::String& string) {
+											input.reset(new std::string(string));
+										}));
 						}
 					}
 
@@ -408,7 +410,6 @@ void MainWindow::initialize()
 								.setUpdateFunction([this]() {
 									return gui::bind(calendar.viewPosition.asString(), sf::Color::White);
 								}));
-
 						break;
 					case sf::Keyboard::P:
 						_text2.setCharacterSize(_text2.getCharacterSize() + 1);
@@ -448,6 +449,7 @@ void MainWindow::initialize()
 			}
 		}
 
+		
 		window.clear(Settings::MainWindow::backgroundColor);
 
 
