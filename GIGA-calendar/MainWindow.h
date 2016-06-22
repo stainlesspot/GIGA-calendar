@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <set>
+#include <unordered_map>
 
 #include <SFML/Graphics.hpp>
 #include <GUI/GUI.h>
@@ -50,7 +50,9 @@ private:
 
 	};
 
-	std::set<Event, std::greater<Event>> events;
+//	std::set<Event, std::greater<Event>> events;
+
+	std::unordered_map<Date, std::array<std::unique_ptr<std::string>, 24>> events;
 
 	Calendar calendar;
 

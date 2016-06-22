@@ -28,7 +28,7 @@ struct Settings {
 	};
 
 	struct Calendar {
-		static uint16_t preemtiveMonthLoad, spaceBetweenCells, spaceBetweenRows, numberOfRows;
+		static uint16_t preemptiveMonthLoad, spaceBetweenCells, spaceBetweenRows, numberOfRows;
 		static Spacing margin;
 		static sf::Color backgroundColor;
 
@@ -43,9 +43,15 @@ struct Settings {
 
 		};
 
+		struct MonthLabel {
+			static uint16_t characterSize;
+			static Spacing margin;
+		};
+
 		struct Cell {
 			static float shaderDarkening;
-			static uint16_t charSize;
+			static uint16_t characterSize;
+			static Spacing padding;
 			static sf::Color textColor;
 			static std::array<sf::Color, 13> monthColors;
 		};

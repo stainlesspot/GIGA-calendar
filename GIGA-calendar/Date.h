@@ -3,9 +3,9 @@
 #include <cstdint>
 #include <string>
 
+
 class Date {
 private:
-
 	uint8_t m_day;
 	uint8_t m_month;
 	short m_year;
@@ -80,3 +80,16 @@ public:
 	const uint8_t getWeekNumber() const;
 
 };
+
+
+namespace std
+{
+	template <>
+	struct hash<Date>
+	{
+		size_t operator()(const Date& d) const
+		{
+			return hash<unsigned long long>()(d.asDays());
+		}
+	};
+}

@@ -11,11 +11,21 @@ std::unique_ptr<Date> MainWindow::Calendar::Cell::highlighted(nullptr);
 const gui::Button& MainWindow::Calendar::Cell::generateButton()
 {
 	Date date(date);
-	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
+	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::characterSize);
+
+//	std::cout << "buttonText w & h : " << text.getGlobalBounds().left << " & " << text.getGlobalBounds().height << std::endl;
+
+	sf::Text text2(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::characterSize);
+
+//	std::cout << "buttonText2 w & h : " << text2.getGlobalBounds().width << " & " << text2.getGlobalBounds().height << std::endl;
+
 
 	button.setTexture(Resources::Calendar::Cell::background)
 		.setPosition(position)
-		.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - width) / 2 + 8, (text.getGlobalBounds().height - height / 2)))
+		.setName(text
+			.setColor(Settings::Calendar::Cell::textColor)
+			.setPosition((text.getGlobalBounds().width - width) / 2 - text.getGlobalBounds().left + Settings::Calendar::Cell::padding.left,
+				(text.getGlobalBounds().height - height) / 2 - text.getGlobalBounds().top + Settings::Calendar::Cell::padding.top))
 		.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
 		.bindAction(gui::Event::Released, [date]() {
 			MainWindow::Calendar::Cell::highlighted.reset(new Date(date));
@@ -43,10 +53,13 @@ const gui::Button& MainWindow::Calendar::Cell::generateButton()
 const gui::Button & MainWindow::Calendar::Cell::updateButton()
 {
 	Date date(date);
-	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::charSize);
+	gui::TextArea text(std::to_string(date.getDay()), Resources::arial, Settings::Calendar::Cell::characterSize);
 
 	button.setPosition(position)
-		.setName(text.setColor(Settings::Calendar::Cell::textColor).setPosition((text.getGlobalBounds().width - width) / 2 + 8, (text.getGlobalBounds().height - height / 2)))
+		.setName(text
+			.setColor(Settings::Calendar::Cell::textColor)
+			.setPosition((text.getGlobalBounds().width - width) / 2 - text.getGlobalBounds().left + Settings::Calendar::Cell::padding.left,
+				(text.getGlobalBounds().height - height) / 2 - text.getGlobalBounds().top + Settings::Calendar::Cell::padding.top))
 		.setColor(Settings::Calendar::Cell::monthColors[date.getMonth()])
 		.bindAction(gui::Event::Released, [date]() {
 			MainWindow::Calendar::Cell::highlighted.reset(new Date(date));
@@ -145,9 +158,9 @@ void MainWindow::initialize()
 
 	calendar.viewPosition = date.getMonday();
 
-	date.setMonth(date.getMonth() - Settings::Calendar::preemtiveMonthLoad);
+	date.addMonths(-int(Settings::Calendar::preemptiveMonthLoad));
 		
-	end.setMonth(end.getMonth() + Settings::Calendar::preemtiveMonthLoad + 1);
+	end.addMonths(Settings::Calendar::preemptiveMonthLoad + 1);
 	--end;
 
 
@@ -173,7 +186,7 @@ void MainWindow::initialize()
 	calendar.load(false, end.getWeekNumber() - date.getWeekNumber(), true);
 
 
-	// Calendar View
+	// Calendar View:
 
 	calendar.viewOffset = (calendar.viewPosition - calendar.start).asDays() / 7;
 
@@ -204,7 +217,7 @@ void MainWindow::initialize()
 
 	Resources::load(Resources::Calendar::MonthScroll::Next::background, "resources/arrow_down.png");
 
-	const unsigned int nextmbX = chWidth - Settings::Calendar::MonthScroll::Next::rightMargin - Resources::Calendar::MonthScroll::Next::background.getSize().x - Settings::Calendar::margin.right;
+	const unsigned int nextMonthLeft = chWidth - Settings::Calendar::MonthScroll::Next::rightMargin - Resources::Calendar::MonthScroll::Next::background.getSize().x - Settings::Calendar::margin.right;
 
 
 	std::string customShader(
@@ -224,30 +237,53 @@ void MainWindow::initialize()
 				}\
 			}");
 
-	calendar.hud.add("nextMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Next::background)
-		.setPosition(nextmbX, Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Next::bottomMargin - Resources::Calendar::MonthScroll::Next::background.getSize().y)
-		.bindAction(gui::Event::Released, [this]() {
-			Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows) / 2 * 7);
-			newViewPosition.addMonths(1).setDay(1);
+	calendar.hud
+		.add("nextMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Next::background)
+			.setPosition(nextMonthLeft, Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Next::bottomMargin - Resources::Calendar::MonthScroll::Next::background.getSize().y)
+			.bindAction(gui::Event::Released, [this]() {
+				Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows) / 2 * 7);
+				newViewPosition.addMonths(1).setDay(1);
 
-			calendar.move((newViewPosition - calendar.viewPosition).asDays() / 7);
-		})
-		.resetShader(customShader));
+				calendar.move((newViewPosition - calendar.viewPosition).asDays() / 7);
+			})
+			.resetShader(customShader));
 
 
 	Resources::load(Resources::Calendar::MonthScroll::Previous::background, "resources/arrow_up.png");
 
-	calendar.hud.add("previousMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Previous::background)
-		.setPosition(nextmbX - Settings::Calendar::MonthScroll::Previous::rightMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().x,
-			Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Previous::bottomMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().y)
-		.bindAction(gui::Event::Released, [this]() {
-			Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows) / 2 * 7);
-			newViewPosition.addMonths(-1).setDay(1);
-//			newViewPosition = newViewPosition.getMonday();
+	const unsigned int prevMonthLeft = nextMonthLeft - Settings::Calendar::MonthScroll::Previous::rightMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().x;
 
-			calendar.move((long long(newViewPosition.asDays()) - long long(calendar.viewPosition.asDays())) / 7);
-		})
-		.resetShader(customShader));
+	gui::TextArea label((calendar.viewPosition + Settings::Calendar::numberOfRows / 2 * 7).asString("Y M"), Resources::arial, Settings::Calendar::MonthLabel::characterSize);
+
+	int oldLabelWidth = label.getGlobalBounds().width;
+
+	calendar.hud
+		.add("previousMonth", gui::Button().setTexture(Resources::Calendar::MonthScroll::Previous::background)
+			.setPosition(prevMonthLeft, Settings::Calendar::margin.top - Settings::Calendar::MonthScroll::Previous::bottomMargin - Resources::Calendar::MonthScroll::Previous::background.getSize().y)
+			.bindAction(gui::Event::Released, [this]() {
+				Date newViewPosition(calendar.viewPosition + (Settings::Calendar::numberOfRows) / 2 * 7);
+				newViewPosition.addMonths(-1).setDay(1);
+				newViewPosition = newViewPosition.getMonday();
+
+				calendar.move((long long(newViewPosition.asDays()) - long long(calendar.viewPosition.asDays())) / 7);
+			})
+			.resetShader(customShader))
+		.add("monthLabel", label
+			.setPosition(prevMonthLeft - Settings::Calendar::MonthLabel::margin.right - label.getGlobalBounds().width,
+				Settings::Calendar::margin.top - label.getGlobalBounds().top - Settings::Calendar::MonthLabel::margin.bottom - label.getGlobalBounds().height) 
+			.setUpdateFunction([this, &oldLabelWidth]() {
+				Date date(calendar.viewPosition + Settings::Calendar::numberOfRows / 2 * 7);
+				
+				int newLabelWidth = gui::TextArea(date.asString("Y M"), Resources::arial, Settings::Calendar::MonthLabel::characterSize).getGlobalBounds().width;
+
+				windowManager.at("calendarHud", true).at("monthLabel").setPosition(windowManager.at("calendarHud", true).at("monthLabel").getPosition().x + oldLabelWidth - newLabelWidth,
+					windowManager.at("calendarHud", true).at("monthLabel").getPosition().y);
+				
+				oldLabelWidth = newLabelWidth;
+
+				return gui::bind(date.asString("Y M"), Settings::Calendar::Cell::monthColors[date.getMonth()]);
+			}));
+
 
 
 
@@ -255,19 +291,11 @@ void MainWindow::initialize()
 
 	//	ActivityMenu:
 
-/*	const unsigned int //amWidth(Settings::MainWindow::width / 3 + ((Settings::MainWindow::width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.right),
-		amHeight(Settings::MainWindow::height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom),
-		ewWidth(amWidth - Settings::ActivityMenu::EventNode::margin.left - Settings::ActivityMenu::EventNode::margin.right),
-		ewHeight(amHeight - Settings::ActivityMenu::EventNode::margin.top - Settings::ActivityMenu::EventNode::margin.bottom);
-*/
-
 	const sf::IntRect
-
 		activityMenuRect(Settings::MainWindow::width * 2 / 3,
 			Settings::MainWindow::padding.top,
 			Settings::MainWindow::width / 3 + ((Settings::MainWindow::width % 3 == 2) ? 1 : 0) - Settings::MainWindow::padding.right,
 			Settings::MainWindow::height - Settings::MainWindow::padding.top - Settings::MainWindow::padding.bottom),
-
 		eventNodeRect(activityMenuRect.left + Settings::ActivityMenu::EventNode::margin.left,
 			activityMenuRect.top + Settings::ActivityMenu::EventNode::margin.top,
 			activityMenuRect.width - Settings::ActivityMenu::EventNode::margin.left - Settings::ActivityMenu::EventNode::margin.right,
@@ -287,7 +315,8 @@ void MainWindow::initialize()
 
 	std::unique_ptr<std::string> input(nullptr);
 
-	activityMenu.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
+	activityMenu
+		.setPosition(Settings::MainWindow::width * 2 / 3, Settings::MainWindow::padding.top)
 		.setBackgroundTexture(Resources::ActivityMenu::background)
 		.add("highlightedDate", highlightedDateMsg.setPosition((activityMenuRect.width - msgBounds.width - msgBounds.left) / 2, (activityMenuRect.height - msgBounds.height - msgBounds.top) / 2)
 			.setUpdateFunction([this, activityMenuRect, eventNodeRect, &previousHighlight, &input]() {	
@@ -367,7 +396,7 @@ void MainWindow::initialize()
 	
 	
 
-	std::cout << "Days since LearnedPhilosophyDefinition : " << Date::now().asDays() - Date(2015, 9, 25).asDays();
+	std::cout << "Did I ever tell you the definition of \"philosophy\"?\nYa, it was " << Date::now().asDays() - Date(2015, 9, 25).asDays() << " days ago." << std::endl;
 
 
 	
@@ -398,18 +427,19 @@ void MainWindow::initialize()
 						if (windowManager.at("activityMenu", true).exists("fpsMeter"))
 							windowManager.at("activityMenu", true).erase("fpsMeter");
 						else
-							windowManager.at("activityMenu", true).add("fpsMeter", gui::FPSMeter(Resources::arial, Settings::Calendar::Cell::charSize).setColor(sf::Color::White).setPosition(10, 0));
+							windowManager.at("activityMenu", true).add("fpsMeter", gui::FPSMeter(Resources::arial, Settings::Calendar::Cell::characterSize).setColor(sf::Color::White).setPosition(10, 0));
 
 						break;
 					case sf::Keyboard::V:
 						if (windowManager.at("activityMenu", true).exists("viewPosition"))
 							windowManager.at("activityMenu", true).erase("viewPosition");
 						else
-							windowManager.at("activityMenu", true).add("viewPosition", gui::TextArea(calendar.viewPosition.asString(), Resources::arial, Settings::Calendar::Cell::charSize)
-								.setColor(sf::Color::White).setPosition(10, 200)
-								.setUpdateFunction([this]() {
-									return gui::bind(calendar.viewPosition.asString(), sf::Color::White);
-								}));
+							windowManager.at("activityMenu", true)
+								.add("viewPosition", gui::TextArea(calendar.viewPosition.asString(), Resources::arial, Settings::Calendar::Cell::characterSize)
+									.setColor(sf::Color::White).setPosition(10, 200)
+									.setUpdateFunction([this]() {
+										return gui::bind(calendar.viewPosition.asString(), sf::Color::White);
+									}));
 						break;
 					case sf::Keyboard::P:
 						_text2.setCharacterSize(_text2.getCharacterSize() + 1);

@@ -28,13 +28,14 @@ float Settings::Calendar::Cell::shaderDarkening(0.15f);
 
 uint16_t
 	Settings::MainWindow::width(sf::VideoMode::getDesktopMode().width),
-	Settings::MainWindow::height(70),
+	Settings::MainWindow::height(sf::VideoMode::getDesktopMode().height),
 
-	Settings::Calendar::preemtiveMonthLoad(1),
+	Settings::Calendar::preemptiveMonthLoad(1),
 	Settings::Calendar::spaceBetweenCells(1),
 	Settings::Calendar::spaceBetweenRows(1),
-	Settings::Calendar::numberOfRows(5),
-	Settings::Calendar::Cell::charSize(35),
+	Settings::Calendar::numberOfRows(6),
+	Settings::Calendar::Cell::characterSize(35),
+	Settings::Calendar::MonthLabel::characterSize(30),
 	Settings::Calendar::MonthScroll::Next::rightMargin(0),
 	Settings::Calendar::MonthScroll::Next::bottomMargin(30),
 	Settings::Calendar::MonthScroll::Previous::rightMargin(15),
@@ -49,9 +50,11 @@ uint16_t
 
 
 Spacing
-	Settings::MonthView::margin(15, 0),
+	Settings::MonthView::margin(0, 0),
 	Settings::MainWindow::padding(1),
 	Settings::Calendar::margin(100, 50),
+	Settings::Calendar::Cell::padding(10),
+	Settings::Calendar::MonthLabel::margin(30, 10),
 	Settings::ActivityMenu::EventNode::margin(115, 50);
 
 
@@ -95,8 +98,8 @@ void Settings::loadFromFile(const std::string & filename)
 
 
 	integers = {
-		std::pair<std::string, uint16_t*>("Calendar::preemtiveMonthLoad", &Calendar::preemtiveMonthLoad),
-		std::pair<std::string, uint16_t*>("Calendar::Cell::charSize", &Calendar::Cell::charSize),
+		std::pair<std::string, uint16_t*>("Calendar::preemptiveMonthLoad", &Calendar::preemptiveMonthLoad),
+		std::pair<std::string, uint16_t*>("Calendar::Cell::characterSize", &Calendar::Cell::characterSize),
 		std::pair<std::string, uint16_t*>("Calendar::MonthScroll::Previous::rightMargin", &Calendar::MonthScroll::Previous::rightMargin),
 		std::pair<std::string, uint16_t*>("Calendar::MonthScroll::Previous::bottomMargin", &Calendar::MonthScroll::Previous::bottomMargin),
 		std::pair<std::string, uint16_t*>("Calendar::MonthScroll::Next::rightMargin", &Calendar::MonthScroll::Next::rightMargin),
@@ -145,6 +148,9 @@ void Settings::loadFromFile(const std::string & filename)
 
 	while (!reader.eof()) {
 		std::getline(reader, line);
+
+		line = line.substr(0, line.find('#'));
+		
 		structStart = line.find('{');
 		if (structStart != std::string::npos) {
 			
@@ -153,6 +159,8 @@ void Settings::loadFromFile(const std::string & filename)
 		
 			while (line.find('}') == std::string::npos) {
 				std::getline(reader, line);
+
+				line = line.substr(0, line.find('#'));
 
 				assignmentPosition = line.find('=');
 				
