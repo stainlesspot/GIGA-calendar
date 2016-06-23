@@ -7,7 +7,6 @@
 #include <GUI/GUI.h>
 
 #include "Date.h"
-#include "Event.h"
 
 class MainWindow {
 private:
@@ -50,9 +49,7 @@ private:
 
 	};
 
-//	std::set<Event, std::greater<Event>> events;
-
-	std::unordered_map<Date, std::array<std::unique_ptr<std::string>, 24>> events;
+	std::unordered_map<Date, std::array<std::string, 24>> events;
 
 	Calendar calendar;
 

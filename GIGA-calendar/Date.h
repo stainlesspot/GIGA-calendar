@@ -18,7 +18,7 @@ private:
 
 public:
 	Date();
-	Date(const unsigned short year, const uint8_t month, const uint8_t day, const bool beforeChrist = false);
+	Date(const unsigned short year, const uint8_t month, const uint8_t day);
 	Date(unsigned long long days, const bool addUnixEpoch = false);
 	Date(const std::string& string);
 

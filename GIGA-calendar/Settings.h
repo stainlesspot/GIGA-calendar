@@ -64,7 +64,7 @@ struct Settings {
 		};
 
 		struct EventNode {
-			static uint16_t characterSize, spaceBetweenRows, numberOfRows;
+			static uint16_t characterSize, spaceBetweenRows, numberOfRows, hourMarginLeft;
 			static Spacing margin;
 			static sf::Color backgroundColor;
 		};

@@ -32,7 +32,7 @@ Date::Date()
 	: Date(1970, 1, 1)
 {}
 
-Date::Date(const unsigned short year, const uint8_t month, const uint8_t day, const bool beforeChrist)
+Date::Date(const unsigned short year, const uint8_t month, const uint8_t day)
 	: m_year(year)
 {
 	setMonth(month);

@@ -43,7 +43,8 @@ uint16_t
 	
 	Settings::ActivityMenu::EventNode::characterSize(15),
 	Settings::ActivityMenu::EventNode::spaceBetweenRows(5),
-	Settings::ActivityMenu::EventNode::numberOfRows(6),
+	Settings::ActivityMenu::EventNode::numberOfRows(12),
+	Settings::ActivityMenu::EventNode::hourMarginLeft(10),
 	Settings::ActivityMenu::HighlightedDateMsg::marginTop(10),
 	Settings::ActivityMenu::HighlightedDateMsg::marginBottom(10);
 
@@ -55,7 +56,7 @@ Spacing
 	Settings::Calendar::margin(100, 50),
 	Settings::Calendar::Cell::padding(10),
 	Settings::Calendar::MonthLabel::margin(30, 10),
-	Settings::ActivityMenu::EventNode::margin(115, 50);
+	Settings::ActivityMenu::EventNode::margin(50, 50, 10);
 
 
 
@@ -108,7 +109,8 @@ void Settings::loadFromFile(const std::string & filename)
 		std::pair<std::string, uint16_t*>("MainWindow::width", &MainWindow::width),
 		std::pair<std::string, uint16_t*>("MainWindow::height", &MainWindow::height),
 		std::pair<std::string, uint16_t*>("Calendar::spaceBetweenCells", &Calendar::spaceBetweenCells),
-		std::pair<std::string, uint16_t*>("Calendar::spaceBetweenRows", &Calendar::spaceBetweenRows)
+		std::pair<std::string, uint16_t*>("Calendar::spaceBetweenRows", &Calendar::spaceBetweenRows),
+		std::pair<std::string, uint16_t*>("Calendar::numberOfRows", &Calendar::numberOfRows)
 	};
 
 
@@ -143,51 +145,53 @@ void Settings::loadFromFile(const std::string & filename)
 
 	std::ifstream reader(filename, std::ios::in);
 
-	std::string line, structName, variableName, value;
-	size_t structStart, assignmentPosition;
+	if (reader) {
+		std::string line, structName, variableName, value;
+		size_t structStart, assignmentPosition;
 
-	while (!reader.eof()) {
-		std::getline(reader, line);
 
-		line = line.substr(0, line.find('#'));
-		
-		structStart = line.find('{');
-		if (structStart != std::string::npos) {
-			
-			structName = removeWhiteSpaces(line.substr(0, structStart - 1));
-			structName += "::";
-		
-			while (line.find('}') == std::string::npos) {
-				std::getline(reader, line);
+		while (!reader.eof()) {
+			std::getline(reader, line);
 
-				line = line.substr(0, line.find('#'));
+			line = line.substr(0, line.find('#'));
 
-				assignmentPosition = line.find('=');
-				
-				if (assignmentPosition != std::string::npos) {
-					variableName = structName + removeWhiteSpaces(line.substr(0, assignmentPosition));
-					value = removeWhiteSpaces(line.substr(assignmentPosition + 1));
+			structStart = line.find('{');
+			if (structStart != std::string::npos) {
 
-					if (floats.find(variableName) != floats.end()) {
-						*floats[variableName] = std::stof(value);
+				structName = removeWhiteSpaces(line.substr(0, structStart - 1));
+				structName += "::";
+
+				while (line.find('}') == std::string::npos) {
+					std::getline(reader, line);
+
+					line = line.substr(0, line.find('#'));
+
+					assignmentPosition = line.find('=');
+
+					if (assignmentPosition != std::string::npos) {
+						variableName = structName + removeWhiteSpaces(line.substr(0, assignmentPosition));
+						value = removeWhiteSpaces(line.substr(assignmentPosition + 1));
+
+						if (floats.find(variableName) != floats.end()) {
+							*floats[variableName] = std::stof(value);
+						}
+						else if (integers.find(variableName) != integers.end()) {
+							*integers[variableName] = std::stoi(value);
+						}
+						else if (spacings.find(variableName) != spacings.end()) {
+							*spacings[variableName] = stringToSpacing(value);
+						}
+						else if (colors.find(variableName) != colors.end()) {
+							*colors[variableName] = stringToColor(value);
+						}
+
 					}
-					else if (integers.find(variableName) != integers.end()) {
-						*integers[variableName] = std::stoi(value);
-					}
-					else if(spacings.find(variableName) != spacings.end()){
-						*spacings[variableName] = stringToSpacing(value);
-					}
-					else if (colors.find(variableName) != colors.end()) {
-						*colors[variableName] = stringToColor(value);
-					}
-
 				}
+
 			}
-
 		}
+		reader.close();
 	}
-
-
 }
 
 std::string Settings::removeWhiteSpaces(std::string string) {
